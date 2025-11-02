@@ -179,8 +179,14 @@ def predict_with_models(text):
             sdg_pred = SDG_MODEL.predict(vec)
             sdg_arr = np.asarray(sdg_pred).reshape(-1)
             sdg_dict = {f'SDG{i+1}': float(round(v, 2)) for i, v in enumerate(sdg_arr)}
-        except Exception:
+            print(f"SDG predictions successful: {len(sdg_dict)} SDGs")
+        except Exception as sdg_error:
+            print(f"Error predicting SDG scores: {str(sdg_error)}")
+            import traceback
+            traceback.print_exc()
             sdg_dict = None
+    else:
+        print("SDG_MODEL is None - model not loaded")
 
     return esg_dict, sdg_dict
 
@@ -287,23 +293,26 @@ def predict():
             model_esg = None
             model_sdgs = None
 
-        # Prepare response
+        # Prepare response - always include sdgs field even if None
         response = {
             "input": {"description": description},
             "scores": scores,
             "overall_score": overall_score,
             "details": details,
             "model_scores": model_esg,
-            "sdgs": model_sdgs,
+            "sdgs": model_sdgs if model_sdgs is not None else {},
             "interpretation": {
                 "scale": "Scores range from 0 to 1, where 1 indicates strongest alignment",
                 "score_levels": {"high": "0.7 - 1.0", "medium": "0.4 - 0.69", "low": "0 - 0.39"}
             }
         }
         
-        # Add note if model predictions are unavailable
+        # Add notes if model predictions are unavailable
         if model_esg is None:
-            response["note"] = "Model-based predictions are currently unavailable. Showing keyword-based scores only."
+            response["note"] = "Model-based ESG predictions are currently unavailable. Showing keyword-based scores only."
+        
+        if model_sdgs is None or (isinstance(model_sdgs, dict) and len(model_sdgs) == 0):
+            response["sdg_note"] = "SDG model predictions are currently unavailable. The SDG model may not be loaded or may have encountered an error."
         
         return jsonify(response)
     
