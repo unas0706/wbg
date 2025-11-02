@@ -2,7 +2,7 @@ services:
   - type: web
     name: esg-sdg-api
     env: python
-    repo: REPLACE_WITH_YOUR_REPO_URL
+    repo: https://github.com/unas0706/wbg
     branch: main
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app -b 0.0.0.0:$PORT --workers 2
