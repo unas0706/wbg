@@ -292,3 +292,4 @@ if __name__ == '__main__':
     print("📚 View documentation at http://localhost:5000")
     print("🔍 Try the health check at http://localhost:5000/health")
     app.run(host='0.0.0.0', port=5000, debug=True)
+
