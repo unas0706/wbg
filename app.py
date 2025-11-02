@@ -40,8 +40,11 @@ VECTORIZER = None
 ESG_MODEL = None
 SDG_MODEL = None
 
+# Flag to track if we've attempted to load SDG model
+SDG_LOAD_ATTEMPTED = False
+
 def try_load_models():
-    global VECTORIZER, ESG_MODEL, SDG_MODEL
+    global VECTORIZER, ESG_MODEL, SDG_MODEL, SDG_LOAD_ATTEMPTED
     for base in MODEL_PATHS:
         vfile = os.path.join(base, 'vectorizer.pkl')
         efile = os.path.join(base, 'esg_regression.pkl')
