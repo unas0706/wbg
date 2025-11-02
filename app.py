@@ -63,15 +63,30 @@ def try_load_models():
             # import heavy optional dependency lazily
             import joblib
             if VECTORIZER is None and os.path.exists(vfile):
+                print(f"Loading vectorizer from {vfile}")
                 VECTORIZER = joblib.load(vfile)
                 # Verify vectorizer is fitted
                 if hasattr(VECTORIZER, 'idf_') and VECTORIZER.idf_ is None:
                     print(f"Warning: Vectorizer at {vfile} is not fitted")
                     VECTORIZER = None
+                else:
+                    print(f"Vectorizer loaded successfully")
             if ESG_MODEL is None and os.path.exists(efile):
+                print(f"Loading ESG model from {efile}")
                 ESG_MODEL = joblib.load(efile)
+                print(f"ESG model loaded successfully")
             if SDG_MODEL is None and os.path.exists(sfile):
-                SDG_MODEL = joblib.load(sfile)
+                print(f"Loading SDG model from {sfile}")
+                try:
+                    SDG_MODEL = joblib.load(sfile)
+                    print(f"SDG model loaded successfully")
+                except Exception as sdg_load_error:
+                    print(f"Error loading SDG model from {sfile}: {str(sdg_load_error)}")
+                    import traceback
+                    traceback.print_exc()
+                    SDG_MODEL = None
+            elif SDG_MODEL is None:
+                print(f"SDG model file not found at {sfile}")
         except Exception as e:
             # Log the error for debugging
             print(f"Error loading models from {base}: {str(e)}")
@@ -145,6 +160,10 @@ def predict_with_models(text):
     """
     # Lazy-load models (may be heavy); do not do this at import time
     if VECTORIZER is None or ESG_MODEL is None:
+        try_load_models()
+    
+    # Also try to load SDG model if it's not loaded yet
+    if SDG_MODEL is None:
         try_load_models()
 
     if VECTORIZER is None or ESG_MODEL is None:
