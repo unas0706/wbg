@@ -59,10 +59,12 @@ def try_load_models():
                 key = f"{S3_PREFIX}/sdg_regression.pkl" if S3_PREFIX else 'sdg_regression.pkl'
                 fetch_from_s3(S3_BUCKET, key, sfile)
 
-        try:
-            # import heavy optional dependency lazily
-            import joblib
-            if VECTORIZER is None and os.path.exists(vfile):
+        # import heavy optional dependency lazily
+        import joblib
+        
+        # Load vectorizer
+        if VECTORIZER is None and os.path.exists(vfile):
+            try:
                 print(f"Loading vectorizer from {vfile}")
                 VECTORIZER = joblib.load(vfile)
                 # Verify vectorizer is fitted
@@ -71,34 +73,45 @@ def try_load_models():
                     VECTORIZER = None
                 else:
                     print(f"Vectorizer loaded successfully")
-            if ESG_MODEL is None and os.path.exists(efile):
+            except Exception as e:
+                print(f"Error loading vectorizer from {vfile}: {str(e)}")
+                import traceback
+                traceback.print_exc()
+                VECTORIZER = None
+        
+        # Load ESG model
+        if ESG_MODEL is None and os.path.exists(efile):
+            try:
                 print(f"Loading ESG model from {efile}")
                 ESG_MODEL = joblib.load(efile)
                 print(f"ESG model loaded successfully")
-            if SDG_MODEL is None and os.path.exists(sfile):
+            except Exception as e:
+                print(f"Error loading ESG model from {efile}: {str(e)}")
+                import traceback
+                traceback.print_exc()
+                ESG_MODEL = None
+        
+        # Load SDG model - separate try-except so it doesn't affect other models
+        if SDG_MODEL is None and os.path.exists(sfile):
+            try:
                 print(f"Loading SDG model from {sfile}")
-                try:
-                    SDG_MODEL = joblib.load(sfile)
-                    if SDG_MODEL is not None:
-                        print(f"SDG model loaded successfully, type: {type(SDG_MODEL)}")
+                SDG_MODEL = joblib.load(sfile)
+                if SDG_MODEL is not None:
+                    print(f"SDG model loaded successfully, type: {type(SDG_MODEL)}")
+                    # Verify it's a valid model with predict method
+                    if hasattr(SDG_MODEL, 'predict'):
+                        print(f"SDG model has predict method - ready to use")
                     else:
-                        print(f"SDG model loaded but is None")
-                except Exception as sdg_load_error:
-                    print(f"Error loading SDG model from {sfile}: {str(sdg_load_error)}")
-                    import traceback
-                    traceback.print_exc()
-                    SDG_MODEL = None
-            elif SDG_MODEL is None:
-                print(f"SDG model file not found at {sfile}")
-        except Exception as e:
-            # Log the error for debugging
-            print(f"Error loading models from {base}: {str(e)}")
-            import traceback
-            traceback.print_exc()
-            # don't crash on load/import errors; leave as None
-            VECTORIZER = VECTORIZER or None
-            ESG_MODEL = ESG_MODEL or None
-            SDG_MODEL = SDG_MODEL or None
+                        print(f"WARNING: SDG model doesn't have predict method!")
+                else:
+                    print(f"SDG model loaded but is None")
+            except Exception as sdg_load_error:
+                print(f"ERROR loading SDG model from {sfile}: {str(sdg_load_error)}")
+                import traceback
+                traceback.print_exc()
+                SDG_MODEL = None
+        elif SDG_MODEL is None:
+            print(f"SDG model file not found at {sfile}")
 
 # Do not eagerly load heavy models at import time; load lazily on first predict call
 
