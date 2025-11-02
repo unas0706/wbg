@@ -64,11 +64,19 @@ def try_load_models():
             import joblib
             if VECTORIZER is None and os.path.exists(vfile):
                 VECTORIZER = joblib.load(vfile)
+                # Verify vectorizer is fitted
+                if hasattr(VECTORIZER, 'idf_') and VECTORIZER.idf_ is None:
+                    print(f"Warning: Vectorizer at {vfile} is not fitted")
+                    VECTORIZER = None
             if ESG_MODEL is None and os.path.exists(efile):
                 ESG_MODEL = joblib.load(efile)
             if SDG_MODEL is None and os.path.exists(sfile):
                 SDG_MODEL = joblib.load(sfile)
-        except Exception:
+        except Exception as e:
+            # Log the error for debugging
+            print(f"Error loading models from {base}: {str(e)}")
+            import traceback
+            traceback.print_exc()
             # don't crash on load/import errors; leave as None
             VECTORIZER = VECTORIZER or None
             ESG_MODEL = ESG_MODEL or None
@@ -141,8 +149,17 @@ def predict_with_models(text):
 
     if VECTORIZER is None or ESG_MODEL is None:
         return None, None
+    
+    # Verify vectorizer is fitted before using
+    if not hasattr(VECTORIZER, 'idf_') or VECTORIZER.idf_ is None:
+        print("Warning: Vectorizer is not fitted")
+        return None, None
 
-    vec = VECTORIZER.transform([text])
+    try:
+        vec = VECTORIZER.transform([text])
+    except Exception as e:
+        print(f"Error transforming text with vectorizer: {str(e)}")
+        return None, None
 
     try:
         esg_pred = ESG_MODEL.predict(vec)
@@ -262,7 +279,13 @@ def predict():
         overall_score = round(sum(scores.values()) / 3, 2)
 
         # Try model-based predictions (if models exist)
-        model_esg, model_sdgs = predict_with_models(description)
+        try:
+            model_esg, model_sdgs = predict_with_models(description)
+        except Exception as model_error:
+            # Log model error but don't fail the request
+            print(f"Model prediction error (using keyword-based scores only): {str(model_error)}")
+            model_esg = None
+            model_sdgs = None
 
         # Prepare response
         response = {
@@ -278,9 +301,17 @@ def predict():
             }
         }
         
+        # Add note if model predictions are unavailable
+        if model_esg is None:
+            response["note"] = "Model-based predictions are currently unavailable. Showing keyword-based scores only."
+        
         return jsonify(response)
     
     except Exception as e:
+        # Log full error for debugging
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"Error in predict endpoint: {error_trace}")
         return jsonify({
             "error": "Internal server error",
             "message": str(e)
