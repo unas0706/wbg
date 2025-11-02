@@ -79,7 +79,10 @@ def try_load_models():
                 print(f"Loading SDG model from {sfile}")
                 try:
                     SDG_MODEL = joblib.load(sfile)
-                    print(f"SDG model loaded successfully")
+                    if SDG_MODEL is not None:
+                        print(f"SDG model loaded successfully, type: {type(SDG_MODEL)}")
+                    else:
+                        print(f"SDG model loaded but is None")
                 except Exception as sdg_load_error:
                     print(f"Error loading SDG model from {sfile}: {str(sdg_load_error)}")
                     import traceback
@@ -193,19 +196,37 @@ def predict_with_models(text):
         esg_dict = None
 
     sdg_dict = None
+    print(f"Checking SDG_MODEL: {SDG_MODEL is not None}")
     if SDG_MODEL is not None:
         try:
+            print(f"Attempting SDG prediction with model type: {type(SDG_MODEL)}")
             sdg_pred = SDG_MODEL.predict(vec)
+            print(f"SDG prediction raw result shape: {np.asarray(sdg_pred).shape if hasattr(np, 'asarray') else 'unknown'}")
             sdg_arr = np.asarray(sdg_pred).reshape(-1)
+            print(f"SDG prediction array shape after reshape: {sdg_arr.shape}, length: {len(sdg_arr)}")
             sdg_dict = {f'SDG{i+1}': float(round(v, 2)) for i, v in enumerate(sdg_arr)}
-            print(f"SDG predictions successful: {len(sdg_dict)} SDGs")
+            print(f"SDG predictions successful: {len(sdg_dict)} SDGs - {list(sdg_dict.keys())[:5]}...")
         except Exception as sdg_error:
             print(f"Error predicting SDG scores: {str(sdg_error)}")
             import traceback
             traceback.print_exc()
             sdg_dict = None
     else:
-        print("SDG_MODEL is None - model not loaded")
+        print("SDG_MODEL is None - attempting to reload models")
+        # Try one more time to load SDG model
+        try_load_models()
+        if SDG_MODEL is not None:
+            try:
+                print(f"SDG model now loaded, attempting prediction")
+                sdg_pred = SDG_MODEL.predict(vec)
+                sdg_arr = np.asarray(sdg_pred).reshape(-1)
+                sdg_dict = {f'SDG{i+1}': float(round(v, 2)) for i, v in enumerate(sdg_arr)}
+                print(f"SDG predictions successful after reload: {len(sdg_dict)} SDGs")
+            except Exception as sdg_error:
+                print(f"Error predicting SDG scores after reload: {str(sdg_error)}")
+                import traceback
+                traceback.print_exc()
+                sdg_dict = None
 
     return esg_dict, sdg_dict
 
