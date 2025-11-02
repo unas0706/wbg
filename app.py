@@ -95,26 +95,29 @@ def try_load_models():
                 ESG_MODEL = None
         
         # Load SDG model - separate try-except so it doesn't affect other models
-        if SDG_MODEL is None and os.path.exists(sfile):
+        # Always try to load SDG model if file exists, even if SDG_MODEL is already set
+        if os.path.exists(sfile) and SDG_MODEL is None:
             try:
-                print(f"Loading SDG model from {sfile}")
-                SDG_MODEL = joblib.load(sfile)
-                if SDG_MODEL is not None:
-                    print(f"SDG model loaded successfully, type: {type(SDG_MODEL)}")
+                print(f"🔄 Loading SDG model from {sfile}")
+                loaded_sdg = joblib.load(sfile)
+                if loaded_sdg is not None:
+                    SDG_MODEL = loaded_sdg
+                    print(f"✅ SDG model loaded successfully, type: {type(SDG_MODEL)}")
                     # Verify it's a valid model with predict method
                     if hasattr(SDG_MODEL, 'predict'):
-                        print(f"SDG model has predict method - ready to use")
+                        print(f"✅ SDG model has predict method - ready to use")
                     else:
-                        print(f"WARNING: SDG model doesn't have predict method!")
+                        print(f"⚠️ WARNING: SDG model doesn't have predict method!")
+                        SDG_MODEL = None
                 else:
-                    print(f"SDG model loaded but is None")
+                    print(f"❌ SDG model loaded but is None")
             except Exception as sdg_load_error:
-                print(f"ERROR loading SDG model from {sfile}: {str(sdg_load_error)}")
+                print(f"❌ ERROR loading SDG model from {sfile}: {str(sdg_load_error)}")
                 import traceback
                 traceback.print_exc()
-                SDG_MODEL = None
-        elif SDG_MODEL is None:
-            print(f"SDG model file not found at {sfile}")
+                # Don't set to None here - keep previous value if any
+        elif not os.path.exists(sfile) and SDG_MODEL is None:
+            print(f"⚠️ SDG model file not found at {sfile}")
 
 # Do not eagerly load heavy models at import time; load lazily on first predict call
 
