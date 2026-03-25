@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>MIGA E&S Portal 2.0 — Documentation</title>
+<style>
+:root{
+  --navy:#1B3A5C;--blue:#2E75B6;--blue-light:#5B9BD5;--blue-ultra:#E8F3FC;
+  --orange:#C55A11;--green:#375623;--green-light:#E2EFDA;
+  --grey-50:#F7F8FA;--grey-100:#EEF0F3;--grey-200:#D9DDE3;--grey-400:#9AA3AF;--grey-700:#4A5568;--grey-900:#1A202C;
+  --white:#fff;--code-bg:#0D1117;--code-text:#E6EDF3;
+  --sidebar-w:280px;--topbar-h:60px;
+  --font-sans:'Segoe UI',system-ui,sans-serif;--font-mono:'Cascadia Code','Fira Code','Consolas',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);background:var(--grey-50);color:var(--grey-900);line-height:1.65}
+
+/* ── TOPBAR ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar-h);background:var(--navy);display:flex;align-items:center;padding:0 20px;z-index:200;gap:16px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+#topbar .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+#topbar .logo-badge{background:var(--blue);color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.5px}
+#topbar .logo-name{color:#fff;font-size:16px;font-weight:600}
+#topbar .logo-sub{color:rgba(255,255,255,.55);font-size:12px;margin-left:2px}
+#topbar .top-search{margin-left:auto;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:0 12px;height:34px;min-width:240px}
+#topbar .top-search input{background:none;border:none;outline:none;color:#fff;font-size:13px;flex:1}
+#topbar .top-search input::placeholder{color:rgba(255,255,255,.45)}
+#topbar .top-right{display:flex;align-items:center;gap:8px;margin-left:12px}
+.top-badge{background:rgba(255,255,255,.15);color:rgba(255,255,255,.85);font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.2);cursor:pointer;transition:.2s}
+.top-badge:hover{background:rgba(255,255,255,.25)}
+.top-badge.active{background:var(--blue);border-color:var(--blue);color:#fff}
+#menu-toggle{display:none;background:none;border:none;cursor:pointer;padding:4px;color:rgba(255,255,255,.8)}
+
+/* ── SIDEBAR ── */
+#sidebar{position:fixed;top:var(--topbar-h);left:0;width:var(--sidebar-w);height:calc(100vh - var(--topbar-h));background:var(--white);border-right:1px solid var(--grey-200);overflow-y:auto;z-index:100;transition:.3s}
+.sidebar-section{padding:20px 0 8px 20px;font-size:10px;font-weight:700;letter-spacing:1px;color:var(--grey-400);text-transform:uppercase}
+.sidebar-section:first-child{padding-top:16px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 20px;cursor:pointer;font-size:13.5px;color:var(--grey-700);transition:.15s;border-left:3px solid transparent;text-decoration:none}
+.nav-item:hover{background:var(--blue-ultra);color:var(--blue)}
+.nav-item.active{background:var(--blue-ultra);color:var(--blue);border-left:3px solid var(--blue);font-weight:600}
+.nav-item .nav-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+.nav-sub{padding-left:42px}
+.nav-sub .nav-item{font-size:12.5px;padding:5px 12px 5px 0;border-left:none}
+.nav-sub .nav-item.active{background:none;color:var(--blue);font-weight:600}
+.nav-sub .nav-item.active::before{content:'›';margin-right:4px}
+.version-badge{display:inline-block;background:var(--green-light);color:var(--green);font-size:10px;font-weight:600;padding:1px 6px;border-radius:10px;margin-left:6px}
+
+/* ── MAIN ── */
+#main{margin-left:var(--sidebar-w);margin-top:var(--topbar-h);min-height:calc(100vh - var(--topbar-h));padding:0}
+.page{display:none;padding:40px 48px 80px;max-width:1100px}
+.page.active{display:block}
+
+/* ── HOME PAGE ── */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,#2B5080 60%,#2E75B6 100%);border-radius:12px;padding:52px 48px;color:#fff;margin-bottom:40px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-60px;top:-60px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.04)}
+.hero h1{font-size:32px;font-weight:700;margin-bottom:10px;line-height:1.2}
+.hero p{font-size:15px;color:rgba(255,255,255,.75);max-width:560px;margin-bottom:24px}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.9);font-size:12px;padding:5px 12px;border-radius:20px}
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:40px}
+.quick-card{background:var(--white);border:1px solid var(--grey-200);border-radius:10px;padding:20px;cursor:pointer;transition:.2s;text-decoration:none;display:block}
+.quick-card:hover{border-color:var(--blue);box-shadow:0 4px 16px rgba(46,117,182,.12);transform:translateY(-1px)}
+.qc-icon{font-size:24px;margin-bottom:10px}
+.qc-title{font-size:14px;font-weight:600;color:var(--grey-900);margin-bottom:4px}
+.qc-desc{font-size:12px;color:var(--grey-400);line-height:1.5}
+.qc-tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;margin-top:8px;font-weight:600}
+.tag-func{background:#FFF3E0;color:#E65100}
+.tag-tech{background:#E3F2FD;color:#1565C0}
+.tag-api{background:#E8F5E9;color:#2E7D32}
+.tag-video{background:#FCE4EC;color:#C62828}
+
+/* ── SECTION HEADINGS ── */
+.page-header{margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--grey-200)}
+.page-header h1{font-size:26px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.page-header p{font-size:14px;color:var(--grey-400);line-height:1.6}
+.breadcrumb{font-size:12px;color:var(--grey-400);margin-bottom:12px;display:flex;align-items:center;gap:4px}
+.breadcrumb span{color:var(--blue)}
+h2.sec{font-size:18px;font-weight:600;color:var(--navy);margin:36px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--blue-ultra)}
+h3.sub{font-size:15px;font-weight:600;color:var(--grey-900);margin:24px 0 10px}
+h4.subsub{font-size:13px;font-weight:600;color:var(--orange);margin:16px 0 8px}
+p.desc{font-size:14px;color:var(--grey-700);line-height:1.75;margin-bottom:12px}
+
+/* ── INFO BOXES ── */
+.info-box{border-left:4px solid var(--blue);background:var(--blue-ultra);border-radius:0 8px 8px 0;padding:12px 16px;margin:16px 0}
+.info-box p{font-size:13px;color:var(--navy);margin:0;line-height:1.6}
+.info-box strong{color:var(--blue)}
+.warn-box{border-left:4px solid var(--orange);background:#FFF3EE;border-radius:0 8px 8px 0;padding:12px 16px;margin:16px 0}
+.warn-box p{font-size:13px;color:#7C3000;margin:0;line-height:1.6}
+.tip-box{border-left:4px solid var(--green);background:var(--green-light);border-radius:0 8px 8px 0;padding:12px 16px;margin:16px 0}
+.tip-box p{font-size:13px;color:var(--green);margin:0;line-height:1.6}
+
+/* ── TABLES ── */
+.doc-table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0 24px}
+.doc-table th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-weight:600;font-size:12px}
+.doc-table td{padding:9px 14px;border-bottom:1px solid var(--grey-100);color:var(--grey-700);vertical-align:top}
+.doc-table tr:hover td{background:var(--grey-50)}
+.doc-table tr:last-child td{border-bottom:none}
+.doc-table code{background:var(--grey-100);padding:1px 5px;border-radius:3px;font-family:var(--font-mono);font-size:11px;color:var(--orange)}
+.method-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;font-family:var(--font-mono)}
+.m-get{background:#DFF7ED;color:#0D6640}
+.m-post{background:#FFF0C2;color:#7C5000}
+.m-delete{background:#FDDDE6;color:#A0002A}
+
+/* ── CODE BLOCKS ── */
+.code-wrap{background:var(--code-bg);border-radius:10px;overflow:hidden;margin:16px 0 24px;border:1px solid #30363D}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:#161B22;border-bottom:1px solid #30363D}
+.code-lang{font-size:11px;font-weight:600;color:#7D8590;font-family:var(--font-mono)}
+.code-copy{background:none;border:1px solid #30363D;color:#7D8590;font-size:11px;padding:3px 10px;border-radius:4px;cursor:pointer;font-family:var(--font-mono);transition:.15s}
+.code-copy:hover{background:#21262D;color:#E6EDF3}
+.code-copy.copied{color:#3FB950;border-color:#3FB950}
+pre.code-block{padding:20px;overflow-x:auto;font-family:var(--font-mono);font-size:12.5px;line-height:1.7;color:var(--code-text)}
+.kw{color:#FF7B72}.cl{color:#79C0FF}.fn{color:#D2A8FF}.st{color:#A5D6FF}.cm{color:#8B949E;font-style:italic}
+.nu{color:#79C0FF}.ky{color:#FF7B72}.pr{color:#E3B341}.typ{color:#F0883E}
+
+/* ── STEPS ── */
+.steps{display:flex;flex-direction:column;gap:0;margin:20px 0}
+.step{display:flex;gap:16px;padding-bottom:24px;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;left:17px;top:36px;bottom:0;width:2px;background:var(--grey-200)}
+.step-num{width:36px;height:36px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;position:relative;z-index:1}
+.step-content h4{font-size:14px;font-weight:600;color:var(--grey-900);margin-bottom:4px}
+.step-content p{font-size:13px;color:var(--grey-700);line-height:1.6}
+
+/* ── CARDS ── */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:16px 0 28px}
+.doc-card{background:var(--white);border:1px solid var(--grey-200);border-radius:10px;padding:20px;transition:.2s}
+.doc-card:hover{border-color:var(--blue-light);box-shadow:0 2px 12px rgba(46,117,182,.1)}
+.doc-card h4{font-size:14px;font-weight:600;color:var(--grey-900);margin-bottom:6px}
+.doc-card p{font-size:12px;color:var(--grey-400);line-height:1.6}
+.card-accent{border-top:3px solid var(--blue)}
+.card-accent-orange{border-top:3px solid var(--orange)}
+.card-accent-green{border-top:3px solid var(--green)}
+
+/* ── ARCH DIAGRAM ── */
+.arch-diagram{background:var(--grey-50);border:1px solid var(--grey-200);border-radius:12px;padding:32px;margin:20px 0}
+.arch-layer{display:flex;gap:10px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
+.arch-box{background:var(--white);border:1.5px solid var(--grey-200);border-radius:8px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--grey-900);text-align:center;min-width:120px;position:relative}
+.arch-box.blue{background:var(--blue-ultra);border-color:var(--blue-light);color:var(--blue)}
+.arch-box.navy{background:var(--navy);color:#fff;border-color:var(--navy)}
+.arch-box.orange{background:#FFF3EE;border-color:#FDBA8C;color:var(--orange)}
+.arch-box.green{background:var(--green-light);border-color:#B8D98D;color:var(--green)}
+.arch-arrow{text-align:center;font-size:18px;color:var(--grey-400);margin-bottom:6px;line-height:1}
+.arch-label{text-align:center;font-size:10px;color:var(--grey-400);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px}
+
+/* ── VIDEO CARDS ── */
+.video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:16px 0}
+.video-card{background:var(--white);border:1px solid var(--grey-200);border-radius:10px;overflow:hidden;cursor:pointer;transition:.2s}
+.video-card:hover{border-color:var(--blue);box-shadow:0 4px 16px rgba(46,117,182,.12);transform:translateY(-2px)}
+.video-thumb{width:100%;height:160px;background:var(--grey-100);position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.video-thumb.t1{background:linear-gradient(135deg,#1B3A5C,#2E75B6)}
+.video-thumb.t2{background:linear-gradient(135deg,#375623,#5A8F3C)}
+.video-thumb.t3{background:linear-gradient(135deg,#7C3000,#C55A11)}
+.video-thumb.t4{background:linear-gradient(135deg,#3C1A5F,#7B3FB8)}
+.video-thumb.t5{background:linear-gradient(135deg,#0A3D5C,#1976B0)}
+.video-thumb.t6{background:linear-gradient(135deg,#2C2C2C,#555)}
+.play-btn{width:52px;height:52px;background:rgba(255,255,255,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.video-duration{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.75);color:#fff;font-size:10px;padding:2px 6px;border-radius:3px;font-family:var(--font-mono)}
+.video-info{padding:14px 16px}
+.video-info h4{font-size:13.5px;font-weight:600;color:var(--grey-900);margin-bottom:4px;line-height:1.4}
+.video-info .vmeta{font-size:11px;color:var(--grey-400);display:flex;gap:8px}
+.video-info .vtag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;margin-top:6px;font-weight:600;background:var(--blue-ultra);color:var(--blue)}
+
+/* ── FEATURE FLAGS ── */
+.feature-list{display:flex;flex-direction:column;gap:6px;margin:12px 0}
+.feature-item{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--grey-700);line-height:1.5}
+.feature-item::before{content:'✓';font-size:13px;font-weight:700;color:var(--green);flex-shrink:0;margin-top:1px}
+
+/* ── ENDPOINT CARDS ── */
+.endpoint{background:var(--white);border:1px solid var(--grey-200);border-radius:8px;margin-bottom:12px;overflow:hidden}
+.endpoint-header{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;transition:.15s;user-select:none}
+.endpoint-header:hover{background:var(--grey-50)}
+.endpoint-path{font-family:var(--font-mono);font-size:12.5px;color:var(--grey-900);font-weight:600}
+.endpoint-desc{font-size:12px;color:var(--grey-400);margin-left:auto}
+.endpoint-body{padding:16px;border-top:1px solid var(--grey-100);display:none}
+.endpoint-body.open{display:block}
+.param-table{width:100%;font-size:12px;border-collapse:collapse}
+.param-table th{background:var(--grey-50);padding:7px 10px;text-align:left;font-weight:600;color:var(--grey-700);font-size:11px}
+.param-table td{padding:7px 10px;border-bottom:1px solid var(--grey-100);vertical-align:top}
+.param-table td code{font-family:var(--font-mono);font-size:11px;background:var(--grey-100);padding:1px 5px;border-radius:3px;color:var(--orange)}
+.param-required{color:#C62828;font-size:10px;font-weight:600;background:#FFEBEE;padding:1px 5px;border-radius:3px}
+.param-optional{color:var(--grey-400);font-size:10px}
+
+/* ── TABS ── */
+.tab-bar{display:flex;gap:0;border-bottom:2px solid var(--grey-200);margin-bottom:24px}
+.tab-btn{padding:10px 20px;font-size:13px;font-weight:500;color:var(--grey-400);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:.15s}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* ── SEARCH RESULTS ── */
+#search-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:flex-start;justify-content:center;padding-top:80px}
+#search-overlay.open{display:flex}
+#search-box{background:var(--white);border-radius:12px;width:560px;max-width:90vw;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+#search-box input{width:100%;padding:16px 20px;font-size:15px;border:none;outline:none;border-bottom:1px solid var(--grey-200)}
+#search-results{max-height:360px;overflow-y:auto}
+.sr-item{display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;border-bottom:1px solid var(--grey-100);transition:.15s}
+.sr-item:hover{background:var(--blue-ultra)}
+.sr-icon{font-size:16px;width:28px;text-align:center}
+.sr-title{font-size:13.5px;font-weight:600;color:var(--grey-900)}
+.sr-path{font-size:11px;color:var(--grey-400)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0}
+  .page{padding:24px 20px 60px}
+  #menu-toggle{display:block}
+  .hero{padding:32px 24px}
+  .hero h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── TOPBAR ── -->
+<div id="topbar">
+  <button id="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <a class="logo" href="#" onclick="showPage('home')">
+    <span class="logo-badge">MIGA</span>
+    <span class="logo-name">E&S Portal 2.0 <span class="logo-sub">Docs</span></span>
+  </a>
+  <div class="top-search">
+    <svg width="14" height="14" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input placeholder="Search documentation…" id="top-search-input" onclick="openSearch()" readonly/>
+  </div>
+  <div class="top-right">
+    <span class="top-badge active">v2.0</span>
+    <span class="top-badge">DEV</span>
+    <span class="top-badge" onclick="alert('GitHub integration — connect your repo')">GitHub</span>
+  </div>
+</div>
+
+<!-- ── SIDEBAR ── -->
+<nav id="sidebar">
+  <div class="sidebar-section">Getting Started</div>
+  <a class="nav-item active" onclick="showPage('home')" id="nav-home">
+    <span class="nav-icon">🏠</span> Home
+  </a>
+  <a class="nav-item" onclick="showPage('overview')" id="nav-overview">
+    <span class="nav-icon">📋</span> System Overview
+  </a>
+  <a class="nav-item" onclick="showPage('quickstart')" id="nav-quickstart">
+    <span class="nav-icon">⚡</span> Quick Start Guide
+  </a>
+
+  <div class="sidebar-section">Functional Docs</div>
+  <a class="nav-item" onclick="showPage('functional')" id="nav-functional">
+    <span class="nav-icon">📖</span> Functional Documentation
+  </a>
+  <div class="nav-sub">
+    <a class="nav-item" onclick="showPage('functional');scrollTo('sec-dashboard')">Dashboard Module</a>
+    <a class="nav-item" onclick="showPage('functional');scrollTo('sec-pipeline')">Projects in Pipeline</a>
+    <a class="nav-item" onclick="showPage('functional');scrollTo('sec-portfolio')">Projects in Portfolio</a>
+    <a class="nav-item" onclick="showPage('functional');scrollTo('sec-shelved')">Shelved Projects</a>
+    <a class="nav-item" onclick="showPage('functional');scrollTo('sec-reports')">Reports Module</a>
+  </div>
+
+  <div class="sidebar-section">Technical Docs</div>
+  <a class="nav-item" onclick="showPage('architecture')" id="nav-architecture">
+    <span class="nav-icon">🏗️</span> System Architecture
+  </a>
+  <a class="nav-item" onclick="showPage('techstack')" id="nav-techstack">
+    <span class="nav-icon">⚙️</span> Tech Stack
+  </a>
+  <a class="nav-item" onclick="showPage('coderef')" id="nav-coderef">
+    <span class="nav-icon">💻</span> Code Reference
+  </a>
+  <a class="nav-item" onclick="showPage('database')" id="nav-database">
+    <span class="nav-icon">🗄️</span> Database Schema
+  </a>
+
+  <div class="sidebar-section">API Reference</div>
+  <a class="nav-item" onclick="showPage('api')" id="nav-api">
+    <span class="nav-icon">🔌</span> REST API Overview
+  </a>
+  <div class="nav-sub">
+    <a class="nav-item" onclick="showPage('api');scrollTo('api-projects')">Projects API</a>
+    <a class="nav-item" onclick="showPage('api');scrollTo('api-monitoring')">Monitoring API</a>
+    <a class="nav-item" onclick="showPage('api');scrollTo('api-esap')">ESAP API</a>
+    <a class="nav-item" onclick="showPage('api');scrollTo('api-dd')">Due Diligence API</a>
+    <a class="nav-item" onclick="showPage('api');scrollTo('api-dashboard')">Dashboard API</a>
+  </div>
+
+  <div class="sidebar-section">KT Resources</div>
+  <a class="nav-item" onclick="showPage('videos')" id="nav-videos">
+    <span class="nav-icon">🎬</span> KT Videos <span class="version-badge">6</span>
+  </a>
+  <a class="nav-item" onclick="showPage('glossary')" id="nav-glossary">
+    <span class="nav-icon">📚</span> Glossary
+  </a>
+
+  <div style="padding:20px;margin-top:8px;border-top:1px solid var(--grey-200)">
+    <p style="font-size:11px;color:var(--grey-400);line-height:1.6">Maintained by<br><strong style="color:var(--grey-700)">MIGA E&S Tech Team</strong><br>World Bank Group · 2026</p>
+  </div>
+</nav>
+
+<!-- ── MAIN CONTENT ── -->
+<main id="main">
+
+<!-- ════════════════════════════════════ HOME ══ -->
+<div class="page active" id="page-home">
+  <div style="padding:40px 48px 80px;max-width:1100px">
+    <div class="hero">
+      <h1>MIGA E&S Portal 2.0<br>Documentation Hub</h1>
+      <p>Your complete reference for functional usage, technical architecture, API integration, code examples, and KT video resources — all in one place.</p>
+      <div class="hero-badges">
+        <span class="hero-badge">📋 Functional Docs</span>
+        <span class="hero-badge">🏗️ Technical Docs</span>
+        <span class="hero-badge">🔌 REST API Reference</span>
+        <span class="hero-badge">🎬 KT Videos</span>
+        <span class="hero-badge">💻 Code Examples</span>
+      </div>
+    </div>
+
+    <div class="quick-grid">
+      <a class="quick-card" onclick="showPage('quickstart')">
+        <div class="qc-icon">⚡</div>
+        <div class="qc-title">Quick Start Guide</div>
+        <div class="qc-desc">Get up and running with the portal in under 5 minutes — login, navigation, and your first project.</div>
+        <span class="qc-tag tag-func">Beginner</span>
+      </a>
+      <a class="quick-card" onclick="showPage('functional')">
+        <div class="qc-icon">📖</div>
+        <div class="qc-title">Functional Documentation</div>
+        <div class="qc-desc">Complete module-by-module guide: Dashboard, Pipeline, Portfolio, ESAP, Monitoring, Reports.</div>
+        <span class="qc-tag tag-func">Functional</span>
+      </a>
+      <a class="quick-card" onclick="showPage('architecture')">
+        <div class="qc-icon">🏗️</div>
+        <div class="qc-title">System Architecture</div>
+        <div class="qc-desc">CQRS/MediatR design patterns, layer diagram, data flow, and component relationships.</div>
+        <span class="qc-tag tag-tech">Technical</span>
+      </a>
+      <a class="quick-card" onclick="showPage('techstack')">
+        <div class="qc-icon">⚙️</div>
+        <div class="qc-title">Tech Stack</div>
+        <div class="qc-desc">React.js, ASP.NET Core, MediatR, SQL Server — setup, configuration, and deployment guide.</div>
+        <span class="qc-tag tag-tech">Technical</span>
+      </a>
+      <a class="quick-card" onclick="showPage('api')">
+        <div class="qc-icon">🔌</div>
+        <div class="qc-title">REST API Reference</div>
+        <div class="qc-desc">All 40+ endpoints documented with request/response schemas, parameters, and code samples.</div>
+        <span class="qc-tag tag-api">API</span>
+      </a>
+      <a class="quick-card" onclick="showPage('coderef')">
+        <div class="qc-icon">💻</div>
+        <div class="qc-title">Code Reference</div>
+        <div class="qc-desc">Handler patterns, service layer examples, repository queries, and frontend component snippets.</div>
+        <span class="qc-tag tag-tech">Technical</span>
+      </a>
+      <a class="quick-card" onclick="showPage('database')">
+        <div class="qc-icon">🗄️</div>
+        <div class="qc-title">Database Schema</div>
+        <div class="qc-desc">Core tables, relationships, key fields, and query patterns for the ESRD database.</div>
+        <span class="qc-tag tag-tech">Technical</span>
+      </a>
+      <a class="quick-card" onclick="showPage('videos')">
+        <div class="qc-icon">🎬</div>
+        <div class="qc-title">KT Videos</div>
+        <div class="qc-desc">6 knowledge transfer sessions covering every module — link directly from your portal.</div>
+        <span class="qc-tag tag-video">Videos</span>
+      </a>
+    </div>
+
+    <h2 class="sec" style="margin-top:0">What is MIGA E&S Portal 2.0?</h2>
+    <p class="desc">The MIGA E&S Portal 2.0 is an enterprise web application for the <strong>Multilateral Investment Guarantee Agency (MIGA)</strong>, a member of the World Bank Group. It manages the complete lifecycle of MIGA-guaranteed investment projects — from initial pipeline evaluation through active portfolio monitoring, reporting, and eventual closure.</p>
+    <p class="desc">The portal digitalizes Environmental & Social (E&S) due diligence against <strong>IFC Performance Standards PS1–PS8</strong>, tracks Environmental & Social Action Plans (ESAPs), monitors Annual Monitoring Reports (AMRs), and provides real-time analytics dashboards for 243+ active portfolio projects and 130+ pipeline projects.</p>
+
+    <div class="card-grid">
+      <div class="doc-card card-accent">
+        <h4>243 Portfolio Projects</h4>
+        <p>Active MIGA-guaranteed investments under ongoing E&S monitoring across 60+ countries.</p>
+      </div>
+      <div class="doc-card card-accent">
+        <h4>130 Pipeline Projects</h4>
+        <p>Projects under E&S due diligence — 75 active, 51 slow-moving, 4 leads.</p>
+      </div>
+      <div class="doc-card card-accent-orange">
+        <h4>40+ REST Endpoints</h4>
+        <p>Full REST API across 6 groups: Projects, Monitoring, ESAP, DueDiligence, Dashboard, EsInsights.</p>
+      </div>
+      <div class="doc-card card-accent-green">
+        <h4>IFC PS1–PS8</h4>
+        <p>Full compliance assessment against all 8 IFC Performance Standards with automated ESRR scoring.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ QUICK START ══ -->
+<div class="page" id="page-quickstart">
+  <div style="padding:40px 48px 80px;max-width:1000px">
+    <div class="breadcrumb">Getting Started <span>›</span> Quick Start Guide</div>
+    <div class="page-header">
+      <h1>Quick Start Guide</h1>
+      <p>Get up and running with MIGA E&S Portal 2.0 in minutes. Follow these steps to log in, navigate, and complete your first workflow.</p>
+    </div>
+
+    <h2 class="sec">Step-by-step: First Login to First Task</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Access the Portal</h4>
+          <p>Navigate to <strong>migaportalclouddev.worldbank.org/espipeline</strong> in your browser (Chrome or Edge recommended). Use your World Bank credentials to log in via SSO.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Review the E&S Dashboard</h4>
+          <p>The dashboard loads automatically after login. Review your <strong>Unassigned Projects</strong> count, AMR Outstanding count, and the MSV summary for your portfolio. Use the "Filter By" dropdown to scope to your own projects.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Navigate to Your Projects</h4>
+          <p>Click <strong>Projects in Pipeline → My Projects</strong> to see your assigned pipeline projects. Or <strong>Projects in Portfolio → My Projects</strong> for active guaranteed projects. Use the Search bar to find a specific project by name or ID.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Open a Project &amp; Complete Due Diligence (Pipeline)</h4>
+          <p>Click any Project ID to open the detail view. Navigate to the <strong>Due Diligence tab</strong>. Set PS1–PS8 applicability (Yes/No). Score Management Factors, Performance Factors, and Communication Factors (1–3). Click <strong>Assess ESRR</strong> to generate the risk rating.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>Create ESAP Actions (if required)</h4>
+          <p>Navigate to the <strong>ESAP tab</strong>. Toggle "Is ESAP Required?" to Yes. Click <strong>Add</strong> to create action items with due dates and deliverables. Save the ESAP for review.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h4>Add a Monitoring Activity (Portfolio)</h4>
+          <p>For portfolio projects, go to the <strong>Monitoring tab</strong>. Click <strong>Add New Monitoring Activity</strong>. Set the Fiscal Year, check AMR Review, enter the Reporting Period dates, and save. The dashboard AMR counters update automatically.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <h4>Generate a Report</h4>
+          <p>Click <strong>Reports</strong> in the top navigation. Select a report type (e.g., AMR Submission Report or ESAP Status Report). Apply filters and click Export to download as Excel.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">Role-based access at a glance</h2>
+    <table class="doc-table">
+      <thead><tr><th>Role</th><th>What you can do</th><th>Restrictions</th></tr></thead>
+      <tbody>
+        <tr><td><strong>E&S Specialist</strong></td><td>Edit own projects, conduct due diligence, create ESAP, upload docs, save monitoring</td><td>Cannot view other specialists' projects in "My Projects"; cannot override ESRR</td></tr>
+        <tr><td><strong>Manager</strong></td><td>View all projects (All Members), override ESRR ratings, approve High Risk, access full analytics</td><td>Cannot configure system settings</td></tr>
+        <tr><td><strong>Administrator</strong></td><td>Full access — user management, system config, bulk export, all modules</td><td>—</td></tr>
+        <tr><td><strong>Read-Only</strong></td><td>View all project details, monitoring history, reports, documents</td><td>No create, edit, or delete operations</td></tr>
+      </tbody>
+    </table>
+
+    <div class="info-box"><p><strong>Need help?</strong> Check the KT Videos section for recorded walkthroughs of every module, or search this documentation using the search bar above.</p></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ FUNCTIONAL DOCS ══ -->
+<div class="page" id="page-functional">
+  <div style="padding:40px 48px 80px;max-width:1000px">
+    <div class="breadcrumb">Functional Docs <span>›</span> Module Reference</div>
+    <div class="page-header">
+      <h1>Functional Documentation</h1>
+      <p>Complete module-by-module guide covering every screen, tab, field, and workflow in the MIGA E&S Portal 2.0.</p>
+    </div>
+
+    <!-- DASHBOARD -->
+    <h2 class="sec" id="sec-dashboard">Dashboard Module</h2>
+    <p class="desc">The E&S Dashboard is the entry point after login. It provides a real-time consolidated view of all project analytics, compliance metrics, and monitoring status across the entire MIGA portfolio and pipeline.</p>
+    <h3 class="sub">Navigation Buttons</h3>
+    <table class="doc-table">
+      <thead><tr><th>Button</th><th>Function</th></tr></thead>
+      <tbody>
+        <tr><td><strong>ES Insights Dashboard</strong></td><td>Opens graphical pipeline/portfolio analytics — sector distribution, management group charts, ESRR donut charts</td></tr>
+        <tr><td><strong>GBV Dashboard</strong></td><td>Gender-Based Violence risk assessment summary across all projects</td></tr>
+        <tr><td><strong>Unassigned Projects (n)</strong></td><td>Count badge + quick link to projects with no assigned E&S Specialist</td></tr>
+        <tr><td><strong>Filter</strong></td><td>Filter all dashboard data by member, region, sector, or fiscal year</td></tr>
+        <tr><td><strong>Export</strong></td><td>Download current dashboard data as Excel/CSV</td></tr>
+      </tbody>
+    </table>
+    <h3 class="sub">Business Stage Summary (Graphical View)</h3>
+    <p class="desc">Displays three summary circles: <strong>Projects in Pipeline</strong> (130 total / 75 Active / 51 Slow / 4 Lead), <strong>Projects in Portfolio</strong> (243 total / 6% Knowledge Gap / 14% Projected / 18 Upcoming Expiry), and <strong>Unassigned Projects</strong> (94). Below these, two bar/donut charts show Project Distribution by Management Group (MAS, EEI, FINCAP, INF, TROF) and by Sector (Financial 83, Infrastructure 156, etc.).</p>
+    <h3 class="sub">ESRR Score Distributions</h3>
+    <p class="desc"><strong>ESRR(D) for Pipeline (75 projects):</strong> No Rating 63, Partly Unsatisfactory 11, Unsatisfactory 1. <strong>ESRR(M) for Portfolio (243 projects):</strong> Satisfactory 178, Partly Unsatisfactory 33, Excellent 2, Unsatisfactory 4, No Rating 6, NA 20.</p>
+    <h3 class="sub">AMR Summary Table</h3>
+    <table class="doc-table">
+      <thead><tr><th>Metric</th><th>FY Count</th><th>CY Count</th></tr></thead>
+      <tbody>
+        <tr><td>Projects in Portfolio</td><td>243</td><td>—</td></tr>
+        <tr><td>Projects in Portfolio with AMR</td><td>213</td><td>—</td></tr>
+        <tr><td>AMR received to date</td><td>FY26 (R): 20</td><td>CY26 (R): 1</td></tr>
+        <tr><td>Outstanding AMRs</td><td>7</td><td>7</td></tr>
+        <tr><td>Projects without AMR due date</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+
+    <!-- PIPELINE -->
+    <h2 class="sec" id="sec-pipeline">Projects in Pipeline</h2>
+    <p class="desc">Projects in Pipeline are investment applications that have <strong>not yet received a MIGA guarantee</strong>. They are under Environmental &amp; Social Due Diligence (ESDD) evaluation by an assigned E&S Specialist.</p>
+    <h3 class="sub">Sub-Tabs</h3>
+    <div class="feature-list">
+      <div class="feature-item"><strong>My Projects</strong> — Only projects assigned to the logged-in specialist</div>
+      <div class="feature-item"><strong>All Projects (91+)</strong> — All active pipeline projects; used by managers for workload oversight</div>
+      <div class="feature-item"><strong>Unassigned Projects (16)</strong> — Projects with no E&S Specialist; managers assign from this view</div>
+      <div class="feature-item"><strong>Master Contract Projects (1)</strong> — High-priority, fast-track projects (e.g., Raxio Data Centre, Uganda)</div>
+    </div>
+    <h3 class="sub">Project Detail Tabs (Pipeline Stage)</h3>
+    <table class="doc-table">
+      <thead><tr><th>Tab</th><th>Purpose</th><th>Key Actions</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Project Info</strong></td><td>General metadata: ID, region, sector, GBV score, contract dates</td><td>View only (Edit button for authorized users)</td></tr>
+        <tr><td><strong>Due Diligence</strong></td><td>PS1–PS8 assessment, ESRR scoring questionnaire, risk rating generation</td><td>Score factors, Assess ESRR, Override rating</td></tr>
+        <tr><td><strong>ESAP</strong></td><td>Action plan for contractor compliance — actions, dates, deliverables</td><td>Add/Edit/Delete actions, Upload template, Download plan</td></tr>
+        <tr><td><strong>Documents</strong></td><td>Upload and manage project documents (ESIAs, audit logs, templates)</td><td>Add ESAP Document, Delete</td></tr>
+        <tr><td><strong>Nature Finance</strong></td><td>Environmental finance impact assessment and justification</td><td>Edit fields via edit icon</td></tr>
+        <tr><td><strong>GBV Risk Assessment</strong></td><td>Gender-Based Violence risk questionnaire → GBV Risk Rating</td><td>Complete questionnaire, Finalize rating</td></tr>
+        <tr><td><strong>Audit Summary</strong></td><td>Read-only change log of all edits with user + timestamp</td><td>View only</td></tr>
+      </tbody>
+    </table>
+    <h3 class="sub">Due Diligence Scoring</h3>
+    <p class="desc">The ESRR(D) is calculated from three factor groups, each scored 1–3 (1=Poor, 2=Average, 3=Good):</p>
+    <table class="doc-table">
+      <thead><tr><th>Factor Group</th><th>Questions</th><th>Areas</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Management Factors</strong></td><td>3</td><td>E&S Staffing, E&S Management System, Management Commitment</td></tr>
+        <tr><td><strong>Performance Factors</strong></td><td>5</td><td>Incidents/Compliance, PS/Safeguards Gaps, ESDD Quality, E&S Improvements, Host Country Compliance</td></tr>
+        <tr><td><strong>Communication Factors</strong></td><td>2</td><td>Quality of E&S Information, Stakeholder Communication</td></tr>
+      </tbody>
+    </table>
+
+    <!-- PORTFOLIO -->
+    <h2 class="sec" id="sec-portfolio">Projects in Portfolio</h2>
+    <p class="desc">Portfolio projects have received their MIGA guarantee and are actively operational. They require <strong>ongoing E&S monitoring</strong> throughout the guarantee life: annual AMR reviews, periodic site visits, virtual monitoring, and ESAP follow-up.</p>
+    <h3 class="sub">Monitoring Activity Fields</h3>
+    <table class="doc-table">
+      <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>AMR Review</code></td><td>Checkbox + Date range</td><td>Annual Monitoring Report review with reporting period From/To dates</td></tr>
+        <tr><td><code>AMR Carried Out By</code></td><td>Dropdown</td><td>Organization who conducted the review (e.g., MIGA, Third Party)</td></tr>
+        <tr><td><code>AMR Due / Received Date</code></td><td>DateTime</td><td>Scheduled and actual receipt dates for the AMR</td></tr>
+        <tr><td><code>Site Visit</code></td><td>Checkbox + Date range</td><td>Physical site visit with MSV Carried Out By field</td></tr>
+        <tr><td><code>Virtual Monitoring</code></td><td>Checkbox + Date range</td><td>Remote monitoring with rationale and responsible party</td></tr>
+        <tr><td><code>Client Meeting</code></td><td>Checkbox + Date</td><td>Date of client meeting held</td></tr>
+        <tr><td><code>Additional Description</code></td><td>Free text</td><td>Narrative notes (e.g., "AMRs for Jan-Dec 2022 and Jan-Dec 2023")</td></tr>
+      </tbody>
+    </table>
+
+    <!-- SHELVED -->
+    <h2 class="sec" id="sec-shelved">Shelved Projects</h2>
+    <p class="desc">Projects terminated or excluded from MIGA's guarantee program. <strong>181 records</strong> maintained for audit and compliance purposes.</p>
+    <table class="doc-table">
+      <thead><tr><th>Status</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><strong>DECLINED</strong></td><td>MIGA decided not to issue the guarantee</td></tr>
+        <tr><td><strong>WITHDRAWN</strong></td><td>Investor or guarantee holder withdrew the application</td></tr>
+        <tr><td><strong>PROJECT NOT GOING FORWARD</strong></td><td>Investment project was cancelled or abandoned</td></tr>
+        <tr><td><strong>DESELECTED BY MIGA</strong></td><td>MIGA proactively removed the project from consideration</td></tr>
+      </tbody>
+    </table>
+
+    <!-- REPORTS -->
+    <h2 class="sec" id="sec-reports">Reports Module</h2>
+    <table class="doc-table">
+      <thead><tr><th>Report</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>High Risk Report</td><td>All High Risk classified projects with CAO status and key E&S issues</td></tr>
+        <tr><td>ESAP Status Report</td><td>All ESAP actions: overdue, on track, completed across the portfolio</td></tr>
+        <tr><td>AMR Submission Report</td><td>AMR submission rates, outstanding and overdue submissions</td></tr>
+        <tr><td>ESRR Scores for Portfolio</td><td>Aggregated ESRR(M) scores for compliance reporting</td></tr>
+        <tr><td>Monitoring Site Visits – Trend</td><td>MSV completion rate trends over time</td></tr>
+        <tr><td>Major Incidents Report</td><td>E&S incidents affecting MIGA-guaranteed projects</td></tr>
+        <tr><td>Nature Finance Report</td><td>Nature Finance assessments across pipeline and portfolio</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ ARCHITECTURE ══ -->
+<div class="page" id="page-architecture">
+  <div style="padding:40px 48px 80px;max-width:1000px">
+    <div class="breadcrumb">Technical Docs <span>›</span> System Architecture</div>
+    <div class="page-header">
+      <h1>System Architecture</h1>
+      <p>MIGA E&S Portal 2.0 follows a CQRS pattern with MediatR, clean separation of layers, and a microservice-ready design.</p>
+    </div>
+
+    <h2 class="sec">Architecture Overview</h2>
+    <div class="arch-diagram">
+      <div class="arch-label">Presentation Layer</div>
+      <div class="arch-layer">
+        <div class="arch-box blue">React.js UI<br><small>Portfolio Grid / Forms</small></div>
+        <div class="arch-box blue">Swagger UI<br><small>API Explorer</small></div>
+      </div>
+      <div class="arch-arrow">↓ HTTP / REST ↓</div>
+      <div class="arch-label">API Gateway Layer</div>
+      <div class="arch-layer">
+        <div class="arch-box navy">ProjectsController</div>
+        <div class="arch-box navy">MonitoringController</div>
+        <div class="arch-box navy">DashboardController</div>
+      </div>
+      <div class="arch-arrow">↓ MediatR Message Bus ↓</div>
+      <div class="arch-label">Application Layer (CQRS)</div>
+      <div class="arch-layer">
+        <div class="arch-box orange">Query Handlers<br><small>GetPortfolioProjects</small></div>
+        <div class="arch-box orange">Command Handlers<br><small>SaveMonitoring</small></div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-label">Domain / Service Layer</div>
+      <div class="arch-layer">
+        <div class="arch-box green">PortfolioProjectsService</div>
+        <div class="arch-box green">MonitoringService</div>
+        <div class="arch-box green">CommonService</div>
+      </div>
+      <div class="arch-arrow">↓</div>
+      <div class="arch-label">Data Layer</div>
+      <div class="arch-layer">
+        <div class="arch-box">ProjectsRepository<br><small>SQL Server</small></div>
+        <div class="arch-box">Integration Service<br><small>ES Score Lookups</small></div>
+      </div>
+    </div>
+
+    <h2 class="sec">CQRS + MediatR Pattern</h2>
+    <p class="desc">The portal uses <strong>Command Query Responsibility Segregation (CQRS)</strong> implemented via the MediatR library. This means:</p>
+    <div class="feature-list">
+      <div class="feature-item"><strong>Queries</strong> (reads like GetPortfolioProjects) use dedicated Query Handlers that only fetch and aggregate data — no side effects</div>
+      <div class="feature-item"><strong>Commands</strong> (writes like SaveMonitoringActivity) use Command Handlers that validate business rules before persisting</div>
+      <div class="feature-item"><strong>Controllers</strong> are thin routing layers — they dispatch to MediatR and return the result, containing zero business logic</div>
+      <div class="feature-item"><strong>Handlers</strong> are independently unit-testable and replaceable without changing the controller</div>
+    </div>
+
+    <h2 class="sec">Portfolio Projects — Full Sequence Flow</h2>
+    <p class="desc">When a user clicks "Portfolio Projects" in the UI, this exact sequence runs:</p>
+    <table class="doc-table">
+      <thead><tr><th>#</th><th>From → To</th><th>Message / Action</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>UI → ProjectsController</td><td><code>HTTP POST /GetPortfolioProjects</code> with filter body</td></tr>
+        <tr><td>2</td><td>Controller → MediatR</td><td><code>Send(PortfolioProjectsQuery)</code></td></tr>
+        <tr><td>3</td><td>MediatR → Handler</td><td>Resolve Handler → <code>PortfolioProjectsQueryHandler</code></td></tr>
+        <tr><td>4</td><td>Handler → Service</td><td><code>GetPortfolioProjects()</code></td></tr>
+        <tr><td>5</td><td>Service → ProjectsRepository</td><td>Get Portfolio Projection (AMR, ESRR, Risk)</td></tr>
+        <tr><td>6</td><td>Service → ProjectsRepository</td><td>Get Project &amp; Application Details</td></tr>
+        <tr><td>7</td><td>Service → Integration Service</td><td>Get ES Score &amp; Phase Lookups</td></tr>
+        <tr><td>8</td><td>Service (internal)</td><td>Merge DB Projection + Integration data</td></tr>
+        <tr><td>9</td><td>Handler → Controller</td><td>Return <code>List&lt;PortfolioProjectInformation&gt;</code></td></tr>
+        <tr><td>10</td><td>Controller → UI</td><td><code>PortfolioProjectsResponse</code> → Show Portfolio Grid</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ TECH STACK ══ -->
+<div class="page" id="page-techstack">
+  <div style="padding:40px 48px 80px;max-width:1000px">
+    <div class="breadcrumb">Technical Docs <span>›</span> Tech Stack</div>
+    <div class="page-header">
+      <h1>Tech Stack</h1>
+      <p>Complete technology breakdown, setup instructions, and configuration guide for every layer of the MIGA E&S Portal 2.0.</p>
+    </div>
+
+    <h2 class="sec">Technology Stack Overview</h2>
+    <table class="doc-table">
+      <thead><tr><th>Layer</th><th>Technology</th><th>Version</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>Frontend</td><td><strong>React.js</strong></td><td>18.x</td><td>Component-based SPA — grids, forms, tabs, dashboard charts</td></tr>
+        <tr><td>API Framework</td><td><strong>ASP.NET Core</strong></td><td>6.0 / 7.0</td><td>RESTful API controllers, middleware, authentication</td></tr>
+        <tr><td>Messaging</td><td><strong>MediatR</strong></td><td>12.x</td><td>CQRS query/command dispatch — decouples controllers from handlers</td></tr>
+        <tr><td>ORM / Data Access</td><td><strong>Entity Framework Core / Dapper</strong></td><td>7.x</td><td>Database queries, stored procedures, repository pattern</td></tr>
+        <tr><td>Database</td><td><strong>SQL Server</strong></td><td>2019/2022</td><td>Primary data store — projects, monitoring, ESAP, DD records</td></tr>
+        <tr><td>Authentication</td><td><strong>Azure AD / SSO</strong></td><td>—</td><td>World Bank SSO — role-based access via AD groups</td></tr>
+        <tr><td>API Docs</td><td><strong>Swagger / Swashbuckle</strong></td><td>6.x</td><td>Auto-generated interactive API documentation</td></tr>
+        <tr><td>Hosting</td><td><strong>World Bank Cloud / Azure</strong></td><td>—</td><td>DEV: migaportalclouddev.worldbank.org</td></tr>
+        <tr><td>File Storage</td><td><strong>Azure Blob Storage</strong></td><td>—</td><td>Document uploads — ESIAs, ESAP files, audit logs</td></tr>
+        <tr><td>CI/CD</td><td><strong>Azure DevOps Pipelines</strong></td><td>—</td><td>Automated build, test, deploy pipeline</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">Frontend Setup (React.js)</h2>
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab(this,'ts-fe')">Installation</button>
+      <button class="tab-btn" onclick="switchTab(this,'ts-fe2')">Project Structure</button>
+      <button class="tab-btn" onclick="switchTab(this,'ts-fe3')">Environment Config</button>
+    </div>
+    <div id="ts-fe" class="tab-content active">
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+        <pre class="code-block"><span class="cm"># Prerequisites: Node.js 18+, npm 9+</span>
+
+<span class="cm"># Clone the repository</span>
+git clone https://worldbank-ado@dev.azure.com/worldbank/MIGA-ES-Portal/_git/frontend
+<span class="kw">cd</span> miga-es-portal-ui
+
+<span class="cm"># Install dependencies</span>
+npm install
+
+<span class="cm"># Start development server</span>
+npm run dev
+
+<span class="cm"># Build for production</span>
+npm run build
+
+<span class="cm"># Run tests</span>
+npm test</pre>
+      </div>
+    </div>
+    <div id="ts-fe2" class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-lang">text</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+        <pre class="code-block">src/
+├── components/
+│   ├── Dashboard/           <span class="cm"># Dashboard charts, AMR summary, ESRR widgets</span>
+│   ├── Pipeline/            <span class="cm"># Pipeline project list and detail tabs</span>
+│   ├── Portfolio/           <span class="cm"># Portfolio list and monitoring forms</span>
+│   ├── DueDiligence/        <span class="cm"># PS scoring, ESRR questionnaire</span>
+│   ├── ESAP/                <span class="cm"># Action plan table and form</span>
+│   ├── GBV/                 <span class="cm"># GBV risk assessment</span>
+│   └── Shared/              <span class="cm"># Reusable tables, modals, buttons</span>
+├── pages/
+│   ├── DashboardPage.jsx
+│   ├── PipelinePage.jsx
+│   └── PortfolioPage.jsx
+├── services/
+│   └── api.js               <span class="cm"># Axios API client with base URL config</span>
+├── store/                   <span class="cm"># Redux Toolkit or Zustand state</span>
+└── utils/</pre>
+      </div>
+    </div>
+    <div id="ts-fe3" class="tab-content">
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-lang">.env</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+        <pre class="code-block"><span class="cm"># .env.development</span>
+REACT_APP_API_BASE_URL=https://localhost:44379/api/esrd
+REACT_APP_ENV=development
+REACT_APP_AUTH_URL=https://login.microsoftonline.com/{tenant-id}
+REACT_APP_CLIENT_ID={azure-ad-client-id}
+
+<span class="cm"># .env.production</span>
+REACT_APP_API_BASE_URL=https://migaportalclouddev.worldbank.org/api/esrd
+REACT_APP_ENV=production</pre>
+      </div>
+    </div>
+
+    <h2 class="sec">Backend Setup (ASP.NET Core)</h2>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">bash</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+      <pre class="code-block"><span class="cm"># Prerequisites: .NET SDK 7.0+, SQL Server 2019+</span>
+
+<span class="cm"># Clone backend repo</span>
+git clone https://worldbank-ado@dev.azure.com/worldbank/MIGA-ES-Portal/_git/backend
+<span class="kw">cd</span> MIGA.ESPortal.API
+
+<span class="cm"># Restore NuGet packages</span>
+dotnet restore
+
+<span class="cm"># Update database (EF Core migrations)</span>
+dotnet ef database update --project MIGA.ESPortal.Infrastructure
+
+<span class="cm"># Run the API</span>
+dotnet run --project MIGA.ESPortal.API
+
+<span class="cm"># API available at:</span>
+<span class="cm"># https://localhost:44379/api/esrd/swagger (Swagger UI)</span>
+<span class="cm"># https://localhost:44379/api/esrd (Base URL)</span></pre>
+    </div>
+
+    <h2 class="sec">Key NuGet Packages</h2>
+    <table class="doc-table">
+      <thead><tr><th>Package</th><th>Version</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>MediatR</code></td><td>12.x</td><td>CQRS query/command dispatch</td></tr>
+        <tr><td><code>MediatR.Extensions.Microsoft.DependencyInjection</code></td><td>12.x</td><td>DI registration for MediatR handlers</td></tr>
+        <tr><td><code>Microsoft.EntityFrameworkCore.SqlServer</code></td><td>7.x</td><td>EF Core SQL Server provider</td></tr>
+        <tr><td><code>Dapper</code></td><td>2.x</td><td>Micro-ORM for complex stored procedure calls</td></tr>
+        <tr><td><code>Swashbuckle.AspNetCore</code></td><td>6.x</td><td>Swagger/OpenAPI documentation generation</td></tr>
+        <tr><td><code>Microsoft.Identity.Web</code></td><td>2.x</td><td>Azure AD / SSO authentication</td></tr>
+        <tr><td><code>AutoMapper</code></td><td>12.x</td><td>DTO ↔ Domain model mapping</td></tr>
+        <tr><td><code>FluentValidation</code></td><td>11.x</td><td>Request validation in command handlers</td></tr>
+        <tr><td><code>Serilog.AspNetCore</code></td><td>7.x</td><td>Structured logging</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ CODE REFERENCE ══ -->
+<div class="page" id="page-coderef">
+  <div style="padding:40px 48px 80px;max-width:1000px">
+    <div class="breadcrumb">Technical Docs <span>›</span> Code Reference</div>
+    <div class="page-header">
+      <h1>Code Reference</h1>
+      <p>Real code examples from the MIGA E&S Portal 2.0 codebase — CQRS handlers, repositories, service layer, and React components.</p>
+    </div>
+
+    <h2 class="sec">MediatR Query Handler Pattern</h2>
+    <p class="desc">This is the canonical pattern used throughout the codebase. Every "get" operation follows this exact shape:</p>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">C# — PortfolioProjectsQueryHandler.cs</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+      <pre class="code-block"><span class="cm">// Query definition — immutable request object</span>
+<span class="kw">public record</span> <span class="cl">PortfolioProjectsQuery</span>(
+    <span class="cl">PortfolioProjectsRequest</span> <span class="pr">Request</span>
+) : <span class="cl">IRequest</span>&lt;<span class="cl">PortfolioProjectsResponse</span>&gt;;
+
+<span class="cm">// Handler — registered automatically by MediatR DI</span>
+<span class="kw">public class</span> <span class="cl">PortfolioProjectsQueryHandler</span>
+    : <span class="cl">IRequestHandler</span>&lt;<span class="cl">PortfolioProjectsQuery</span>, <span class="cl">PortfolioProjectsResponse</span>&gt;
+{
+    <span class="kw">private readonly</span> <span class="cl">IPortfolioProjectsService</span> <span class="pr">_service</span>;
+
+    <span class="kw">public</span> <span class="fn">PortfolioProjectsQueryHandler</span>(
+        <span class="cl">IPortfolioProjectsService</span> service)
+    {
+        <span class="pr">_service</span> = service;
+    }
+
+    <span class="kw">public async</span> <span class="cl">Task</span>&lt;<span class="cl">PortfolioProjectsResponse</span>&gt; <span class="fn">Handle</span>(
+        <span class="cl">PortfolioProjectsQuery</span> query,
+        <span class="cl">CancellationToken</span> cancellationToken)
+    {
+        <span class="cm">// All business logic lives in the service layer</span>
+        <span class="kw">var</span> projects = <span class="kw">await</span> <span class="pr">_service</span>.<span class="fn">GetPortfolioProjectsAsync</span>(
+            query.<span class="pr">Request</span>, cancellationToken);
+
+        <span class="kw">return new</span> <span class="cl">PortfolioProjectsResponse</span>
+        {
+            <span class="pr">Projects</span> = projects,
+            <span class="pr">TotalCount</span> = projects.<span class="fn">Count</span>()
+        };
+    }
+}</pre>
+    </div>
+
+    <h2 class="sec">Service Layer Pattern</h2>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">C# — PortfolioProjectsService.cs</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+      <pre class="code-block"><span class="kw">public class</span> <span class="cl">PortfolioProjectsService</span> : <span class="cl">IPortfolioProjectsService</span>
+{
+    <span class="kw">private readonly</span> <span class="cl">IProjectsRepository</span>    <span class="pr">_projectsRepo</span>;
+    <span class="kw">private readonly</span> <span class="cl">IIntegrationService</span>   <span class="pr">_integrationSvc</span>;
+    <span class="kw">private readonly</span> <span class="cl">ICommonService</span>         <span class="pr">_commonSvc</span>;
+
+    <span class="kw">public async</span> <span class="cl">Task</span>&lt;<span class="cl">IEnumerable</span>&lt;<span class="cl">PortfolioProjectInfo</span>&gt;&gt;
+        <span class="fn">GetPortfolioProjectsAsync</span>(
+            <span class="cl">PortfolioProjectsRequest</span> request,
+            <span class="cl">CancellationToken</span> ct)
+    {
+        <span class="cm">// 1. Fetch core data from DB</span>
+        <span class="kw">var</span> projections = <span class="kw">await</span> <span class="pr">_projectsRepo</span>
+            .<span class="fn">GetPortfolioProjectionsAsync</span>(request, ct);
+
+        <span class="cm">// 2. Enrich with project details</span>
+        <span class="kw">var</span> details = <span class="kw">await</span> <span class="pr">_projectsRepo</span>
+            .<span class="fn">GetProjectApplicationDetailsAsync</span>(request, ct);
+
+        <span class="cm">// 3. Fetch ES scores from Integration Service</span>
+        <span class="kw">var</span> esScores = <span class="kw">await</span> <span class="pr">_integrationSvc</span>
+            .<span class="fn">GetEsScoreAndPhaseLookups</span>(ct);
+
+        <span class="cm">// 4. Merge all data sources</span>
+        <span class="kw">return</span> <span class="fn">MergeProjectData</span>(projections, details, esScores);
+    }
+
+    <span class="kw">private</span> <span class="cl">IEnumerable</span>&lt;<span class="cl">PortfolioProjectInfo</span>&gt; <span class="fn">MergeProjectData</span>(
+        <span class="cl">IEnumerable</span>&lt;<span class="cl">ProjectionData</span>&gt; projections,
+        <span class="cl">IEnumerable</span>&lt;<span class="cl">ProjectDetail</span>&gt; details,
+        <span class="cl">EsScoreLookup</span> esScores)
+    {
+        <span class="kw">return</span> projections.<span class="fn">Join</span>(details,
+            p => p.<span class="pr">EsId</span>, d => d.<span class="pr">EsId</span>,
+            (p, d) => <span class="kw">new</span> <span class="cl">PortfolioProjectInfo</span>
+            {
+                <span class="pr">EsId</span>        = p.<span class="pr">EsId</span>,
+                <span class="pr">ProjectName</span> = d.<span class="pr">ProjectName</span>,
+                <span class="pr">EsrrScore</span>   = p.<span class="pr">EsrrScore</span>,
+                <span class="pr">AmrDueDate</span>  = p.<span class="pr">AmrDueDate</span>,
+                <span class="pr">EsPhase</span>     = esScores.<span class="fn">GetPhase</span>(p.<span class="pr">EsId</span>)
+            });
+    }
+}</pre>
+    </div>
+
+    <h2 class="sec">Repository Pattern</h2>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">C# — ProjectsRepository.cs (Dapper)</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+      <pre class="code-block"><span class="kw">public class</span> <span class="cl">ProjectsRepository</span> : <span class="cl">IProjectsRepository</span>
+{
+    <span class="kw">private readonly</span> <span class="cl">IDbConnection</span> <span class="pr">_db</span>;
+
+    <span class="kw">public async</span> <span class="cl">Task</span>&lt;<span class="cl">IEnumerable</span>&lt;<span class="cl">ProjectionData</span>&gt;&gt;
+        <span class="fn">GetPortfolioProjectionsAsync</span>(
+            <span class="cl">PortfolioProjectsRequest</span> request,
+            <span class="cl">CancellationToken</span> ct)
+    {
+        <span class="kw">var</span> sql = <span class="st">@"
+            SELECT
+                p.EsId,
+                p.ProjectStageId,
+                p.AmrDueDate,
+                r.EsrrRating,
+                r.EsrrScore,
+                h.HighRiskFlag
+            FROM   dbo.ESProjects p
+            LEFT JOIN dbo.ESRRRatings  r ON r.EsId = p.EsId
+            LEFT JOIN dbo.HighRisk     h ON h.EsId = p.EsId
+            WHERE  p.IsPortfolioProject = 1
+              AND  (@FiscalYear  IS NULL OR p.FiscalYear = @FiscalYear)
+              AND  (@RegionKey   IS NULL OR p.RegionKey  = @RegionKey)"</span>;
+
+        <span class="kw">return await</span> <span class="pr">_db</span>.<span class="fn">QueryAsync</span>&lt;<span class="cl">ProjectionData</span>&gt;(
+            sql,
+            <span class="kw">new</span> { request.<span class="pr">FiscalYear</span>, request.<span class="pr">RegionKey</span> });
+    }
+}</pre>
+    </div>
+
+    <h2 class="sec">API Controller (Thin Layer)</h2>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">C# — ProjectsController.cs</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+      <pre class="code-block">[<span class="cl">ApiController</span>]
+[<span class="cl">Route</span>(<span class="st">"api/esrd/[controller]"</span>)]
+[<span class="cl">Authorize</span>]
+<span class="kw">public class</span> <span class="cl">ProjectsController</span> : <span class="cl">ControllerBase</span>
+{
+    <span class="kw">private readonly</span> <span class="cl">IMediator</span> <span class="pr">_mediator</span>;
+
+    <span class="kw">public</span> <span class="fn">ProjectsController</span>(<span class="cl">IMediator</span> mediator) =>
+        <span class="pr">_mediator</span> = mediator;
+
+    [<span class="cl">HttpPost</span>(<span class="st">"GetPortfolioProjects"</span>)]
+    <span class="kw">public async</span> <span class="cl">Task</span>&lt;<span class="cl">IActionResult</span>&gt; <span class="fn">GetPortfolioProjects</span>(
+        [<span class="cl">FromBody</span>] <span class="cl">PortfolioProjectsRequest</span> request)
+    {
+        <span class="cm">// Controller does NOTHING except dispatch to MediatR</span>
+        <span class="kw">var</span> result = <span class="kw">await</span> <span class="pr">_mediator</span>.<span class="fn">Send</span>(
+            <span class="kw">new</span> <span class="cl">PortfolioProjectsQuery</span>(request));
+
+        <span class="kw">return</span> <span class="fn">Ok</span>(result);
+    }
+
+    [<span class="cl">HttpPost</span>(<span class="st">"SaveGbvQuestionnaires"</span>)]
+    <span class="kw">public async</span> <span class="cl">Task</span>&lt;<span class="cl">IActionResult</span>&gt; <span class="fn">SaveGbvQuestionnaires</span>(
+        [<span class="cl">FromBody</span>] <span class="cl">SaveGbvQuestionnairesCommand</span> command)
+    {
+        <span class="kw">var</span> result = <span class="kw">await</span> <span class="pr">_mediator</span>.<span class="fn">Send</span>(command);
+        <span class="kw">return</span> <span class="fn">Ok</span>(result);
+    }
+}</pre>
+    </div>
+
+    <h2 class="sec">React Component — API Call Pattern</h2>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">JavaScript — usePortfolioProjects.js</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+      <pre class="code-block"><span class="kw">import</span> { useState, useEffect } <span class="kw">from</span> <span class="st">'react'</span>;
+<span class="kw">import</span> api <span class="kw">from</span> <span class="st">'../services/api'</span>;
+
+<span class="kw">export function</span> <span class="fn">usePortfolioProjects</span>(filters) {
+    <span class="kw">const</span> [projects, setProjects] = <span class="fn">useState</span>([]);
+    <span class="kw">const</span> [loading, setLoading]  = <span class="fn">useState</span>(<span class="kw">false</span>);
+    <span class="kw">const</span> [error, setError]      = <span class="fn">useState</span>(<span class="kw">null</span>);
+
+    <span class="fn">useEffect</span>(() => {
+        <span class="kw">const</span> <span class="fn">fetchProjects</span> = <span class="kw">async</span> () => {
+            <span class="fn">setLoading</span>(<span class="kw">true</span>);
+            <span class="kw">try</span> {
+                <span class="kw">const</span> { data } = <span class="kw">await</span> api.<span class="fn">post</span>(
+                    <span class="st">'/Projects/GetPortfolioProjects'</span>,
+                    {
+                        FiscalYear:          filters.fiscalYear,
+                        RegionKey:           filters.region,
+                        ManagementGroupCode: filters.mgmtGroup,
+                        EsSpecialist:        filters.specialist
+                    }
+                );
+                <span class="fn">setProjects</span>(data.<span class="pr">Result</span> ?? []);
+            } <span class="kw">catch</span> (err) {
+                <span class="fn">setError</span>(err.message);
+            } <span class="kw">finally</span> {
+                <span class="fn">setLoading</span>(<span class="kw">false</span>);
+            }
+        };
+        <span class="fn">fetchProjects</span>();
+    }, [filters]);
+
+    <span class="kw">return</span> { projects, loading, error };
+}</pre>
+    </div>
+    <div class="tip-box"><p><strong>Pattern note:</strong> All API responses use the standard envelope: <code>STATUS</code>, <code>STATUS_CODE</code>, <code>NOTIFICATIONS[]</code>, <code>Result</code>. Always destructure <code>data.Result</code> for the actual payload.</p></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ DATABASE ══ -->
+<div class="page" id="page-database">
+  <div style="padding:40px 48px 80px;max-width:1000px">
+    <div class="breadcrumb">Technical Docs <span>›</span> Database Schema</div>
+    <div class="page-header">
+      <h1>Database Schema</h1>
+      <p>Core tables, key relationships, and primary fields for the ESRD SQL Server database.</p>
+    </div>
+
+    <h2 class="sec">Core Tables</h2>
+    <table class="doc-table">
+      <thead><tr><th>Table</th><th>Primary Key</th><th>Key Fields</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>ESProjects</code></td><td><code>EsId</code></td><td>ProjectNumber, FiscalYear, RegionKey, IsPortfolioProject, IsShelvedProject</td><td>Master project record — pipeline + portfolio + shelved</td></tr>
+        <tr><td><code>ESContracts</code></td><td><code>ContractId</code></td><td>EsId, ContractNumber, EffectiveDate, ExpiryDate, GuaranteeHolder</td><td>Contract details for portfolio projects</td></tr>
+        <tr><td><code>ESRRRatings</code></td><td><code>RatingId</code></td><td>EsId, EsrrRating, EsrrRatingCode, EsrrScore, RatingDate, IsOverridden</td><td>ESRR risk rating records (D and M)</td></tr>
+        <tr><td><code>ESMonitoring</code></td><td><code>ProjectStageId</code></td><td>EsId, FiscalYear, AmrDueDate, AmrReceivedDate, SiteVisitFlag, VirtualMonitoringFlag</td><td>Monitoring activity records per project per fiscal year</td></tr>
+        <tr><td><code>ESEsapActions</code></td><td><code>EsapActionId</code></td><td>EsId, Action, DueDate, CompletionDate, Deliverables, Remarks</td><td>ESAP action items</td></tr>
+        <tr><td><code>ESDueDiligence</code></td><td><code>DdId</code></td><td>EsId, ProjectStageId, EsrrScore, PsarOverAllScore, ManagementFactorsComments</td><td>Due diligence assessment summary</td></tr>
+        <tr><td><code>ESDdQuestions</code></td><td><code>DdQId</code></td><td>DdId, QuestionNumber, QuestionType, Answer, Score, QuestionSection</td><td>Individual questionnaire responses</td></tr>
+        <tr><td><code>ESGbvAssessments</code></td><td><code>GbvId</code></td><td>EsId, GbvRating, GbvScore, GbvRatingStatus</td><td>GBV risk assessment per project</td></tr>
+        <tr><td><code>ESDocuments</code></td><td><code>DocumentId</code></td><td>EsId, DocumentName, DocumentType, DocumentKey, UploadDate</td><td>Document metadata (files in Blob Storage)</td></tr>
+        <tr><td><code>ESHighRisk</code></td><td><code>HighRiskId</code></td><td>EsId, IsCaoComplaint, Rationale, KeyIssues, LastUpdated</td><td>High Risk classification data</td></tr>
+        <tr><td><code>ESNatureFinance</code></td><td><code>NfId</code></td><td>EsId, NatureFinance, NatureFinancePotential, Justification</td><td>Nature Finance assessment</td></tr>
+        <tr><td><code>ESUsers</code></td><td><code>UserId</code></td><td>UpI, Name, Email, RoleCode, TeamCode</td><td>E&S Specialist and manager user records</td></tr>
+        <tr><td><code>ESTeamAssignments</code></td><td><code>AssignmentId</code></td><td>EsId, LeadSpecialistUpI, SupportSpecialistUpI, ManagerUpI</td><td>Project team assignments</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">Key Relationships</h2>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">SQL</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+      <pre class="code-block"><span class="cm">-- One project can have many monitoring records (one per fiscal year)</span>
+<span class="kw">ALTER TABLE</span> ESMonitoring
+    <span class="kw">ADD CONSTRAINT</span> FK_Monitoring_Project
+    <span class="kw">FOREIGN KEY</span> (EsId) <span class="kw">REFERENCES</span> ESProjects(EsId);
+
+<span class="cm">-- One project has many ESAP actions</span>
+<span class="kw">ALTER TABLE</span> ESEsapActions
+    <span class="kw">ADD CONSTRAINT</span> FK_Esap_Project
+    <span class="kw">FOREIGN KEY</span> (EsId) <span class="kw">REFERENCES</span> ESProjects(EsId);
+
+<span class="cm">-- One project has one DueDiligence record per stage</span>
+<span class="kw">CREATE UNIQUE INDEX</span> UX_DueDiligence_EsId_Stage
+    <span class="kw">ON</span> ESDueDiligence (EsId, ProjectStageId);
+
+<span class="cm">-- Typical query — get portfolio projects with latest ESRR</span>
+<span class="kw">SELECT</span>
+    p.EsId, p.FiscalYear,
+    c.ContractNumber, c.ExpiryDate,
+    r.EsrrRating, r.EsrrScore,
+    m.AmrDueDate, m.AmrReceivedDate
+<span class="kw">FROM</span>      ESProjects        p
+<span class="kw">JOIN</span>      ESContracts       c <span class="kw">ON</span> c.EsId = p.EsId
+<span class="kw">LEFT JOIN</span> ESRRRatings       r <span class="kw">ON</span> r.EsId = p.EsId <span class="kw">AND</span> r.RatingType = <span class="st">'M'</span>
+<span class="kw">LEFT JOIN</span> ESMonitoring      m <span class="kw">ON</span> m.EsId = p.EsId
+<span class="kw">WHERE</span> p.IsPortfolioProject = 1
+<span class="kw">ORDER BY</span> p.EsId;</pre>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ API ══ -->
+<div class="page" id="page-api">
+  <div style="padding:40px 48px 80px;max-width:1000px">
+    <div class="breadcrumb">API Reference <span>›</span> REST API Overview</div>
+    <div class="page-header">
+      <h1>REST API Reference</h1>
+      <p>Base URL: <code style="background:var(--grey-100);padding:2px 8px;border-radius:4px;font-family:var(--font-mono)">https://localhost:44379/api/esrd</code> | Swagger UI: <code style="background:var(--grey-100);padding:2px 8px;border-radius:4px;font-family:var(--font-mono)">/swagger/index.html</code></p>
+    </div>
+
+    <div class="info-box"><p><strong>Standard Response Envelope:</strong> All endpoints return <code>{ STATUS, STATUS_CODE, NOTIFICATIONS[], Result }</code>. STATUS_CODE 0 = success. Always extract payload from <code>Result</code>.</p></div>
+
+    <h2 class="sec" id="api-projects">Projects API</h2>
+    <div class="endpoint">
+      <div class="endpoint-header" onclick="toggleEndpoint(this)">
+        <span class="method-badge m-post">POST</span>
+        <span class="endpoint-path">/Projects/GetPortfolioProjects</span>
+        <span class="endpoint-desc">Fetch portfolio projects with filters</span>
+      </div>
+      <div class="endpoint-body">
+        <h4 class="subsub">Request Body</h4>
+        <table class="param-table"><thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+          <tr><td><code>FiscalYear</code></td><td>int[]</td><td><span class="param-optional">optional</span></td><td>Filter by fiscal year array</td></tr>
+          <tr><td><code>RegionKey</code></td><td>string[]</td><td><span class="param-optional">optional</span></td><td>Filter by WB region key</td></tr>
+          <tr><td><code>ManagementGroupCode</code></td><td>int[]</td><td><span class="param-optional">optional</span></td><td>Filter by management group</td></tr>
+          <tr><td><code>EsSpecialist</code></td><td>int[]</td><td><span class="param-optional">optional</span></td><td>Filter by specialist UPI</td></tr>
+          <tr><td><code>BusinessStage</code></td><td>string[]</td><td><span class="param-optional">optional</span></td><td>Filter by business stage</td></tr>
+        </tbody></table>
+        <h4 class="subsub">Example Response</h4>
+        <div class="code-wrap" style="margin-top:8px">
+          <div class="code-header"><span class="code-lang">JSON</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+          <pre class="code-block">{
+  <span class="pr">"STATUS"</span>: <span class="st">"Success"</span>,
+  <span class="pr">"STATUS_CODE"</span>: <span class="nu">0</span>,
+  <span class="pr">"NOTIFICATIONS"</span>: [],
+  <span class="pr">"Result"</span>: [
+    {
+      <span class="pr">"EsId"</span>: <span class="nu">1258</span>,
+      <span class="pr">"ProjectName"</span>: <span class="st">"HBZ Bank Limited"</span>,
+      <span class="pr">"Region"</span>: <span class="st">"Sub-Saharan Africa"</span>,
+      <span class="pr">"EsrrRating"</span>: <span class="st">"Satisfactory"</span>,
+      <span class="pr">"AmrDueDate"</span>: <span class="st">"2025-05-01T00:00:00Z"</span>
+    }
+  ]
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <div class="endpoint-header" onclick="toggleEndpoint(this)">
+        <span class="method-badge m-get">GET</span>
+        <span class="endpoint-path">/Projects/GetProjectDetails</span>
+        <span class="endpoint-desc">Get single project by ID</span>
+      </div>
+      <div class="endpoint-body">
+        <table class="param-table"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody>
+          <tr><td><code>EsId</code></td><td>int</td><td><span class="param-required">required*</span></td><td>Internal E&S ID (*one of these required)</td></tr>
+          <tr><td><code>ProjectNumber</code></td><td>string</td><td><span class="param-required">required*</span></td><td>MIGA project number (e.g., "14383")</td></tr>
+          <tr><td><code>IsProjectsInPipeline</code></td><td>boolean</td><td><span class="param-optional">optional</span></td><td>Scope to pipeline only</td></tr>
+          <tr><td><code>IsShelvedProject</code></td><td>boolean</td><td><span class="param-optional">optional</span></td><td>Scope to shelved only</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <h2 class="sec" id="api-monitoring">Monitoring API</h2>
+    <div class="endpoint">
+      <div class="endpoint-header" onclick="toggleEndpoint(this)">
+        <span class="method-badge m-post">POST</span>
+        <span class="endpoint-path">/Monitoring/SaveMonitoringActivity</span>
+        <span class="endpoint-desc">Create or update a monitoring record</span>
+      </div>
+      <div class="endpoint-body">
+        <p style="font-size:12px;color:var(--grey-400);margin-bottom:10px">Content-Type: multipart/form-data</p>
+        <table class="param-table"><thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead><tbody>
+          <tr><td><code>ProjectStageId</code></td><td>int</td><td>0 for new, existing ID for update</td></tr>
+          <tr><td><code>EsId</code></td><td>int</td><td>Project EsId</td></tr>
+          <tr><td><code>FiscalYear</code></td><td>int</td><td>MIGA fiscal year</td></tr>
+          <tr><td><code>AmrReviewFlag</code></td><td>boolean</td><td>AMR review was conducted</td></tr>
+          <tr><td><code>AmrDueDate</code></td><td>datetime</td><td>AMR due date</td></tr>
+          <tr><td><code>AmrFromDate / AmrToDate</code></td><td>datetime</td><td>Reporting period covered</td></tr>
+          <tr><td><code>AmrReceivedDate</code></td><td>datetime</td><td>Actual date AMR was received</td></tr>
+          <tr><td><code>SiteVisitFlag</code></td><td>boolean</td><td>Physical site visit conducted</td></tr>
+          <tr><td><code>VirtualMonitoringFlag</code></td><td>boolean</td><td>Virtual monitoring used</td></tr>
+          <tr><td><code>ClientMeetingFlag</code></td><td>boolean</td><td>Client meeting held</td></tr>
+          <tr><td><code>AdditionalDescription</code></td><td>string</td><td>Narrative notes</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+
+    <h2 class="sec" id="api-esap">ESAP API</h2>
+    <table class="doc-table">
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-badge m-post">POST</span></td><td><code>/EsapAction/SaveEsapAction</code></td><td>Create or update ESAP action — EsapActionId, EsId, Action, DueDate, CompletionDate, Deliverables, Remarks</td></tr>
+        <tr><td><span class="method-badge m-get">GET</span></td><td><code>/EsapAction/GetEsapDetails</code></td><td>Full ESAP including IsEsapRequired flag and EsapActions[] array</td></tr>
+        <tr><td><span class="method-badge m-post">POST</span></td><td><code>/EsapAction/SaveEsapRequired</code></td><td>Toggle ESAP required — { EsId, IsEsapRequired }</td></tr>
+        <tr><td><span class="method-badge m-post">POST</span></td><td><code>/EsapAction/DeleteEsapAction</code></td><td>Delete actions — { esapActionIdList: [1,2,3] }</td></tr>
+        <tr><td><span class="method-badge m-post">POST</span></td><td><code>/EsapAction/UploadEsapAction</code></td><td>Multipart upload — EsId + UploadFile (binary)</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec" id="api-dd">Due Diligence API</h2>
+    <table class="doc-table">
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-badge m-get">GET</span></td><td><code>/DueDiligence/GetDueDiligenceDetails</code></td><td>Full DD questionnaire + ResponseSummary (ESRR scores, PS ratings, all factor comments)</td></tr>
+        <tr><td><span class="method-badge m-post">POST</span></td><td><code>/DueDiligence/SaveDueDiligence</code></td><td>Save full DD assessment — EsId, GeneralInformation, QuestionDetails[], all ESRR fields</td></tr>
+        <tr><td><span class="method-badge m-post">POST</span></td><td><code>/DueDiligence/DeleteDueDiligence</code></td><td>Delete DD record by ProjectStageId</td></tr>
+        <tr><td><span class="method-badge m-post">POST</span></td><td><code>/DueDiligence/DownloadDueDiligenceReport</code></td><td>Download DD as PDF/Word — full questionnaire payload</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec" id="api-dashboard">Dashboard API</h2>
+    <table class="doc-table">
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-badge m-post">POST</span></td><td><code>/Dashboard/GetPipelineProjectsForDashboardDetails</code></td><td>Pipeline analytics — filter: FiscalYear[], RegionKey[], ProductType[], GbvRating[], EsSpecialistUPI</td></tr>
+        <tr><td><span class="method-badge m-post">POST</span></td><td><code>/Dashboard/GetPortfolioProjectsForDashboardDetails</code></td><td>Portfolio analytics — same filter structure</td></tr>
+        <tr><td><span class="method-badge m-post">POST</span></td><td><code>/EsInsights/StartMalenaUpload</code></td><td>Initiate Malena AI document analysis</td></tr>
+        <tr><td><span class="method-badge m-get">GET</span></td><td><code>/EsInsights/GetEsInsightDocuments</code></td><td>Documents available for AI analysis</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ KT VIDEOS ══ -->
+<div class="page" id="page-videos">
+  <div style="padding:40px 48px 80px;max-width:1000px">
+    <div class="breadcrumb">KT Resources <span>›</span> Knowledge Transfer Videos</div>
+    <div class="page-header">
+      <h1>KT Videos</h1>
+      <p>6 recorded knowledge transfer sessions covering every module of the MIGA E&S Portal 2.0. Link these directly from your portal's Help section.</p>
+    </div>
+
+    <div class="info-box"><p><strong>How to link KT videos:</strong> Replace the <code>data-video-url</code> values below with your actual portal video URLs. The cards automatically open links in a new tab. Videos are hosted in your MIGA SharePoint / Azure Media Services portal.</p></div>
+
+    <div class="video-grid">
+      <div class="video-card" onclick="openVideoLink('YOUR_PORTAL_VIDEO_URL_1')">
+        <div class="video-thumb t1">
+          <div class="play-btn">▶</div>
+          <div class="video-duration">45:22</div>
+        </div>
+        <div class="video-info">
+          <h4>KT 1: System Overview & Dashboard</h4>
+          <div class="vmeta"><span>Session 1 of 6</span><span>·</span><span>45 min</span></div>
+          <span class="vtag">Getting Started</span>
+        </div>
+      </div>
+      <div class="video-card" onclick="openVideoLink('YOUR_PORTAL_VIDEO_URL_2')">
+        <div class="video-thumb t2">
+          <div class="play-btn">▶</div>
+          <div class="video-duration">52:10</div>
+        </div>
+        <div class="video-info">
+          <h4>KT 2: Projects in Pipeline — Due Diligence & ESRR</h4>
+          <div class="vmeta"><span>Session 2 of 6</span><span>·</span><span>52 min</span></div>
+          <span class="vtag">Functional</span>
+        </div>
+      </div>
+      <div class="video-card" onclick="openVideoLink('YOUR_PORTAL_VIDEO_URL_3')">
+        <div class="video-thumb t3">
+          <div class="play-btn">▶</div>
+          <div class="video-duration">38:45</div>
+        </div>
+        <div class="video-info">
+          <h4>KT 3: Portfolio Monitoring — AMR, Site Visits & ESAP</h4>
+          <div class="vmeta"><span>Session 3 of 6</span><span>·</span><span>39 min</span></div>
+          <span class="vtag">Functional</span>
+        </div>
+      </div>
+      <div class="video-card" onclick="openVideoLink('YOUR_PORTAL_VIDEO_URL_4')">
+        <div class="video-thumb t4">
+          <div class="play-btn">▶</div>
+          <div class="video-duration">1:02:30</div>
+        </div>
+        <div class="video-info">
+          <h4>KT 4: Technical Architecture & CQRS Pattern</h4>
+          <div class="vmeta"><span>Session 4 of 6</span><span>·</span><span>63 min</span></div>
+          <span class="vtag">Technical</span>
+        </div>
+      </div>
+      <div class="video-card" onclick="openVideoLink('YOUR_PORTAL_VIDEO_URL_5')">
+        <div class="video-thumb t5">
+          <div class="play-btn">▶</div>
+          <div class="video-duration">47:15</div>
+        </div>
+        <div class="video-info">
+          <h4>KT 5: REST API Integration & Swagger Walkthrough</h4>
+          <div class="vmeta"><span>Session 5 of 6</span><span>·</span><span>47 min</span></div>
+          <span class="vtag">Technical</span>
+        </div>
+      </div>
+      <div class="video-card" onclick="openVideoLink('YOUR_PORTAL_VIDEO_URL_6')">
+        <div class="video-thumb t6">
+          <div class="play-btn">▶</div>
+          <div class="video-duration">29:50</div>
+        </div>
+        <div class="video-info">
+          <h4>KT 6: Reports, GBV Assessment & Admin Functions</h4>
+          <div class="vmeta"><span>Session 6 of 6</span><span>·</span><span>30 min</span></div>
+          <span class="vtag">Functional</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec" style="margin-top:40px">How to embed KT video links in your portal</h2>
+    <p class="desc">To add "Watch KT Video" buttons throughout the portal, add this snippet anywhere in your React components:</p>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">JavaScript — KTVideoLink.jsx</span><button class="code-copy" onclick="copyCode(this)">Copy</button></div>
+      <pre class="code-block"><span class="cm">// Reusable component — drop into any page/tab</span>
+<span class="kw">const</span> KT_VIDEO_URLS = {
+  <span class="pr">dashboard</span>:    <span class="st">'https://worldbank.sharepoint.com/sites/MIGA/KT/session1'</span>,
+  <span class="pr">pipeline</span>:     <span class="st">'https://worldbank.sharepoint.com/sites/MIGA/KT/session2'</span>,
+  <span class="pr">portfolio</span>:    <span class="st">'https://worldbank.sharepoint.com/sites/MIGA/KT/session3'</span>,
+  <span class="pr">architecture</span>: <span class="st">'https://worldbank.sharepoint.com/sites/MIGA/KT/session4'</span>,
+  <span class="pr">api</span>:          <span class="st">'https://worldbank.sharepoint.com/sites/MIGA/KT/session5'</span>,
+  <span class="pr">reports</span>:      <span class="st">'https://worldbank.sharepoint.com/sites/MIGA/KT/session6'</span>,
+};
+
+<span class="kw">export function</span> <span class="fn">KTVideoButton</span>({ module }) {
+  <span class="kw">return</span> (
+    &lt;<span class="cl">a</span>
+      href={KT_VIDEO_URLS[module]}
+      target=<span class="st">"_blank"</span>
+      rel=<span class="st">"noopener noreferrer"</span>
+      style={{ display:<span class="st">'inline-flex'</span>, alignItems:<span class="st">'center'</span>, gap:<span class="st">'6px'</span>,
+               background:<span class="st">'#FCE4EC'</span>, color:<span class="st">'#C62828'</span>, padding:<span class="st">'5px 12px'</span>,
+               borderRadius:<span class="st">'20px'</span>, fontSize:<span class="st">'12px'</span>, fontWeight:600,
+               textDecoration:<span class="st">'none'</span> }}
+    &gt;
+      ▶ Watch KT Video
+    &lt;/<span class="cl">a</span>&gt;
+  );
+}
+
+<span class="cm">// Usage in any component:</span>
+<span class="cm">// &lt;KTVideoButton module="portfolio" /&gt;</span></pre>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ GLOSSARY ══ -->
+<div class="page" id="page-glossary">
+  <div style="padding:40px 48px 80px;max-width:1000px">
+    <div class="breadcrumb">KT Resources <span>›</span> Glossary</div>
+    <div class="page-header">
+      <h1>Glossary</h1>
+      <p>Key terms, acronyms, and definitions used throughout the MIGA E&S Portal 2.0 and this documentation.</p>
+    </div>
+    <table class="doc-table">
+      <thead><tr><th style="width:120px">Term</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td><strong>AMR</strong></td><td>Annual Monitoring Report — submitted by the guarantee holder annually detailing the project's E&S performance against the agreed ESAP</td></tr>
+        <tr><td><strong>CAO</strong></td><td>Compliance Advisor Ombudsman — independent IFC/MIGA oversight function that handles E&S performance complaints from affected communities</td></tr>
+        <tr><td><strong>CQRS</strong></td><td>Command Query Responsibility Segregation — software architecture pattern separating read operations (queries) from write operations (commands)</td></tr>
+        <tr><td><strong>E&S</strong></td><td>Environmental and Social — refers to the environmental and social impacts, risks, and management practices of an investment project</td></tr>
+        <tr><td><strong>ESAP</strong></td><td>Environmental and Social Action Plan — contractual list of actions a guarantee holder must complete as a condition of the MIGA guarantee</td></tr>
+        <tr><td><strong>ESDD</strong></td><td>Environmental and Social Due Diligence — the full assessment process conducted by E&S Specialists for pipeline projects</td></tr>
+        <tr><td><strong>ESMS</strong></td><td>Environmental and Social Management System — systematic framework for managing E&S risks at the project/enterprise level</td></tr>
+        <tr><td><strong>ESRR</strong></td><td>Environmental and Social Risk Rating — the risk rating assigned to a project. (D) = Due Diligence stage; (M) = Monitoring stage</td></tr>
+        <tr><td><strong>GBV</strong></td><td>Gender-Based Violence — specific risk category assessed for all MIGA projects via a dedicated questionnaire</td></tr>
+        <tr><td><strong>IFC</strong></td><td>International Finance Corporation — sister organization to MIGA within the World Bank Group</td></tr>
+        <tr><td><strong>MediatR</strong></td><td>Open-source .NET library implementing the Mediator pattern, used for CQRS message dispatch in this system</td></tr>
+        <tr><td><strong>MIGA</strong></td><td>Multilateral Investment Guarantee Agency — World Bank Group member providing political risk insurance to promote FDI in developing countries</td></tr>
+        <tr><td><strong>MSV</strong></td><td>Monitoring Site Visit — a physical or virtual visit to a project site for E&S compliance verification</td></tr>
+        <tr><td><strong>PS1–PS8</strong></td><td>IFC Performance Standards 1–8 — internationally recognized E&S risk management standards applied to all MIGA-guaranteed projects</td></tr>
+        <tr><td><strong>PRI</strong></td><td>Political Risk Insurance — the core guarantee product MIGA offers to investors and lenders</td></tr>
+        <tr><td><strong>SEA/SH</strong></td><td>Sexual Exploitation and Abuse / Sexual Harassment — a GBV risk sub-category tracked under MIGA's gender framework</td></tr>
+        <tr><td><strong>SIP</strong></td><td>Strategic Initiative Project — a high-priority pipeline project categorization requiring expedited review</td></tr>
+        <tr><td><strong>WBG</strong></td><td>World Bank Group — umbrella comprising IBRD, IDA, IFC, MIGA, and ICSID</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════ SYSTEM OVERVIEW ══ -->
+<div class="page" id="page-overview">
+  <div style="padding:40px 48px 80px;max-width:1000px">
+    <div class="breadcrumb">Getting Started <span>›</span> System Overview</div>
+    <div class="page-header">
+      <h1>System Overview</h1>
+      <p>MIGA E&S Portal 2.0 — what it does, who uses it, and how the modules connect.</p>
+    </div>
+    <p class="desc">The MIGA E&S Portal 2.0 is an enterprise web application for the <strong>Multilateral Investment Guarantee Agency (MIGA)</strong>, a World Bank Group member. It manages the full E&S lifecycle of guaranteed investment projects across 60+ developing countries.</p>
+
+    <h2 class="sec">Module Map</h2>
+    <div class="card-grid">
+      <div class="doc-card card-accent" onclick="showPage('functional');scrollTo('sec-dashboard')" style="cursor:pointer">
+        <h4>📊 Dashboard</h4>
+        <p>Central analytics: ESRR distributions, AMR tracking, MSV status, pipeline vs portfolio metrics. Real-time, filterable by specialist or all members.</p>
+      </div>
+      <div class="doc-card card-accent" onclick="showPage('functional');scrollTo('sec-pipeline')" style="cursor:pointer">
+        <h4>🚀 Projects in Pipeline</h4>
+        <p>130+ projects under ESDD evaluation. Full due diligence workflow: PS1–PS8 scoring, ESRR generation, ESAP creation, GBV assessment, document upload.</p>
+      </div>
+      <div class="doc-card card-accent" onclick="showPage('functional');scrollTo('sec-portfolio')" style="cursor:pointer">
+        <h4>📁 Projects in Portfolio</h4>
+        <p>243+ active guaranteed projects. Ongoing monitoring: AMR reviews, site visits, virtual monitoring, ESAP follow-up, High Risk tracking.</p>
+      </div>
+      <div class="doc-card card-accent-orange" onclick="showPage('functional');scrollTo('sec-shelved')" style="cursor:pointer">
+        <h4>🗃️ Shelved Projects</h4>
+        <p>181 terminated projects — DECLINED, WITHDRAWN, NOT GOING FORWARD, DESELECTED. Retained for audit and compliance.</p>
+      </div>
+      <div class="doc-card card-accent-green" onclick="showPage('functional');scrollTo('sec-reports')" style="cursor:pointer">
+        <h4>📈 Reports</h4>
+        <p>12 pre-built reports: High Risk, ESAP Status, AMR Submission, ESRR Scores, Monitoring Trends, Major Incidents, Nature Finance.</p>
+      </div>
+      <div class="doc-card card-accent-green" onclick="showPage('architecture')" style="cursor:pointer">
+        <h4>⚙️ Other Initiatives</h4>
+        <p>9+ active WBG/IFC cross-collaboration initiatives and CAO Policy action items tracked with deadlines and status.</p>
+      </div>
+    </div>
+
+    <h2 class="sec">Who uses the portal?</h2>
+    <table class="doc-table">
+      <thead><tr><th>User Type</th><th>Primary Tasks</th></tr></thead>
+      <tbody>
+        <tr><td><strong>E&S Specialist</strong></td><td>Conduct due diligence, score ESRR, create ESAP actions, upload documents, record monitoring activities</td></tr>
+        <tr><td><strong>Manager / Senior Specialist</strong></td><td>Review all projects, override ESRR ratings, classify High Risk, view full analytics dashboard</td></tr>
+        <tr><td><strong>Administrator</strong></td><td>Manage user assignments, configure system, export bulk data, access all modules</td></tr>
+        <tr><td><strong>Project Team</strong></td><td>View project status, download reports, track ESAP compliance</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</main>
+
+<!-- ── SEARCH OVERLAY ── -->
+<div id="search-overlay" onclick="if(event.target===this)closeSearch()">
+  <div id="search-box">
+    <input id="search-input" placeholder="Search documentation…" oninput="doSearch(this.value)" autofocus/>
+    <div id="search-results"></div>
+  </div>
+</div>
+
+<script>
+const SEARCH_INDEX = [
+  {title:"Dashboard Module",path:"Functional → Dashboard",page:"functional",anchor:"sec-dashboard",icon:"📊"},
+  {title:"Projects in Pipeline",path:"Functional → Pipeline",page:"functional",anchor:"sec-pipeline",icon:"🚀"},
+  {title:"Projects in Portfolio",path:"Functional → Portfolio",page:"functional",anchor:"sec-portfolio",icon:"📁"},
+  {title:"Shelved Projects",path:"Functional → Shelved",page:"functional",anchor:"sec-shelved",icon:"🗃️"},
+  {title:"Reports Module",path:"Functional → Reports",page:"functional",anchor:"sec-reports",icon:"📈"},
+  {title:"Due Diligence Scoring",path:"Functional → Pipeline → DD",page:"functional",anchor:"sec-pipeline",icon:"📋"},
+  {title:"ESAP — Action Plan",path:"Functional → Pipeline → ESAP",page:"functional",anchor:"sec-pipeline",icon:"📋"},
+  {title:"GBV Risk Assessment",path:"Functional → Pipeline → GBV",page:"functional",anchor:"sec-pipeline",icon:"📋"},
+  {title:"Monitoring Activity",path:"Functional → Portfolio → Monitoring",page:"functional",anchor:"sec-portfolio",icon:"📋"},
+  {title:"System Architecture",path:"Technical → Architecture",page:"architecture",anchor:null,icon:"🏗️"},
+  {title:"CQRS MediatR Pattern",path:"Technical → Architecture",page:"architecture",anchor:null,icon:"⚙️"},
+  {title:"Tech Stack",path:"Technical → Tech Stack",page:"techstack",anchor:null,icon:"⚙️"},
+  {title:"React.js Setup",path:"Technical → Tech Stack → Frontend",page:"techstack",anchor:null,icon:"⚙️"},
+  {title:"ASP.NET Core Setup",path:"Technical → Tech Stack → Backend",page:"techstack",anchor:null,icon:"⚙️"},
+  {title:"Code Reference",path:"Technical → Code Reference",page:"coderef",anchor:null,icon:"💻"},
+  {title:"QueryHandler Pattern",path:"Technical → Code",page:"coderef",anchor:null,icon:"💻"},
+  {title:"Service Layer Code",path:"Technical → Code",page:"coderef",anchor:null,icon:"💻"},
+  {title:"Database Schema",path:"Technical → Database",page:"database",anchor:null,icon:"🗄️"},
+  {title:"SQL Tables Reference",path:"Technical → Database",page:"database",anchor:null,icon:"🗄️"},
+  {title:"REST API Overview",path:"API Reference",page:"api",anchor:null,icon:"🔌"},
+  {title:"Projects API",path:"API → Projects",page:"api",anchor:"api-projects",icon:"🔌"},
+  {title:"Monitoring API",path:"API → Monitoring",page:"api",anchor:"api-monitoring",icon:"🔌"},
+  {title:"ESAP API",path:"API → ESAP",page:"api",anchor:"api-esap",icon:"🔌"},
+  {title:"Due Diligence API",path:"API → DueDiligence",page:"api",anchor:"api-dd",icon:"🔌"},
+  {title:"Dashboard API",path:"API → Dashboard",page:"api",anchor:"api-dashboard",icon:"🔌"},
+  {title:"KT Videos",path:"KT Resources → Videos",page:"videos",anchor:null,icon:"🎬"},
+  {title:"Glossary",path:"KT Resources → Glossary",page:"glossary",anchor:null,icon:"📚"},
+  {title:"Quick Start Guide",path:"Getting Started",page:"quickstart",anchor:null,icon:"⚡"},
+  {title:"AMR — Annual Monitoring Report",path:"Glossary",page:"glossary",anchor:null,icon:"📚"},
+  {title:"ESRR Rating Scale",path:"Glossary",page:"glossary",anchor:null,icon:"📚"},
+  {title:"IFC Performance Standards PS1–PS8",path:"Glossary",page:"glossary",anchor:null,icon:"📚"},
+];
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pg = document.getElementById('page-' + id);
+  const nv = document.getElementById('nav-' + id);
+  if (pg) { pg.classList.add('active'); window.scrollTo(0, 0); }
+  if (nv) nv.classList.add('active');
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function scrollTo(anchor) {
+  setTimeout(() => {
+    const el = document.getElementById(anchor);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+
+function toggleEndpoint(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function switchTab(btn, tabId) {
+  const bar = btn.closest('.tab-bar');
+  bar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const page = bar.nextElementSibling;
+  let sibling = page;
+  while (sibling) {
+    if (sibling.classList && sibling.classList.contains('tab-content')) {
+      sibling.classList.remove('active');
+    }
+    sibling = sibling.nextElementSibling;
+    if (sibling && sibling.classList && sibling.classList.contains('tab-bar')) break;
+  }
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add('active');
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1800);
+  });
+}
+
+function openSearch() {
+  document.getElementById('search-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('search-input').focus(), 50);
+}
+
+function closeSearch() {
+  document.getElementById('search-overlay').classList.remove('open');
+}
+
+function doSearch(q) {
+  const results = document.getElementById('search-results');
+  if (!q.trim()) { results.innerHTML = ''; return; }
+  const matches = SEARCH_INDEX.filter(item =>
+    item.title.toLowerCase().includes(q.toLowerCase()) ||
+    item.path.toLowerCase().includes(q.toLowerCase())
+  ).slice(0, 8);
+  if (!matches.length) {
+    results.innerHTML = '<div style="padding:20px;text-align:center;color:#9AA3AF;font-size:13px">No results found</div>';
+    return;
+  }
+  results.innerHTML = matches.map(m => `
+    <div class="sr-item" onclick="closeSearch();showPage('${m.page}');${m.anchor ? `scrollTo('${m.anchor}')` : ''}">
+      <span class="sr-icon">${m.icon}</span>
+      <div><div class="sr-title">${m.title}</div><div class="sr-path">${m.path}</div></div>
+    </div>
+  `).join('');
+}
+
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+  if (e.key === 'Escape') closeSearch();
+});
+
+function openVideoLink(url) {
+  if (url && url !== 'YOUR_PORTAL_VIDEO_URL_1' && !url.startsWith('YOUR_')) {
+    window.open(url, '_blank');
+  } else {
+    alert('Replace the video URL in the code with your actual SharePoint/portal video link.\n\nSee the "How to embed KT video links" section on this page for integration instructions.');
+  }
+}
+</script>
+</body>
+</html>
