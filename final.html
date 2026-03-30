@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>MIGA E&S Portal 2.0 — Documentation</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#1B3A5C; --blue:#2E75B6; --blue-light:#5B9BD5; --blue-ultra:#E8F3FC;
+  --orange:#C55A11; --green:#375623; --green-light:#E2EFDA;
+  --grey-50:#F7F8FA; --grey-100:#EEF0F3; --grey-200:#D9DDE3; --grey-400:#9AA3AF; --grey-700:#4A5568; --grey-900:#1A202C;
+  --white:#fff; --code-bg:#0D1117; --code-text:#E6EDF3;
+  --sidebar-w:272px; --topbar-h:60px;
+  --font-sans:'IBM Plex Sans','Segoe UI',system-ui,sans-serif;
+  --font-mono:'IBM Plex Mono','Cascadia Code','Fira Code',monospace;
+  --font-serif:'IBM Plex Serif',Georgia,serif;
+  --accent:#4f9cf9; --accent2:#7bc4fb; --accent3:#00d4aa; --accent4:#f97b4f; --accent5:#b084f9;
+  --teal:#00d4aa; --teal-bg:rgba(0,212,170,.1); --teal-border:rgba(0,212,170,.3);
+  --warn:#f9c74f; --danger:#f94f4f; --success:#4fbd7c;
+  --bg-dark:#0a0e1a; --surface:#1a2440; --border-dark:#253358;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-sans);background:var(--grey-50);color:var(--grey-900);line-height:1.65}
+
+/* ── TOPBAR ── */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar-h);background:var(--navy);display:flex;align-items:center;padding:0 20px;z-index:300;gap:12px;box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.topbar-badge{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.6px;font-family:var(--font-mono)}
+.topbar-name{color:#fff;font-size:15px;font-weight:600;font-family:var(--font-sans)}
+.topbar-sub{color:rgba(255,255,255,.45);font-size:11px}
+#topbar-search{margin-left:auto;display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:6px;padding:0 12px;height:34px;min-width:220px;cursor:text}
+#topbar-search input{background:none;border:none;outline:none;color:#fff;font-size:13px;flex:1;font-family:var(--font-sans)}
+#topbar-search input::placeholder{color:rgba(255,255,255,.4)}
+.topbar-kbd{font-size:10px;color:rgba(255,255,255,.3);font-family:var(--font-mono);border:1px solid rgba(255,255,255,.2);border-radius:3px;padding:1px 5px}
+.topbar-right{display:flex;align-items:center;gap:7px;margin-left:10px}
+.top-pill{background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);font-size:11px;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.15);cursor:pointer;transition:.2s;font-family:var(--font-mono)}
+.top-pill:hover{background:rgba(255,255,255,.22)}
+.top-pill.live{background:var(--teal-bg);border-color:var(--teal-border);color:var(--teal)}
+.top-pill.live::before{content:'●';font-size:8px;margin-right:5px}
+#menu-btn{display:none;background:none;border:none;cursor:pointer;padding:4px;color:rgba(255,255,255,.8);font-size:20px}
+
+/* ── SIDEBAR ── */
+#sidebar{position:fixed;top:var(--topbar-h);left:0;width:var(--sidebar-w);height:calc(100vh - var(--topbar-h));background:var(--white);border-right:1px solid var(--grey-200);overflow-y:auto;z-index:200;transition:.3s}
+#sidebar::-webkit-scrollbar{width:4px}
+#sidebar::-webkit-scrollbar-track{background:transparent}
+#sidebar::-webkit-scrollbar-thumb{background:var(--grey-200);border-radius:2px}
+.sb-section{padding:18px 0 4px 18px;font-size:10px;font-weight:700;letter-spacing:1.2px;color:var(--grey-400);text-transform:uppercase;font-family:var(--font-mono)}
+.sb-section:first-of-type{padding-top:14px}
+.nav-link{display:flex;align-items:center;gap:8px;padding:6px 18px;cursor:pointer;font-size:12.5px;color:var(--grey-700);transition:.12s;border-left:3px solid transparent;text-decoration:none;line-height:1.4}
+.nav-link:hover{background:var(--blue-ultra);color:var(--blue)}
+.nav-link.active{background:var(--blue-ultra);color:var(--blue);border-left-color:var(--blue);font-weight:600}
+.nav-link .ni{font-size:13px;width:17px;text-align:center;flex-shrink:0}
+.nav-sub .nav-link{font-size:12px;padding:5px 18px 5px 42px;border-left:none}
+.nav-sub .nav-link.active{background:none;color:var(--blue);font-weight:600}
+.v-chip{display:inline-block;background:var(--green-light);color:var(--green);font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;margin-left:5px;font-family:var(--font-mono)}
+.sb-divider{height:1px;background:var(--grey-100);margin:8px 18px}
+
+/* ── MAIN ── */
+#main{margin-left:var(--sidebar-w);margin-top:var(--topbar-h);min-height:calc(100vh - var(--topbar-h))}
+.page{display:none}
+.page.active{display:block}
+
+/* ── HOME HERO ── */
+.home-hero{background:linear-gradient(135deg,var(--navy) 0%,#1e4a7a 50%,#2E75B6 100%);padding:52px 52px 44px;color:#fff;position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.08)}
+.home-hero::before{content:'';position:absolute;right:-80px;top:-80px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(79,156,249,.12) 0%,transparent 70%)}
+.home-hero::after{content:'';position:absolute;bottom:-60px;left:25%;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(0,212,170,.07) 0%,transparent 70%)}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;background:rgba(0,212,170,.12);border:1px solid rgba(0,212,170,.3);border-radius:3px;padding:4px 11px;font-family:var(--font-mono);font-size:10px;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:18px}
+.hero-eyebrow::before{content:'●';font-size:7px}
+.home-hero h1{font-family:var(--font-serif);font-size:36px;font-weight:600;line-height:1.2;margin-bottom:12px;position:relative}
+.home-hero h1 em{font-style:italic;color:var(--accent2)}
+.home-hero .hero-desc{font-size:14px;color:rgba(255,255,255,.65);max-width:620px;margin-bottom:28px;font-weight:300;line-height:1.75}
+.hero-meta-row{display:flex;flex-wrap:wrap;gap:24px}
+.hm-item{display:flex;flex-direction:column;gap:2px}
+.hm-label{font-family:var(--font-mono);font-size:9px;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase}
+.hm-val{font-family:var(--font-mono);font-size:13px;color:var(--accent2)}
+
+/* ── STATS BAR ── */
+.stats-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;padding:28px 52px;background:var(--white);border-bottom:1px solid var(--grey-200)}
+.stat-item{text-align:center;padding:14px;background:var(--grey-50);border:1px solid var(--grey-200);border-radius:8px}
+.stat-val{font-family:var(--font-mono);font-size:24px;font-weight:600;color:var(--blue);line-height:1;margin-bottom:5px}
+.stat-lbl{font-size:11px;color:var(--grey-400);line-height:1.3}
+
+/* ── QUICK NAV CARDS ── */
+.quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;padding:32px 52px 0}
+.q-card{background:var(--white);border:1px solid var(--grey-200);border-radius:10px;padding:20px;cursor:pointer;transition:.2s;text-decoration:none;display:block}
+.q-card:hover{border-color:var(--blue);box-shadow:0 4px 18px rgba(46,117,182,.13);transform:translateY(-2px)}
+.q-card-icon{font-size:22px;margin-bottom:10px}
+.q-card-title{font-size:13.5px;font-weight:600;color:var(--grey-900);margin-bottom:4px}
+.q-card-desc{font-size:12px;color:var(--grey-400);line-height:1.5}
+.q-tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;margin-top:8px;font-family:var(--font-mono)}
+.tag-func{background:#FFF3E0;color:#E65100}
+.tag-tech{background:#E3F2FD;color:#1565C0}
+.tag-api{background:#E8F5E9;color:#2E7D32}
+.tag-flow{background:#F3E5F5;color:#6A1B9A}
+
+/* ── SECTION LAYOUT ── */
+.sec-wrap{padding:40px 52px 72px;max-width:1120px}
+.page-hdr{margin-bottom:28px;padding-bottom:18px;border-bottom:2px solid var(--grey-100)}
+.page-hdr-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:10px}
+.page-hdr-num{font-family:var(--font-mono);font-size:10px;color:var(--blue);background:var(--blue-ultra);border:1px solid rgba(46,117,182,.25);border-radius:3px;padding:3px 8px;white-space:nowrap;margin-top:4px}
+.page-hdr h1{font-family:var(--font-serif);font-size:28px;font-weight:600;color:var(--navy);line-height:1.2}
+.page-hdr p{font-size:13.5px;color:var(--grey-400);font-weight:300}
+.breadcrumb{font-size:11.5px;color:var(--grey-400);margin-bottom:14px;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.breadcrumb .bc-active{color:var(--blue)}
+h2.sh{font-size:17px;font-weight:600;color:var(--navy);margin:32px 0 12px;padding-bottom:7px;border-bottom:2px solid var(--blue-ultra);font-family:var(--font-sans)}
+h3.ss{font-size:14px;font-weight:600;color:var(--grey-900);margin:20px 0 8px;padding-left:10px;border-left:3px solid var(--blue-light)}
+h4.sss{font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--accent4);margin:16px 0 6px;letter-spacing:.5px}
+p.body{font-size:13.5px;color:var(--grey-700);line-height:1.78;margin-bottom:12px}
+
+/* ── CALLOUT BOXES ── */
+.box{border-left:4px solid;border-radius:0 8px 8px 0;padding:12px 16px;margin:14px 0;display:flex;gap:10px;align-items:flex-start}
+.box p,.box-body{font-size:12.5px;line-height:1.65;margin:0;flex:1}
+.box-info{background:var(--blue-ultra);border-color:var(--blue)}
+.box-info p,.box-info .box-body{color:var(--navy)}
+.box-info strong{color:var(--blue)}
+.box-warn{background:#FFF8EE;border-color:var(--orange)}
+.box-warn p,.box-warn .box-body{color:#7C3200}
+.box-tip{background:var(--green-light);border-color:var(--green)}
+.box-tip p,.box-tip .box-body{color:var(--green)}
+.box-dark{background:rgba(10,14,26,.9);border-color:var(--accent);color:var(--accent2)}
+.box-dark .box-body{color:var(--accent2);font-family:var(--font-mono);font-size:12px}
+.box-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+
+/* ── TABLES ── */
+.tbl-wrap{overflow-x:auto;margin:14px 0 24px;border-radius:8px;border:1px solid var(--grey-200)}
+.doc-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.doc-tbl thead tr{background:var(--navy)}
+.doc-tbl th{padding:9px 13px;text-align:left;font-weight:600;font-size:11px;color:#fff;font-family:var(--font-mono);letter-spacing:.5px;white-space:nowrap}
+.doc-tbl td{padding:8px 13px;border-bottom:1px solid var(--grey-100);color:var(--grey-700);vertical-align:top;font-size:12.5px}
+.doc-tbl tr:hover td{background:var(--grey-50)}
+.doc-tbl tr:last-child td{border-bottom:none}
+.doc-tbl code{background:var(--grey-100);padding:1px 5px;border-radius:3px;font-family:var(--font-mono);font-size:10.5px;color:var(--orange)}
+.doc-tbl td:first-child{color:var(--grey-900);font-weight:500}
+.m-get{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;font-family:var(--font-mono);background:#DFF7ED;color:#0D6640}
+.m-post{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;font-family:var(--font-mono);background:#FFF0C2;color:#7C5000}
+.m-del{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;font-family:var(--font-mono);background:#FDDDE6;color:#A0002A}
+.td-m{font-family:var(--font-mono);font-size:11px;color:var(--accent3)!important}
+.td-get{color:var(--success)!important;font-family:var(--font-mono);font-size:11px;font-weight:600}
+.td-post{color:var(--accent4)!important;font-family:var(--font-mono);font-size:11px;font-weight:600}
+.td-del{color:var(--danger)!important;font-family:var(--font-mono);font-size:11px;font-weight:600}
+
+/* ── CODE BLOCKS ── */
+.code-wrap{background:var(--code-bg);border-radius:8px;overflow:hidden;margin:14px 0 22px;border:1px solid #30363D}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:9px 15px;background:#161B22;border-bottom:1px solid #30363D}
+.code-lang{font-size:11px;font-weight:600;color:#7D8590;font-family:var(--font-mono)}
+.code-copy-btn{background:none;border:1px solid #30363D;color:#7D8590;font-size:11px;padding:3px 10px;border-radius:4px;cursor:pointer;font-family:var(--font-mono);transition:.15s}
+.code-copy-btn:hover{background:#21262D;color:#E6EDF3}
+.code-copy-btn.copied{color:#3FB950;border-color:#3FB950}
+pre.cb{padding:18px;overflow-x:auto;font-family:var(--font-mono);font-size:12px;line-height:1.75;color:var(--code-text)}
+.kw{color:#FF7B72}.cl{color:#79C0FF}.fn{color:#D2A8FF}.st{color:#A5D6FF}.cm{color:#8B949E;font-style:italic}
+.nu{color:#79C0FF}.ky{color:#FF7B72}.pr{color:#E3B341}.typ{color:#F0883E}.rt{color:#F97B4F}
+
+/* ── FLOW DIAGRAM ── */
+.flow-wrap{background:var(--bg-dark);border:1px solid var(--border-dark);border-radius:10px;padding:24px;margin:16px 0;overflow-x:auto}
+.flow-title{font-family:var(--font-mono);font-size:10px;color:var(--teal);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border-dark)}
+.flow-v{display:flex;flex-direction:column}
+.flow-node{display:flex;align-items:flex-start;gap:14px}
+.flow-connector{display:flex;flex-direction:column;align-items:center;width:38px;flex-shrink:0}
+.flow-circle{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:10px;font-weight:600;flex-shrink:0;position:relative;z-index:1}
+.fc-ui{background:rgba(176,132,249,.2);border:1px solid rgba(176,132,249,.5);color:var(--accent5)}
+.fc-mw{background:rgba(249,197,79,.15);border:1px solid rgba(249,197,79,.4);color:var(--warn)}
+.fc-ctrl{background:rgba(79,156,249,.2);border:1px solid rgba(79,156,249,.5);color:var(--accent)}
+.fc-med{background:rgba(249,197,79,.15);border:1px solid rgba(249,197,79,.4);color:var(--warn)}
+.fc-hnd{background:rgba(0,212,170,.15);border:1px solid rgba(0,212,170,.4);color:var(--teal)}
+.fc-svc{background:rgba(249,123,79,.15);border:1px solid rgba(249,123,79,.4);color:var(--accent4)}
+.fc-repo{background:rgba(249,79,79,.15);border:1px solid rgba(249,79,79,.4);color:var(--danger)}
+.fc-ext{background:rgba(139,196,251,.1);border:1px solid rgba(139,196,251,.25);color:var(--accent2)}
+.fc-db{background:rgba(79,189,124,.1);border:1px solid rgba(79,189,124,.3);color:var(--success)}
+.flow-line{width:1px;flex:1;min-height:18px;background:#253358}
+.flow-content{padding:2px 0 18px;flex:1}
+.flow-content h5{font-size:12.5px;font-weight:600;color:#e8f0ff;margin-bottom:3px}
+.flow-content p{font-size:11.5px;color:#8ca3c8;margin:0;line-height:1.55}
+.flow-content code{font-family:var(--font-mono);font-size:10.5px;color:var(--teal)}
+
+/* ── ARCH DIAGRAM ── */
+.arch-wrap{margin:16px 0}
+.arch-layer{display:flex;align-items:center;gap:12px;margin:3px 0}
+.arch-label{font-family:var(--font-mono);font-size:9.5px;color:var(--grey-400);width:90px;flex-shrink:0;text-align:right;line-height:1.3}
+.arch-boxes{flex:1;display:flex;gap:6px;flex-wrap:wrap}
+.arch-box{padding:9px 14px;border-radius:5px;font-size:12px;font-weight:500;border:1px solid;flex:1;min-width:90px;text-align:center}
+.a-ui{background:rgba(176,132,249,.1);border-color:rgba(176,132,249,.35);color:var(--accent5)}
+.a-api{background:rgba(79,156,249,.1);border-color:rgba(79,156,249,.35);color:var(--accent)}
+.a-svc{background:rgba(249,123,79,.1);border-color:rgba(249,123,79,.35);color:var(--accent4)}
+.a-db{background:rgba(79,189,124,.1);border-color:rgba(79,189,124,.3);color:var(--success)}
+.a-ext{background:rgba(0,212,170,.1);border-color:rgba(0,212,170,.3);color:var(--teal)}
+.arch-connector-v{display:flex;justify-content:center;margin:2px 0;padding-left:96px}
+.arch-line{width:1px;height:14px;background:var(--grey-200);position:relative}
+.arch-line::after{content:'';position:absolute;bottom:-1px;left:-3px;width:0;height:0;border-top:5px solid var(--grey-200);border-left:3.5px solid transparent;border-right:3.5px solid transparent}
+
+/* ── LIFECYCLE ── */
+.lifecycle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin:16px 0}
+.lc-step{background:var(--white);border:1px solid var(--grey-200);border-radius:8px;padding:14px;position:relative;transition:.2s}
+.lc-step:hover{border-color:var(--blue-light)}
+.lc-step-num{position:absolute;top:10px;right:12px;font-family:var(--font-mono);font-size:17px;font-weight:700;color:var(--grey-100);line-height:1}
+.lc-tag{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:2px;margin-bottom:7px;display:inline-block}
+.lc-pipeline{background:#E3F2FD;color:#1565C0}
+.lc-portfolio{background:#E8F5E9;color:#2E7D32}
+.lc-review{background:#FFF8E1;color:#F57F17}
+.lc-archive{background:#FDDDE6;color:#A0002A}
+.lc-step-name{font-size:12px;font-weight:600;color:var(--grey-900);margin-bottom:4px}
+.lc-step-desc{font-size:11px;color:var(--grey-400);line-height:1.5}
+
+/* ── CARD GRID ── */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin:14px 0 24px}
+.doc-card{background:var(--white);border:1px solid var(--grey-200);border-radius:10px;padding:18px;transition:.2s}
+.doc-card:hover{border-color:var(--blue-light);transform:translateY(-1px)}
+.card-icon{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:10px}
+.doc-card h4{font-size:13px;font-weight:600;color:var(--grey-900);margin-bottom:5px;font-family:var(--font-sans)}
+.doc-card p{font-size:12px;color:var(--grey-400);line-height:1.55;margin:0 0 8px}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px}
+.ct{font-size:10px;padding:2px 7px;border-radius:10px;font-family:var(--font-mono)}
+.ct-blue{background:var(--blue-ultra);color:var(--blue)}
+.ct-green{background:var(--green-light);color:var(--green)}
+.ct-orange{background:#FFF3E0;color:#E65100}
+.ct-purple{background:#F3E5F5;color:#6A1B9A}
+
+/* ── PERMISSION PILLS ── */
+.perm{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;font-family:var(--font-mono);border:1px solid;vertical-align:middle;margin-left:6px}
+.p-read{background:#E8F5E9;border-color:#81C784;color:#2E7D32}
+.p-edit{background:#FFF3E0;border-color:#FFB74D;color:#E65100}
+.p-dash{background:#E3F2FD;border-color:#90CAF9;color:#1565C0}
+.p-none{background:var(--grey-100);border-color:var(--grey-200);color:var(--grey-400)}
+
+/* ── STEPS ── */
+.steps-list{display:flex;flex-direction:column;gap:0;margin:16px 0}
+.step-item{display:flex;gap:14px;padding-bottom:20px;position:relative}
+.step-item:not(:last-child)::after{content:'';position:absolute;left:16px;top:34px;bottom:0;width:2px;background:var(--grey-200)}
+.step-num{width:34px;height:34px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;position:relative;z-index:1}
+.step-body h4{font-size:13.5px;font-weight:600;color:var(--grey-900);margin-bottom:3px}
+.step-body p{font-size:12.5px;color:var(--grey-700);line-height:1.6;margin:0}
+.step-body code{font-family:var(--font-mono);font-size:11px;background:var(--grey-100);padding:1px 5px;border-radius:3px;color:var(--orange)}
+
+/* ── API ENDPOINT BLOCKS ── */
+.ep-card{background:var(--white);border:1px solid var(--grey-200);border-radius:8px;margin-bottom:10px;overflow:hidden}
+.ep-header{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;transition:.15s;user-select:none}
+.ep-header:hover{background:var(--grey-50)}
+.ep-method{font-family:var(--font-mono);font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;flex-shrink:0}
+.ep-path{font-family:var(--font-mono);font-size:12.5px;color:var(--grey-700);flex:1}
+.ep-perm{margin-left:auto;flex-shrink:0}
+.ep-chevron{color:var(--grey-400);font-size:11px;flex-shrink:0;transition:.2s}
+.ep-body{display:none;border-top:1px solid var(--grey-100);padding:16px}
+.ep-body.open{display:block}
+.ep-desc{font-size:13px;color:var(--grey-700);line-height:1.65;margin-bottom:14px}
+.params-tbl{width:100%;border-collapse:collapse;font-size:12px;margin:0}
+.params-tbl th{text-align:left;font-size:10.5px;font-family:var(--font-mono);color:var(--grey-400);padding:4px 10px;background:var(--grey-50);border-bottom:1px solid var(--grey-200);letter-spacing:.5px}
+.params-tbl td{padding:5px 10px;border-bottom:1px solid var(--grey-100);vertical-align:top;color:var(--grey-700)}
+.params-tbl tr:last-child td{border-bottom:none}
+.params-tbl code{font-family:var(--font-mono);font-size:11px;color:var(--orange);background:var(--grey-100);padding:1px 4px;border-radius:2px}
+.p-req{color:var(--danger);font-size:10px;font-family:var(--font-mono)}
+.p-opt{color:var(--grey-400);font-size:10px;font-family:var(--font-mono)}
+.returns-row{margin-top:10px;padding-top:10px;border-top:1px dashed var(--grey-200);display:flex;align-items:flex-start;gap:8px}
+.ret-label{font-size:10.5px;font-family:var(--font-mono);font-weight:700;color:var(--green);flex-shrink:0;padding-top:1px}
+.ret-val{font-size:12px;font-family:var(--font-mono);color:var(--grey-700)}
+
+/* ── GLOSSARY ── */
+.glossary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:9px;margin:14px 0}
+.gl-item{background:var(--white);border:1px solid var(--grey-200);border-radius:6px;padding:11px 14px;display:flex;gap:11px;align-items:flex-start}
+.gl-term{font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--teal);min-width:58px;padding-top:1px}
+.gl-def{font-size:12px;color:var(--grey-700);line-height:1.5}
+
+/* ── PS STANDARDS ── */
+.ps-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px;margin:14px 0}
+.ps-card{background:var(--white);border:1px solid var(--grey-200);border-radius:8px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;transition:.2s}
+.ps-card:hover{border-color:var(--blue-light)}
+.ps-num{font-family:var(--font-mono);font-size:11px;font-weight:700;width:34px;height:34px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--blue-ultra);border:1px solid rgba(46,117,182,.3);color:var(--blue)}
+.ps-info h5{font-size:12.5px;font-weight:600;color:var(--grey-900);margin-bottom:4px}
+.ps-info p{font-size:11.5px;color:var(--grey-400);margin:0;line-height:1.5}
+
+/* ── ROLE CARDS ── */
+.role-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:14px 0}
+.role-card{background:var(--white);border:1px solid var(--grey-200);border-radius:8px;padding:16px}
+.role-name{font-size:13px;font-weight:600;color:var(--grey-900);margin-bottom:4px}
+.role-lvl{font-family:var(--font-mono);font-size:9px;padding:2px 7px;border-radius:2px;margin-bottom:10px;display:inline-block;letter-spacing:1px;text-transform:uppercase}
+.rl-admin{background:#E3F2FD;color:#1565C0}
+.rl-spec{background:#E8F5E9;color:#2E7D32}
+.rl-mgr{background:#FFF3E0;color:#E65100}
+.rl-gbv{background:#F3E5F5;color:#6A1B9A}
+.role-perms{list-style:none}
+.role-perms li{font-size:11.5px;color:var(--grey-700);padding:3px 0;border-bottom:1px solid var(--grey-100);display:flex;align-items:flex-start;gap:5px;line-height:1.45}
+.role-perms li:last-child{border-bottom:none}
+.role-perms li::before{content:'→';color:var(--teal);font-size:10px;margin-top:2px;flex-shrink:0}
+
+/* ── SEARCH OVERLAY ── */
+#search-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;align-items:flex-start;justify-content:center;padding-top:100px}
+#search-overlay.open{display:flex}
+#search-box{background:var(--white);border-radius:12px;width:560px;max-width:92vw;box-shadow:0 16px 48px rgba(0,0,0,.25);overflow:hidden;border:1px solid var(--grey-200)}
+#search-input{width:100%;padding:16px 20px;font-size:15px;border:none;outline:none;font-family:var(--font-sans);color:var(--grey-900);background:none;border-bottom:1px solid var(--grey-200)}
+#search-results{max-height:380px;overflow-y:auto}
+.sr-item{display:flex;align-items:center;gap:12px;padding:12px 20px;cursor:pointer;transition:.1s}
+.sr-item:hover{background:var(--blue-ultra)}
+.sr-icon{font-size:16px;flex-shrink:0}
+.sr-title{font-size:13.5px;font-weight:500;color:var(--grey-900)}
+.sr-path{font-size:11px;color:var(--grey-400);margin-top:1px;font-family:var(--font-mono)}
+
+/* ── SCROLL TOP ── */
+#scrolltop{position:fixed;bottom:28px;right:28px;width:38px;height:38px;background:var(--navy);border:1px solid rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;transition:.2s;opacity:0;pointer-events:none;font-size:14px;z-index:400;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+#scrolltop.visible{opacity:1;pointer-events:all}
+#scrolltop:hover{background:var(--blue);transform:scale(1.05)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0}
+  #menu-btn{display:block}
+  #topbar-search{display:none}
+  .home-hero,.stats-strip,.quick-grid,.sec-wrap{padding-left:24px;padding-right:24px}
+  .home-hero h1{font-size:26px}
+  .quick-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+}
+@media(max-width:600px){
+  .hero-meta-row{gap:14px}
+  .stats-strip{grid-template-columns:repeat(3,1fr)}
+  .lifecycle-grid{grid-template-columns:repeat(2,1fr)}
+  .card-grid,.glossary-grid,.ps-grid,.role-grid{grid-template-columns:1fr}
+  .topbar-right{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header id="topbar">
+  <button id="menu-btn" onclick="toggleSidebar()" aria-label="Toggle menu">☰</button>
+  <a class="topbar-logo" href="#" onclick="showPage('home')">
+    <span class="topbar-badge">MIGA</span>
+    <span class="topbar-name">E&amp;S Portal 2.0</span>
+    <span class="topbar-sub">— Docs</span>
+  </a>
+  <div id="topbar-search" onclick="openSearch()">
+    <input placeholder="Search documentation…" readonly style="cursor:text"/>
+    <span class="topbar-kbd">⌘K</span>
+  </div>
+  <div class="topbar-right">
+    <span class="top-pill live">v2.0</span>
+    <span class="top-pill">.NET 8</span>
+    <span class="top-pill">CONFIDENTIAL</span>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sb-section">Getting Started</div>
+  <a class="nav-link active" id="nav-home" onclick="showPage('home')"><span class="ni">🏠</span> Home</a>
+  <a class="nav-link" id="nav-quickstart" onclick="showPage('quickstart')"><span class="ni">⚡</span> Quick Start</a>
+  <div class="sb-divider"></div>
+  <div class="sb-section">System</div>
+  <a class="nav-link" id="nav-overview" onclick="showPage('overview')"><span class="ni">📖</span> System Overview</a>
+  <a class="nav-link" id="nav-architecture" onclick="showPage('architecture')"><span class="ni">🏗️</span> Architecture</a>
+  <a class="nav-link" id="nav-lifecycle" onclick="showPage('lifecycle')"><span class="ni">🔄</span> Project Lifecycle</a>
+  <div class="sb-divider"></div>
+  <div class="sb-section">Modules</div>
+  <a class="nav-link" id="nav-dashboard" onclick="showPage('dashboard')"><span class="ni">📊</span> Dashboard</a>
+  <a class="nav-link" id="nav-pipeline" onclick="showPage('pipeline')"><span class="ni">🔍</span> Pipeline Projects</a>
+  <div class="nav-sub">
+    <a class="nav-link" id="nav-pipeline-detail" onclick="showPage('pipeline');scrollAnchor('pd-detail')">↳ Project Detail</a>
+  </div>
+  <a class="nav-link" id="nav-portfolio" onclick="showPage('portfolio')"><span class="ni">📁</span> Portfolio Projects</a>
+  <div class="nav-sub">
+    <a class="nav-link" onclick="showPage('portfolio');scrollAnchor('pf-detail')">↳ Monitoring &amp; High Risk</a>
+  </div>
+  <a class="nav-link" id="nav-reports" onclick="showPage('reports')"><span class="ni">📈</span> Reports</a>
+  <a class="nav-link" id="nav-shelved" onclick="showPage('shelved')"><span class="ni">🗃️</span> Shelved Projects</a>
+  <div class="sb-divider"></div>
+  <div class="sb-section">API Reference</div>
+  <a class="nav-link" id="nav-api" onclick="showPage('api')"><span class="ni">🔌</span> Overview</a>
+  <div class="nav-sub">
+    <a class="nav-link" onclick="showPage('api');scrollAnchor('api-projects')">↳ Projects API</a>
+    <a class="nav-link" onclick="showPage('api');scrollAnchor('api-monitoring')">↳ Monitoring API</a>
+    <a class="nav-link" onclick="showPage('api');scrollAnchor('api-esap')">↳ ESAP Action API</a>
+    <a class="nav-link" onclick="showPage('api');scrollAnchor('api-dd')">↳ Due Diligence API</a>
+    <a class="nav-link" onclick="showPage('api');scrollAnchor('api-dashboard')">↳ Dashboard API</a>
+    <a class="nav-link" onclick="showPage('api');scrollAnchor('api-highrisk')">↳ High Risk API</a>
+    <a class="nav-link" onclick="showPage('api');scrollAnchor('api-other')">↳ Other Controllers</a>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sb-section">Flow Diagrams</div>
+  <a class="nav-link" id="nav-flows" onclick="showPage('flows')"><span class="ni">⚡</span> CQRS Request Flow</a>
+  <div class="nav-sub">
+    <a class="nav-link" onclick="showPage('flows');scrollAnchor('flow-portfolio')">↳ Portfolio Query</a>
+    <a class="nav-link" onclick="showPage('flows');scrollAnchor('flow-monitoring')">↳ Save Monitoring</a>
+    <a class="nav-link" onclick="showPage('flows');scrollAnchor('flow-bgjob')">↳ Background Jobs</a>
+    <a class="nav-link" onclick="showPage('flows');scrollAnchor('flow-events')">↳ Event Bus</a>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sb-section">Reference</div>
+  <a class="nav-link" id="nav-config" onclick="showPage('config')"><span class="ni">⚙️</span> Config &amp; Environment</a>
+  <a class="nav-link" id="nav-validators" onclick="showPage('validators')"><span class="ni">✅</span> Validators</a>
+  <a class="nav-link" id="nav-roles" onclick="showPage('roles')"><span class="ni">🔐</span> Roles &amp; Permissions</a>
+  <a class="nav-link" id="nav-ps" onclick="showPage('ps')"><span class="ni">📋</span> IFC Performance Standards</a>
+  <a class="nav-link" id="nav-glossary" onclick="showPage('glossary')"><span class="ni">📚</span> Glossary</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main id="main">
+
+<!-- ════════════════════════════════ HOME ════════════════════════════════ -->
+<div id="page-home" class="page active">
+  <div class="home-hero">
+    <div class="hero-eyebrow">Confidential · Internal · World Bank Group</div>
+    <h1>MIGA <em>E&amp;S Portal 2.0</em><br>Complete System Documentation</h1>
+    <p class="hero-desc">Full technical reference for the Environmental &amp; Social Risk Management System — covering architecture, API endpoints, flow diagrams, business logic, and complete module documentation for MIGA-guaranteed investment project management.</p>
+    <div class="hero-meta-row">
+      <div class="hm-item"><span class="hm-label">Version</span><span class="hm-val">2.0</span></div>
+      <div class="hm-item"><span class="hm-label">Framework</span><span class="hm-val">.NET 8 / ASP.NET Core</span></div>
+      <div class="hm-item"><span class="hm-label">Architecture</span><span class="hm-val">CQRS + MediatR</span></div>
+      <div class="hm-item"><span class="hm-label">Controllers</span><span class="hm-val">21 Controllers</span></div>
+      <div class="hm-item"><span class="hm-label">Endpoints</span><span class="hm-val">130+ REST APIs</span></div>
+      <div class="hm-item"><span class="hm-label">Database</span><span class="hm-val">PostgreSQL (EF Core)</span></div>
+    </div>
+  </div>
+  <div class="stats-strip">
+    <div class="stat-item"><div class="stat-val">130+</div><div class="stat-lbl">Pipeline Projects</div></div>
+    <div class="stat-item"><div class="stat-val">243</div><div class="stat-lbl">Portfolio Projects</div></div>
+    <div class="stat-item"><div class="stat-val">181</div><div class="stat-lbl">Shelved Projects</div></div>
+    <div class="stat-item"><div class="stat-val">21</div><div class="stat-lbl">API Controllers</div></div>
+    <div class="stat-item"><div class="stat-val">80+</div><div class="stat-lbl">Services</div></div>
+    <div class="stat-item"><div class="stat-val">14</div><div class="stat-lbl">External Integrations</div></div>
+    <div class="stat-item"><div class="stat-val">18+</div><div class="stat-lbl">Excel/PDF Reports</div></div>
+    <div class="stat-item"><div class="stat-val">PS1–8</div><div class="stat-lbl">IFC Standards</div></div>
+  </div>
+  <div class="quick-grid">
+    <a class="q-card" onclick="showPage('overview')">
+      <div class="q-card-icon">📖</div>
+      <div class="q-card-title">System Overview</div>
+      <div class="q-card-desc">Portal purpose, modules, users, and technology stack.</div>
+      <span class="q-tag tag-func">Functional</span>
+    </a>
+    <a class="q-card" onclick="showPage('architecture')">
+      <div class="q-card-icon">🏗️</div>
+      <div class="q-card-title">Architecture</div>
+      <div class="q-card-desc">CQRS + MediatR pattern, Clean Architecture, response envelope.</div>
+      <span class="q-tag tag-tech">Technical</span>
+    </a>
+    <a class="q-card" onclick="showPage('pipeline')">
+      <div class="q-card-icon">🔍</div>
+      <div class="q-card-title">Pipeline Module</div>
+      <div class="q-card-desc">Due Diligence, ESAP, GBV, and Nature Finance workflows.</div>
+      <span class="q-tag tag-func">Functional</span>
+    </a>
+    <a class="q-card" onclick="showPage('portfolio')">
+      <div class="q-card-icon">✅</div>
+      <div class="q-card-title">Portfolio Module</div>
+      <div class="q-card-desc">Monitoring activities, AMR, site visits, ESRR(M) tracking.</div>
+      <span class="q-tag tag-func">Functional</span>
+    </a>
+    <a class="q-card" onclick="showPage('api')">
+      <div class="q-card-icon">🔌</div>
+      <div class="q-card-title">API Reference</div>
+      <div class="q-card-desc">All 130+ endpoints with parameters, permissions, and returns.</div>
+      <span class="q-tag tag-api">API</span>
+    </a>
+    <a class="q-card" onclick="showPage('flows')">
+      <div class="q-card-icon">⚡</div>
+      <div class="q-card-title">Flow Diagrams</div>
+      <div class="q-card-desc">Portfolio query, Save Monitoring, Background Jobs, Event Bus.</div>
+      <span class="q-tag tag-flow">Diagrams</span>
+    </a>
+    <a class="q-card" onclick="showPage('config')">
+      <div class="q-card-icon">⚙️</div>
+      <div class="q-card-title">Configuration</div>
+      <div class="q-card-desc">Environment variables, Azure Key Vault secrets, service URLs.</div>
+      <span class="q-tag tag-tech">Technical</span>
+    </a>
+    <a class="q-card" onclick="showPage('glossary')">
+      <div class="q-card-icon">📚</div>
+      <div class="q-card-title">Glossary</div>
+      <div class="q-card-desc">AMR, ESAP, ESRR, GBV, MSV, UPI and all domain acronyms.</div>
+      <span class="q-tag tag-func">Reference</span>
+    </a>
+  </div>
+  <div style="padding:24px 52px 60px">
+    <div class="box box-info">
+      <span class="box-icon">ℹ️</span>
+      <p><strong>Base URL (DEV):</strong> <code>https://localhost:44379/api/esrd</code> &nbsp;|&nbsp; <strong>PROD:</strong> <code>https://migaportalclouddev.worldbank.org/api/esrd</code> &nbsp;|&nbsp; All endpoints require Azure AD JWT Bearer token. Standard response: <code>{ STATUS, STATUS_CODE, NOTIFICATIONS[], Result }</code> — check <code>STATUS_CODE: 0</code> for success.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ QUICK START ════════════════════════════════ -->
+<div id="page-quickstart" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">Quick Start</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">00</span><h1>Quick Start Guide</h1></div>
+      <p>Developer onboarding: authentication, first API call, and key conventions</p>
+    </div>
+    <h2 class="sh">Adding a New Feature — Correct Order</h2>
+    <p class="body">Every endpoint must follow the CQRS chain. Never skip steps or inject services/repositories across layer boundaries.</p>
+    <div class="steps-list">
+      <div class="step-item"><div class="step-num">1</div><div class="step-body"><h4>Define Response</h4><p><code>NewFeatureResponse.cs</code> in <code>Responses/Domain/</code> — inherit <code>ResponseBase</code>, add <code>Result</code> field.</p></div></div>
+      <div class="step-item"><div class="step-num">2</div><div class="step-body"><h4>Create Query or Command</h4><p><code>NewFeatureQuery.cs</code> or <code>NewFeatureCommand.cs</code> — implement <code>IRequest&lt;NewFeatureResponse&gt;</code>.</p></div></div>
+      <div class="step-item"><div class="step-num">3</div><div class="step-body"><h4>Write Validator</h4><p><code>NewFeatureCommandValidator.cs</code> — <code>AbstractValidator&lt;T&gt;</code> with <code>RuleFor()</code> calls. Use <code>.When()</code> for conditional rules.</p></div></div>
+      <div class="step-item"><div class="step-num">4</div><div class="step-body"><h4>Define Interface</h4><p><code>INewFeatureService.cs</code> — single method signature <code>Task&lt;ReturnType&gt; MethodName(params)</code>.</p></div></div>
+      <div class="step-item"><div class="step-num">5</div><div class="step-body"><h4>Implement Service</h4><p><code>NewFeatureService.cs</code> — all business logic lives here. Constructor-inject repositories and other services.</p></div></div>
+      <div class="step-item"><div class="step-num">6</div><div class="step-body"><h4>Register in DI</h4><p>In <code>Startup.cs ConfigureServices()</code>: <code>services.AddTransient&lt;INewFeatureService, NewFeatureService&gt;();</code></p></div></div>
+      <div class="step-item"><div class="step-num">7</div><div class="step-body"><h4>Create Handler</h4><p>Implement <code>IRequestHandler&lt;TQuery, TResponse&gt;</code>. Constructor-inject <code>INewFeatureService</code>. Call service, wrap response, return.</p></div></div>
+      <div class="step-item"><div class="step-num">8</div><div class="step-body"><h4>Add Mapper (if needed)</h4><p><code>NewFeatureMapperProfile.cs</code> with <code>CreateMap&lt;Source, Dest&gt;()</code> and <code>ForMember()</code> overrides.</p></div></div>
+      <div class="step-item"><div class="step-num">9</div><div class="step-body"><h4>Add Controller Endpoint</h4><p>In <code>[DomainName]Controller</code> — <code>[HttpGet/Post]</code> method with <code>[PolicyAuthorize]</code>. Call <code>_mediator.Send()</code>. Zero business logic.</p></div></div>
+      <div class="step-item"><div class="step-num">10</div><div class="step-body"><h4>Test via Swagger</h4><p>Navigate to <code>/api/esrd/swagger</code>. Authenticate with Bearer token. Find endpoint. Test with sample input.</p></div></div>
+    </div>
+    <div class="box box-warn">
+      <span class="box-icon">⚠️</span>
+      <p><strong>CRITICAL:</strong> Never inject a Service directly into a Controller. Never inject a Repository directly into a Handler. The chain Controller → MediatR → Handler → Service → Repository must be respected at all times.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ OVERVIEW ════════════════════════════════ -->
+<div id="page-overview" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">System Overview</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">01</span><h1>System Overview</h1></div>
+      <p>About MIGA, Portal purpose, module inventory, and technology stack</p>
+    </div>
+    <p class="body">The <strong>MIGA E&amp;S Portal 2.0</strong> is an enterprise-grade web application for the Multilateral Investment Guarantee Agency (MIGA), World Bank Group. It serves as the central platform for managing the full lifecycle of guaranteed investment projects, with deep focus on Environmental and Social (E&amp;S) risk management, compliance monitoring, and due diligence against IFC Performance Standards PS1–PS8.</p>
+    <p class="body">MIGA's mandate is to promote foreign direct investment in developing countries via political risk insurance. For every project it guarantees, MIGA must assess and mitigate potential environmental and social risks.</p>
+    <h2 class="sh">Application Modules</h2>
+    <div class="card-grid">
+      <div class="doc-card"><div class="card-icon" style="background:rgba(46,117,182,.1)">📊</div><h4>Dashboard</h4><p>Central analytics hub — ESRR distributions, MSV summaries, AMR tracking, GBV dashboard, ES Insights with Power BI.</p><div class="card-tags"><span class="ct ct-blue">Manager View</span><span class="ct ct-green">Specialist View</span></div></div>
+      <div class="doc-card"><div class="card-icon" style="background:rgba(249,197,79,.12)">🔍</div><h4>Projects in Pipeline</h4><p>Unapproved projects under ESDD. PS1–8 assessments, ESRR(D) scoring, GBV ratings, ESAP creation, Nature Finance.</p><div class="card-tags"><span class="ct ct-orange">DD Stage</span><span class="ct ct-blue">91+ Active</span></div></div>
+      <div class="doc-card"><div class="card-icon" style="background:rgba(0,212,170,.1)">✅</div><h4>Projects in Portfolio</h4><p>243+ active guaranteed projects. AMR reviews, site visits, ESAP follow-up, ESRR(M) tracking, high-risk management.</p><div class="card-tags"><span class="ct ct-green">Monitoring</span><span class="ct ct-orange">AMR</span></div></div>
+      <div class="doc-card"><div class="card-icon" style="background:rgba(249,79,79,.1)">🗃️</div><h4>Shelved Projects</h4><p>Read-only archive of 181 declined, withdrawn, cancelled, or deselected projects with full audit history.</p><div class="card-tags"><span class="ct ct-blue">Read-Only</span><span class="ct ct-orange">181 Records</span></div></div>
+      <div class="doc-card"><div class="card-icon" style="background:rgba(176,132,249,.1)">🤝</div><h4>Other Initiatives</h4><p>WBG/IFC cross-collaboration workstreams and CAO policy action items requiring deadline management.</p><div class="card-tags"><span class="ct ct-purple">WBG</span><span class="ct ct-blue">CAO Policy</span></div></div>
+      <div class="doc-card"><div class="card-icon" style="background:rgba(249,123,79,.1)">📋</div><h4>Reports</h4><p>18+ pre-built Excel/PDF reports: High Risk, ESAP Status, AMR Submission, ESRR Scores, Monitoring Trends, Major Incidents.</p><div class="card-tags"><span class="ct ct-green">Excel</span><span class="ct ct-orange">PDF</span></div></div>
+    </div>
+    <h2 class="sh">Technology Stack</h2>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Layer</th><th>Technology</th><th>Version</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>API Framework</td><td>ASP.NET Core</td><td>8.0</td><td>RESTful API host — controllers, middleware, routing, serialization</td></tr>
+          <tr><td>Messaging Bus</td><td>MediatR</td><td>12.x</td><td>CQRS pattern — decoupled Query/Command dispatch</td></tr>
+          <tr><td>DI Container</td><td>Autofac</td><td>7.1.0</td><td>Advanced dependency injection — overrides default ASP.NET Core DI</td></tr>
+          <tr><td>ORM / Database</td><td>EF Core + Npgsql</td><td>7.x</td><td>PostgreSQL database access via Entity Framework Core</td></tr>
+          <tr><td>Object Mapping</td><td>AutoMapper</td><td>12.x</td><td>30 mapping profiles — eliminates manual property copying</td></tr>
+          <tr><td>Validation</td><td>FluentValidation</td><td>11.3.0</td><td>25 validators — run automatically before handlers execute</td></tr>
+          <tr><td>Report Engine</td><td>Aspose.Cells + PDF</td><td>—</td><td>Excel (.xlsx) and PDF report generation for 18+ reports</td></tr>
+          <tr><td>Authentication</td><td>Azure AD JWT Bearer</td><td>—</td><td>World Bank SSO — validates tokens against Azure AD</td></tr>
+          <tr><td>AI Analysis</td><td>Malena AI (IFC)</td><td>—</td><td>Sentence-level E&amp;S document analysis — malenaapiext.ifc.org</td></tr>
+          <tr><td>Event Bus</td><td>Azure Service Bus</td><td>—</td><td>Domain events between MIGA microservices</td></tr>
+          <tr><td>File Storage</td><td>Azure Blob Storage</td><td>—</td><td>migaportaldevstrg.blob.core.windows.net</td></tr>
+          <tr><td>Documents</td><td>WbDocs</td><td>—</td><td>World Bank confidential document management system</td></tr>
+          <tr><td>Analytics</td><td>Power BI Embedded</td><td>—</td><td>ES Insights analytics dashboard</td></tr>
+          <tr><td>Secrets</td><td>Azure Key Vault</td><td>—</td><td>DB strings, API keys — never in code</td></tr>
+          <tr><td>Monitoring</td><td>App Insights</td><td>—</td><td>TelemetryClient — logging, traces, events, exceptions</td></tr>
+          <tr><td>Resilience</td><td>Polly</td><td>—</td><td>3-retry policy on Malena AI HTTP calls</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ ARCHITECTURE ════════════════════════════════ -->
+<div id="page-architecture" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">Architecture</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">02</span><h1>Architecture — CQRS + MediatR</h1></div>
+      <p>Every API operation follows the same CQRS pattern. This is the most critical concept to understand.</p>
+    </div>
+    <h2 class="sh">The Request Chain — Every Operation</h2>
+    <div class="arch-wrap">
+      <div class="arch-layer"><div class="arch-label">Frontend</div><div class="arch-boxes"><div class="arch-box a-ui">React.js + Axios</div></div></div>
+      <div class="arch-connector-v"><div class="arch-line"></div></div>
+      <div class="arch-layer"><div class="arch-label">Auth</div><div class="arch-boxes"><div class="arch-box a-ext">Azure AD JWT Middleware</div></div></div>
+      <div class="arch-connector-v"><div class="arch-line"></div></div>
+      <div class="arch-layer"><div class="arch-label">Controller</div><div class="arch-boxes"><div class="arch-box a-api">ASP.NET Core Controller</div><div class="arch-box a-api">PolicyAuthorize</div></div></div>
+      <div class="arch-connector-v"><div class="arch-line"></div></div>
+      <div class="arch-layer"><div class="arch-label">Validation</div><div class="arch-boxes"><div class="arch-box a-ext">FluentValidation (auto)</div></div></div>
+      <div class="arch-connector-v"><div class="arch-line"></div></div>
+      <div class="arch-layer"><div class="arch-label">MediatR Bus</div><div class="arch-boxes"><div class="arch-box a-api">MediatR.Send(Query/Command)</div></div></div>
+      <div class="arch-connector-v"><div class="arch-line"></div></div>
+      <div class="arch-layer"><div class="arch-label">Handler</div><div class="arch-boxes"><div class="arch-box a-api">IRequestHandler → calls 1 Service</div></div></div>
+      <div class="arch-connector-v"><div class="arch-line"></div></div>
+      <div class="arch-layer"><div class="arch-label">Service</div><div class="arch-boxes"><div class="arch-box a-svc">Business Logic Service</div><div class="arch-box a-svc">AutoMapper</div></div></div>
+      <div class="arch-connector-v"><div class="arch-line"></div></div>
+      <div class="arch-layer"><div class="arch-label">Data</div><div class="arch-boxes"><div class="arch-box a-db">PostgreSQL (EF Core)</div><div class="arch-box a-ext">External APIs</div></div></div>
+    </div>
+    <h2 class="sh">CQRS: Queries vs Commands</h2>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Type</th><th>When Used</th><th>Changes DB?</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td>Query</td><td>Fetching / reading data</td><td>NO</td><td><code>GetPortfolioProjects</code>, <code>GetMonitoringDetails</code>, <code>GetDueDiligenceDetails</code></td></tr>
+          <tr><td>Command</td><td>Creating / updating / deleting</td><td>YES</td><td><code>SaveMonitoringActivity</code>, <code>DeleteEsapAction</code>, <code>SaveDueDiligence</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h2 class="sh">Standard API Response Envelope</h2>
+    <p class="body">Every endpoint returns the same JSON envelope. Always check <code>STATUS_CODE</code> first — HTTP 200 can still have STATUS_CODE 500 inside.</p>
+    <div class="code-wrap">
+      <div class="code-header"><span class="code-lang">JSON — Success Response</span><button class="code-copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre class="cb">{
+  <span class="st">"STATUS"</span>: <span class="st">"Success"</span>,      <span class="cm">// Always "Success" by convention</span>
+  <span class="st">"STATUS_CODE"</span>: <span class="nu">0</span>,       <span class="cm">// 0 = success | 500 = error</span>
+  <span class="st">"NOTIFICATIONS"</span>: [],    <span class="cm">// Error/info messages if any</span>
+  <span class="st">"Result"</span>: [ ... ]       <span class="cm">// The actual data payload</span>
+}
+
+<span class="cm">// Error response — note STATUS is still "Success" but STATUS_CODE is 500</span>
+{
+  <span class="st">"STATUS"</span>: <span class="st">"Success"</span>,
+  <span class="st">"STATUS_CODE"</span>: <span class="nu">500</span>,
+  <span class="st">"NOTIFICATIONS"</span>: [
+    { <span class="st">"Code"</span>: <span class="st">"500"</span>, <span class="st">"Message"</span>: <span class="st">"EsId not found"</span>, <span class="st">"NotificationType"</span>: <span class="nu">500</span> }
+  ],
+  <span class="st">"Result"</span>: <span class="kw">null</span>
+}</pre>
+    </div>
+    <div class="box box-info">
+      <span class="box-icon">ℹ️</span>
+      <p><strong>File download endpoints</strong> (DownloadXxxReport) do NOT return JSON. They return <code>FileStreamResult</code>: a binary .xlsx stream with Content-Disposition header. The browser triggers a Save File dialog automatically.</p>
+    </div>
+    <h2 class="sh">AutoMapper — 30 Mapping Profiles</h2>
+    <p class="body">All 30 profiles are auto-discovered at startup via <code>services.AddAutoMapper(typeof(Startup))</code>. Key profiles include:</p>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Profile</th><th>Primary Mappings</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>MonitoringMapperProfile</td><td><code>SaveMonitoringActivityCommand → EsMonitoring</code></td><td>Date fields converted to MM/DD/YYYY string format</td></tr>
+          <tr><td>DueDiligenceMapperProfile</td><td><code>EsHeader → DueDiligenceQuestionnaire</code></td><td>Complex 3-level PS hierarchy mapping</td></tr>
+          <tr><td>EsapActionMapperProfile</td><td><code>SaveEsapActionCommand → EsapAction</code></td><td>History mapping includes user UPI resolution</td></tr>
+          <tr><td>PortfolioProjectsTabMapperProfile</td><td><code>PortfolioProjectsEntityModel → PortfolioProjectInformation</code></td><td>Main portfolio mapping — 80+ fields</td></tr>
+          <tr><td>GbvDetailMapperProfile</td><td><code>GBV entities → GbvDetailsResponse</code></td><td>GBV risk scoring calculation during mapping</td></tr>
+          <tr><td>DashboardMapperProfile</td><td><code>Entity models → DashboardDetailsResponse</code></td><td>Aggregation and calculation for chart data</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ LIFECYCLE ════════════════════════════════ -->
+<div id="page-lifecycle" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">Project Lifecycle</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">03</span><h1>Project Lifecycle</h1></div>
+      <p>From initial application through active portfolio monitoring to final archival</p>
+    </div>
+    <div class="lifecycle-grid">
+      <div class="lc-step"><div class="lc-step-num">1</div><div class="lc-tag lc-pipeline">Pipeline</div><div class="lc-step-name">Application Received</div><div class="lc-step-desc">Project enters as pipeline. Metadata recorded: Project ID, Region, Host Country, Sector, FY, Product Type.</div></div>
+      <div class="lc-step"><div class="lc-step-num">2</div><div class="lc-tag lc-pipeline">Pipeline</div><div class="lc-step-name">E&amp;S Specialist Assignment</div><div class="lc-step-desc">Manager assigns E&amp;S Specialist via <code>SaveTeamInformation</code>. 16+ unassigned projects await.</div></div>
+      <div class="lc-step"><div class="lc-step-num">3</div><div class="lc-tag lc-review">Review</div><div class="lc-step-name">E&amp;S Due Diligence</div><div class="lc-step-desc">Specialist conducts full ESDD. PS1–PS8 applicability, Management/Performance/Communication factors scored 1–3.</div></div>
+      <div class="lc-step"><div class="lc-step-num">4</div><div class="lc-tag lc-review">Review</div><div class="lc-step-name">ESRR(D) Generated</div><div class="lc-step-desc">System calculates E&amp;S Risk Rating from factor scores. Ratings: Excellent, Satisfactory, Partly Unsat., Unsatisfactory, NA.</div></div>
+      <div class="lc-step"><div class="lc-step-num">5</div><div class="lc-tag lc-review">Review</div><div class="lc-step-name">ESAP Creation</div><div class="lc-step-desc">If compliance actions required, specialist creates ESAP items with due dates and deliverables.</div></div>
+      <div class="lc-step"><div class="lc-step-num">6</div><div class="lc-tag lc-review">Review</div><div class="lc-step-name">GBV Assessment</div><div class="lc-step-desc">Specialist completes GBV risk questionnaire. System calculates GBV Risk Score and Rating (Low/Medium/High FI).</div></div>
+      <div class="lc-step"><div class="lc-step-num">7</div><div class="lc-tag lc-review">Review</div><div class="lc-step-name">Document Upload</div><div class="lc-step-desc">ESIAs, audit logs, ESAP templates uploaded to World Bank WbDocs with Strictly Confidential classification.</div></div>
+      <div class="lc-step"><div class="lc-step-num">8</div><div class="lc-tag lc-portfolio">Portfolio</div><div class="lc-step-name">Guarantee Issuance</div><div class="lc-step-desc">Management review → approved projects move to Portfolio via <code>ProjectPhaseUpdateEvent</code> on Azure Service Bus.</div></div>
+      <div class="lc-step"><div class="lc-step-num">9</div><div class="lc-tag lc-portfolio">Portfolio</div><div class="lc-step-name">Ongoing Monitoring</div><div class="lc-step-desc">Regular E&amp;S monitoring: AMR Review, Site Visit (physical/virtual), Client Meeting. ESRR(M) updated each cycle.</div></div>
+      <div class="lc-step"><div class="lc-step-num">10</div><div class="lc-tag lc-portfolio">Portfolio</div><div class="lc-step-name">ESAP Completion</div><div class="lc-step-desc">Specialist verifies guarantee holder completion. Missed deadlines trigger automated email reminders.</div></div>
+      <div class="lc-step"><div class="lc-step-num">11</div><div class="lc-tag lc-portfolio">Portfolio</div><div class="lc-step-name">High Risk Classification</div><div class="lc-step-desc">If major E&amp;S issues arise, specialist flags as High Risk. CAO complaint status tracked. Triggers enhanced monitoring.</div></div>
+      <div class="lc-step"><div class="lc-step-num">12</div><div class="lc-tag lc-archive">Archive</div><div class="lc-step-name">Project Closure</div><div class="lc-step-desc">Guarantee expires → moves to Shelved (181 records). All data retained read-only. Status: DECLINED, WITHDRAWN, etc.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ DASHBOARD ════════════════════════════════ -->
+<div id="page-dashboard" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">Dashboard Module</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">04</span><h1>Dashboard Module</h1></div>
+      <p>Central analytics hub with role-scoped views and chart data endpoints</p>
+    </div>
+    <p class="body">The Dashboard aggregates pipeline, portfolio, monitoring, and reporting data into a single comprehensive view. Two permission tiers: <strong>DashboardManager</strong> (all specialists' data aggregated) and <strong>DashboardSpecialistView</strong> (own assigned projects only).</p>
+    <h2 class="sh">Dashboard Sections</h2>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Section</th><th>Manager View</th><th>Specialist View</th></tr></thead>
+        <tbody>
+          <tr><td>Pipeline Summary</td><td>All projects — count by ESRR(D) rating, business stage, region, sector</td><td>Own projects only — personal pipeline workload</td></tr>
+          <tr><td>Portfolio Summary</td><td>243+ projects — ESRR(M) distribution, MSV completion, AMR status</td><td>Filtered to specialist's assigned portfolio</td></tr>
+          <tr><td>AMR Tracking</td><td>Outstanding, overdue, upcoming AMR submissions across all specialists</td><td>Personal AMR calendar and due dates</td></tr>
+          <tr><td>GBV Dashboard</td><td>GBV rating breakdown pipeline vs portfolio, country-level risk heat</td><td>GBV ratings for assigned projects</td></tr>
+          <tr><td>ES Insights</td><td>Power BI embedded analytics (InsightsDashboardView permission)</td><td>Same if InsightsDashboardView role assigned</td></tr>
+          <tr><td>Unassigned</td><td>Count of pipeline projects with no specialist assigned</td><td>Not shown</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box box-tip">
+      <span class="box-icon">💡</span>
+      <p><strong>Filter parameters:</strong> All dashboard endpoints accept <code>FiscalYear[]</code>, <code>ManagementGroupCode[]</code>, <code>EsSpecialistUPI</code>. Filters are optional — omit for full portfolio view.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ PIPELINE ════════════════════════════════ -->
+<div id="page-pipeline" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">Pipeline Projects</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">05</span><h1>Projects in Pipeline</h1></div>
+      <p>Managing unapproved projects undergoing E&amp;S Due Diligence</p>
+    </div>
+    <p class="body">Pipeline projects are investment projects that have applied for a MIGA guarantee but have NOT yet been approved and issued a contract. E&amp;S Specialists conduct Environmental &amp; Social Due Diligence (ESDD) — a thorough assessment against IFC Performance Standards PS1–PS8.</p>
+    <h2 class="sh">Sub-Tabs</h2>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Tab</th><th>Content</th><th>Use Case</th></tr></thead>
+        <tbody>
+          <tr><td>My Projects</td><td>Projects assigned to logged-in specialist</td><td>Personal workload management</td></tr>
+          <tr><td>All Projects (91+)</td><td>All active pipeline projects regardless of assignment</td><td>Manager monitoring full pipeline workload</td></tr>
+          <tr><td>Unassigned Projects (16)</td><td>Pipeline with no assigned E&amp;S Specialist</td><td>Managers assign projects to reduce unmanaged risk</td></tr>
+          <tr><td>Master Contract (1)</td><td>High-priority, fast-moving projects tracked separately</td><td>E.g., Raxio Data Centre, Uganda — E&amp;S clearance memo stage</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h2 class="sh" id="pd-detail">Project Detail — Pipeline Stage</h2>
+    <p class="body">Clicking a project opens a multi-tab detail view. Reference project: <strong>Project 14383 — ABSA/Barclays Botswana</strong>. Pipeline Active, Finance &amp; Capital Markets, Sub-Saharan Africa. GBV Risk: Medium FI (Final).</p>
+    <h3 class="ss">Tab: Due Diligence</h3>
+    <p class="body">The heart of the E&amp;S assessment workflow. Multi-section questionnaire evaluating the project against all 8 IFC Performance Standards.</p>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Factor Group</th><th>Questions</th><th>Areas Assessed</th></tr></thead>
+        <tbody>
+          <tr><td>Management Factors</td><td>3</td><td>E&amp;S Staffing, E&amp;S Management System, Management Commitment</td></tr>
+          <tr><td>Performance Factors</td><td>5</td><td>Incidents/Compliance, PS/Safeguards Gaps, ESDD Quality, E&amp;S Improvements, Monitoring</td></tr>
+          <tr><td>Communication Factors</td><td>2</td><td>Quality/Quantity of E&amp;S Information, Stakeholder Communication</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box box-warn">
+      <span class="box-icon">⚠️</span>
+      <p><strong>Scoring Scale:</strong> 1 = Poor, 2 = Average, 3 = Good. The 'Assess ESRR' button recalculates ESRR(D). An 'Override' button allows managers to manually override the calculated rating with written justification.</p>
+    </div>
+    <h3 class="ss">Tab: ESAP (Environmental &amp; Social Action Plan)</h3>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Is ESAP Required?</td><td>Boolean</td><td>Yes/No toggle determining if ESAP applies to this project</td></tr>
+          <tr><td>Action</td><td>Text</td><td>Specific compliance action the guarantee holder must complete</td></tr>
+          <tr><td>Due Date</td><td>Date</td><td>Original target completion date</td></tr>
+          <tr><td>Re-Scheduled Date</td><td>Date</td><td>Rescheduled date if original was missed</td></tr>
+          <tr><td>Completion Date</td><td>Date</td><td>Actual verified completion date</td></tr>
+          <tr><td>Deliverables</td><td>Text</td><td>Expected output / evidence of completion</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 class="ss">Tab: GBV Risk Assessment</h3>
+    <p class="body">Evaluates the project's risk of facilitating Gender-Based Violence. Generates: GBV Risk Score, GBV Risk Rating (Low FI / Medium FI / High FI), and GBV Rating Status (Final / Pending / Not Required).</p>
+    <h3 class="ss">Tab: Nature Finance</h3>
+    <p class="body">Tracks contributions to nature-based financing frameworks aligned with global biodiversity commitments (TNFD, NGFS). Fields: Nature Finance applicability, Potential score (H/M/L/NA), Justification.</p>
+    <h3 class="ss">Tab: Audit Summary</h3>
+    <p class="body">Read-only chronological change log — who made the change, what was changed, when — full compliance audit trail for every project record.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ PORTFOLIO ════════════════════════════════ -->
+<div id="page-portfolio" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">Portfolio Projects</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">06</span><h1>Projects in Portfolio</h1></div>
+      <p>Ongoing monitoring of 243+ actively guaranteed MIGA projects</p>
+    </div>
+    <p class="body">Portfolio projects have successfully received a MIGA guarantee and are actively operational. Unlike pipeline projects under evaluation, portfolio projects require ongoing E&amp;S monitoring to ensure continued compliance throughout the guarantee life.</p>
+    <h2 class="sh" id="pf-detail">Portfolio Project Detail — Monitoring Tab</h2>
+    <p class="body">Monitoring activities are the core workflow. Types: AMR Review, Site Visit, Virtual Monitoring, Client Meeting, Other.</p>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Activity Type</th><th>Flag Field</th><th>Required Date Fields</th><th>Frequency</th></tr></thead>
+        <tbody>
+          <tr><td>AMR Review</td><td><code>AmrReviewFlag</code></td><td>AmrFromDate, AmrToDate, AmrDueDate, AmrReceivedDate</td><td>Annual or Biannual</td></tr>
+          <tr><td>Site Visit</td><td><code>SiteVisitFlag</code></td><td>SiteVisitFromDate, SiteVisitToDate</td><td>Per ESRR(M) rating level</td></tr>
+          <tr><td>Virtual Monitoring</td><td><code>VirtualMonitoringFlag</code></td><td>VirtualFromDate, VirtualToDate</td><td>As needed</td></tr>
+          <tr><td>Client Meeting</td><td><code>ClientMeetingFlag</code></td><td>ClientMeetingDate</td><td>As needed</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h2 class="sh">High Risk Classification</h2>
+    <p class="body">Applied to portfolio projects with significant E&amp;S performance issues. Triggers enhanced monitoring requirements, manager review, and inclusion in High Risk reports.</p>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>IsHighRisk</td><td>Boolean flag — true activates enhanced monitoring requirements</td></tr>
+          <tr><td>IsCaoComplaint</td><td>Whether a Compliance Advisor Ombudsman complaint has been filed</td></tr>
+          <tr><td>Rationale</td><td>Reason for High Risk classification — required text field</td></tr>
+          <tr><td>KeyIssues</td><td>Specific E&amp;S issues identified at the project site</td></tr>
+          <tr><td>RecentDevelopments</td><td>Latest update on the High Risk situation</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h2 class="sh">ESRR(M) Rating Scale</h2>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Rating</th><th>Code</th><th>Meaning</th><th>Action Required</th></tr></thead>
+        <tbody>
+          <tr><td>Excellent</td><td class="td-m">E</td><td>Consistently exceeds all E&amp;S performance requirements</td><td>Continue current practices</td></tr>
+          <tr><td>Satisfactory</td><td class="td-m">S</td><td>Fully meets all applicable E&amp;S requirements</td><td>Maintain compliance; standard monitoring</td></tr>
+          <tr><td>Partly Unsatisfactory</td><td class="td-m">PU</td><td>Partially meets requirements; corrective actions needed</td><td>Issue corrective action plan; increase frequency</td></tr>
+          <tr><td>Unsatisfactory</td><td class="td-m">U</td><td>Significantly fails E&amp;S requirements; escalation required</td><td>Escalate to management; guarantee conditions at risk</td></tr>
+          <tr><td>No Rating</td><td class="td-m">NR</td><td>Rating not yet assigned — early stage or insufficient data</td><td>Specialist to complete due diligence assessment</td></tr>
+          <tr><td>Not Applicable</td><td class="td-m">NA</td><td>Rating not applicable to this project type or structure</td><td>Document rationale for non-applicability</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ REPORTS ════════════════════════════════ -->
+<div id="page-reports" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">Reports Module</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">07</span><h1>Reports Module</h1></div>
+      <p>18+ downloadable Excel/PDF compliance, monitoring, risk, and performance reports</p>
+    </div>
+    <p class="body">All download endpoints generate Excel (.xlsx) files via Aspose.Cells and return <code>FileStreamResult</code>. The browser triggers a Save File dialog. Preview endpoints (Get*) return structured JSON for the Reports screen UI.</p>
+    <h2 class="sh">Available Download Reports</h2>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Report</th><th>Description</th><th>Key Columns</th></tr></thead>
+        <tbody>
+          <tr><td>High Risk Report</td><td>Full High Risk project detail</td><td>Project Name, Region, CAO Complaint, Rationale, Key Issues, Recent Developments</td></tr>
+          <tr><td>High Risk List Report</td><td>Simplified list of current High Risk projects</td><td>Project ID, Name, Region, Specialist, High Risk Date</td></tr>
+          <tr><td>High Risk Removal Report</td><td>Projects removed from High Risk</td><td>All High Risk fields + Removal Date, Removal Rationale</td></tr>
+          <tr><td>Major Incident Report</td><td>All major E&amp;S incidents</td><td>Incident Date, Type, Severity, Description, Corrective Actions, Status</td></tr>
+          <tr><td>ESAP Status Report</td><td>ESAP action compliance status</td><td>Action Description, Due Date, Status (Overdue/On Track/Completed)</td></tr>
+          <tr><td>ESRR Status Report</td><td>ESRR(M) ratings for all portfolio projects</td><td>Project ID, Name, ESRR(M) Rating, Score, Date, Previous Rating</td></tr>
+          <tr><td>AMR Submission Report</td><td>AMR submission tracking by FY</td><td>Project ID, AMR Due Date, Received Date, Outstanding Flag</td></tr>
+          <tr><td>Monitoring Visit Trends</td><td>MSV completion trends over fiscal years</td><td>FY, Recommended, Completed, Completion Rate, Track B</td></tr>
+          <tr><td>ESRR Score Portfolio</td><td>ESRR(M) scores for all portfolio projects</td><td>Project ID, ESRR(D), ESRR(M), Change, Date, Specialist, Override</td></tr>
+          <tr><td>ESRR Score Individual</td><td>ESRR score history for one project</td><td>Date, Score, Rating, Override Flag, Justification — one row per cycle</td></tr>
+          <tr><td>Monitoring Project Report</td><td>Comprehensive monitoring activities</td><td>All AMR, site visit, virtual monitoring records per project</td></tr>
+          <tr><td>Nature Finance Report</td><td>Nature Finance assessments for all projects</td><td>Project ID, Potential Score, IsNatureFinance (Y/N), Justification</td></tr>
+          <tr><td>Recently Updated Report</td><td>Projects with changes in last N days</td><td>Project ID, Name, Last Modified, Changed By, Change Type</td></tr>
+          <tr><td>Dashboard Report</td><td>Comprehensive dashboard data workbook</td><td>Multiple sheets: Pipeline Summary, Portfolio Summary, Other Initiatives</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ SHELVED ════════════════════════════════ -->
+<div id="page-shelved" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">Shelved Projects</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">08</span><h1>Shelved Projects</h1></div>
+      <p>Read-only archive of terminated and declined projects</p>
+    </div>
+    <p class="body">Shelved Projects are investment projects that were declined, withdrawn, not going forward, or deselected by MIGA. The system currently holds <strong>181 shelved records</strong>. All data is retained read-only for compliance purposes — no edit operations are permitted.</p>
+    <h2 class="sh">Shelved Status Codes</h2>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Status Code</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td class="td-m">DECLINED</td><td>MIGA formally declined to issue the guarantee after full review</td></tr>
+          <tr><td class="td-m">WITHDRAWN</td><td>The investor or guarantee holder withdrew the application</td></tr>
+          <tr><td class="td-m">NOT GOING FORWARD</td><td>Project not proceeding; no formal decline or withdrawal issued</td></tr>
+          <tr><td class="td-m">DESELECTED BY MIGA</td><td>MIGA proactively removed the project from its pipeline</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box box-info">
+      <span class="box-icon">ℹ️</span>
+      <p>The <code>GetShelvedProjects</code> endpoint accepts optional query params: <code>EsId</code>, <code>ProjectNumber</code>, <code>Status</code> for filtering. No write operations exist on this controller.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ API REFERENCE ════════════════════════════════ -->
+<div id="page-api" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">API Reference</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">09</span><h1>API Reference</h1></div>
+      <p>All 130+ REST endpoints across 21 controllers — parameters, permissions, returns</p>
+    </div>
+    <div class="box box-info">
+      <span class="box-icon">ℹ️</span>
+      <p><strong>Base URL (DEV):</strong> <code>https://localhost:44379/api/esrd</code> &nbsp;|&nbsp; <strong>Auth:</strong> All endpoints require <code>Authorization: Bearer &lt;JWT&gt;</code> header from Azure AD SSO.</p>
+    </div>
+
+    <!-- PROJECTS API -->
+    <h2 class="sh" id="api-projects">Projects API — /api/esrd/Projects</h2>
+    <p class="body">Largest controller with 24+ endpoints. Covers pipeline, portfolio, shelved projects, team management, GBV, AMR history, and all project-level downloads.</p>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-post">POST</span><span class="ep-path">/Projects/GetPipelineProjects</span><span class="perm p-read">ReadAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Fetch all projects in pipeline stage. All filters optional.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>FiscalYear</code></td><td>int[]</td><td class="p-opt">optional</td><td>e.g. [2025, 2024]</td></tr><tr><td><code>RegionKey</code></td><td>string[]</td><td class="p-opt">optional</td><td>e.g. ['AFR','EAP']</td></tr><tr><td><code>EsSpecialist</code></td><td>int[]</td><td class="p-opt">optional</td><td>UPI list for filtering</td></tr><tr><td><code>ManagementGroupCode</code></td><td>int[]</td><td class="p-opt">optional</td><td>Management group filter</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">PipelineProjectsResponse { Result: List&lt;PipelineProjectInformation&gt; }</span></div></div></div>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-post">POST</span><span class="ep-path">/Projects/GetPortfolioProjects</span><span class="perm p-read">ReadAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Fetch all actively monitored portfolio projects. Merges ESRD PostgreSQL DB with MIGA Portal Integration Service. Returns 80+ fields per project.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>FiscalYear</code></td><td>int[]</td><td class="p-opt">optional</td><td>Fiscal year filter</td></tr><tr><td><code>ESMFiscalYear</code></td><td>int?[]</td><td class="p-opt">optional</td><td>ESM fiscal year filter</td></tr><tr><td><code>ManagementGroupCode</code></td><td>int[]</td><td class="p-opt">optional</td><td>Management group filter</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">PortfolioProjectsResponse { Result: List&lt;PortfolioProjectInformation&gt; (80+ fields) }</span></div></div></div>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-get">GET</span><span class="ep-path">/Projects/GetShelvedProjects</span><span class="perm p-read">ReadAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Fetch all 181 terminated/shelved projects. Read-only.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>EsId</code></td><td>int</td><td class="p-opt">optional</td><td>Filter by E&amp;S ID</td></tr><tr><td><code>Status</code></td><td>string</td><td class="p-opt">optional</td><td>DECLINED, WITHDRAWN, etc.</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">ShelvedProjectsResponse { Result: List&lt;ShelvedProjectInformation&gt; }</span></div></div></div>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-post">POST</span><span class="ep-path">/Projects/SaveTeamInformation</span><span class="perm p-edit">EditAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Assign E&amp;S team to a project. Sends notification email. Triggers TeamAssignmentApprovedEvent domain event.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>EsId</code></td><td>int</td><td class="p-req">required</td><td>Project to assign team to</td></tr><tr><td><code>EsSpecialistUpI</code></td><td>int</td><td class="p-req">required</td><td>Lead specialist UPI</td></tr><tr><td><code>SupportSpecialistUpIList</code></td><td>int[]</td><td class="p-opt">optional</td><td>Co-specialist UPIs</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">SaveTeamInformationResponse { STATUS_CODE: 0 }</span></div></div></div>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-post">POST</span><span class="ep-path">/Projects/SaveGbvQuestionnaires</span><span class="perm p-edit">EditAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Save GBV questionnaire answers and calculate GBV Risk Rating.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>EsId</code></td><td>int</td><td class="p-req">required</td><td>Project ID</td></tr><tr><td><code>GbvId</code></td><td>int</td><td class="p-req">required</td><td>0=new, &gt;0=update</td></tr><tr><td><code>GbvRiskRatingStatusCode</code></td><td>string</td><td class="p-req">required</td><td>Final/Pending/NotRequired</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">SaveGbvQuestionnairesCommandResponse { GbvId, STATUS_CODE: 0 }</span></div></div></div>
+
+    <!-- MONITORING API -->
+    <h2 class="sh" id="api-monitoring">Monitoring API — /api/esrd/Monitoring</h2>
+    <p class="body">Manages all ongoing E&amp;S monitoring activities for portfolio projects: AMR Reviews, site visits, virtual monitoring, and client meetings.</p>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-get">GET</span><span class="ep-path">/Monitoring/GetMonitoringList</span><span class="perm p-read">ReadAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Retrieve chronological list of all monitoring activities for a project.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>EsId</code></td><td>int</td><td class="p-req">required</td><td>Project ID</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">MonitoringListResponse { Result: List&lt;MonitoringActivityInformation&gt; }</span></div></div></div>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-get">GET</span><span class="ep-path">/Monitoring/GetMonitoringDetails</span><span class="perm p-read">ReadAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Retrieve full monitoring questionnaire detail for a specific monitoring activity.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>EsId</code></td><td>int</td><td class="p-req">required</td><td>Project ID</td></tr><tr><td><code>ProjectStageId</code></td><td>int</td><td class="p-req">required</td><td>Specific monitoring record ID</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">MonitoringQuestionnaireResponse { questionnaire with all section data }</span></div></div></div>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-post">POST</span><span class="ep-path">/Monitoring/SaveMonitoringActivity</span><span class="perm p-edit">EditAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">[FromForm] multipart. Create or update a monitoring activity. Applies 12 conditional validation rules. Auto-seeds questionnaire from DD responses on first activity.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>ProjectStageId</code></td><td>int</td><td class="p-req">required</td><td>0=new, &gt;0=update</td></tr><tr><td><code>EsId</code></td><td>int</td><td class="p-req">required</td><td>Project ID</td></tr><tr><td><code>AmrReviewFlag</code></td><td>bool?</td><td class="p-opt">optional</td><td>AMR review conducted?</td></tr><tr><td><code>AmrDueDate</code></td><td>datetime?</td><td class="p-opt">conditional</td><td>Required if AmrReviewFlag=true</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">SaveMonitoringActivityResponse { ProjectStageId: int }</span></div></div></div>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-post">POST</span><span class="ep-path">/Monitoring/DeleteMonitoring</span><span class="perm p-edit">EditAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Soft-delete a monitoring activity. Sets IsDeleted=true; record not physically removed.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>ProjectStageId</code></td><td>int (query)</td><td class="p-req">required</td><td>Monitoring record to delete</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">SaveResponse { STATUS_CODE: 0 }</span></div></div></div>
+
+    <!-- ESAP ACTION API -->
+    <h2 class="sh" id="api-esap">ESAP Action API — /api/esrd/EsapAction</h2>
+    <p class="body">Manages Environmental &amp; Social Action Plans — contractual lists of actions guarantee holders must complete. Full audit history included.</p>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-get">GET</span><span class="ep-path">/EsapAction/GetEsapActions</span><span class="perm p-read">ReadAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Retrieve all ESAP actions for a project with full EsapActionHistory[]. User names resolved from UPI.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>EsId</code></td><td>int</td><td class="p-req">required</td><td>Project ID</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">EsapActionsResponse { EsapRequiredInfo, EsapActions[{ ...EsapActionHistory[] }] }</span></div></div></div>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-post">POST</span><span class="ep-path">/EsapAction/SaveEsapAction</span><span class="perm p-edit">EditAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Create or update an ESAP action. Auto-creates EsapActionHistory entry recording who saved it and when.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>EsapActionId</code></td><td>int</td><td class="p-req">required</td><td>0=new action, &gt;0=update</td></tr><tr><td><code>EsId</code></td><td>int</td><td class="p-req">required</td><td>Project ID</td></tr><tr><td><code>Action</code></td><td>string</td><td class="p-req">required</td><td>Action description text</td></tr><tr><td><code>DueDate</code></td><td>datetime</td><td class="p-req">required</td><td>Target completion date</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">SaveEsapActionResponse { EsapActionId: int }</span></div></div></div>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-post">POST</span><span class="ep-path">/EsapAction/DeleteEsapAction</span><span class="perm p-edit">EditAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Soft-delete one or more ESAP actions. Accepts list of IDs for bulk delete.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>esapActionIdList</code></td><td>int[]</td><td class="p-req">required</td><td>List of action IDs, e.g. [1,2,3]</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">SaveResponse { STATUS_CODE: 0, count of deleted records }</span></div></div></div>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-post">POST</span><span class="ep-path">/EsapAction/UploadEsapAction</span><span class="perm p-edit">EditAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">[FromForm] Upload ESAP actions from Excel template. Deletes existing non-DD actions, creates new ones, sets IsEsap=true.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>EsId</code></td><td>int</td><td class="p-req">required</td><td>Project ID (form field)</td></tr><tr><td><code>UploadFile</code></td><td>binary (.xlsx)</td><td class="p-req">required</td><td>Filled ESAP_Actions_Template.xlsx</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">SaveResponse { STATUS_CODE: 0, count of uploaded actions }</span></div></div></div>
+
+    <!-- DUE DILIGENCE API -->
+    <h2 class="sh" id="api-dd">Due Diligence API — /api/esrd/DueDiligence</h2>
+    <p class="body">Manages the full DD questionnaire — core assessment tool for pipeline projects. Evaluates against PS1–PS8 and generates ESRR(D) rating. One of the most data-rich endpoints in the system.</p>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-get">GET</span><span class="ep-path">/DueDiligence/GetDueDiligenceDetails</span><span class="perm p-none">Open</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Assemble and return the complete DD questionnaire for a project. Returns all 8 questionnaire sections with saved responses, calculated ESRR(D), editability flag, and bubble help tooltips.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>EsId</code></td><td>int (query)</td><td class="p-req">required</td><td>Project to fetch questionnaire for</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">DueDiligenceQuestionnaireResponse { 8 section arrays + ResponseSummary + IsDueDiligenceEditable }</span></div></div></div>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-post">POST</span><span class="ep-path">/DueDiligence/SaveDueDiligence</span><span class="perm p-edit">EditAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Save all DD questionnaire responses in a single call. Validates editability (cannot edit if active contracts exist). Handles ESRR override.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>EsId</code></td><td>int</td><td class="p-req">required</td><td>Project ID</td></tr><tr><td><code>ProjectStageId</code></td><td>int</td><td class="p-req">required</td><td>0=new, &gt;0=update</td></tr><tr><td><code>GeneralInformation</code></td><td>object</td><td class="p-req">required</td><td>ESRR scores, dates, override, all factor comments</td></tr><tr><td><code>QuestionDetails</code></td><td>array</td><td class="p-req">required</td><td>Each: QuestionId, OptionId, TextBoxAnswer, CheckBoxChecked, QuestionSection</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">SaveDueDiligenceResponse { ProjectStageId: int }</span></div></div></div>
+
+    <!-- DASHBOARD API -->
+    <h2 class="sh" id="api-dashboard">Dashboard API — /api/esrd/Dashboard</h2>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-post">POST</span><span class="ep-path">/Dashboard/GetDashboardDetails</span><span class="perm p-dash">DashboardManager</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Manager-level dashboard: aggregated data across ALL specialists. Pipeline/portfolio counts, ESRR distributions, MSV summary, AMR status, business stage, sector, management group, and unassigned count.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>EsSpecialistUPI</code></td><td>int?</td><td class="p-opt">optional</td><td>0 or omit for all specialists</td></tr><tr><td><code>FiscalYear</code></td><td>int[]</td><td class="p-opt">optional</td><td>Fiscal year filter</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">DashboardDetailsResponse { pipeline stats, portfolio stats, ESRR distributions, AMR summary }</span></div></div></div>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-post">POST</span><span class="ep-path">/Dashboard/GetDashboardDetailsForSpecialist</span><span class="perm p-dash">SpecialistView</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Specialist-scoped dashboard: same structure as GetDashboardDetails but filtered to only the logged-in specialist's assigned projects.</p><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">DashboardDetailsResponse { specialist-filtered metrics }</span></div></div></div>
+
+    <!-- HIGH RISK & INCIDENT -->
+    <h2 class="sh" id="api-highrisk">High Risk, Nature Finance &amp; Incident APIs</h2>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-get">GET</span><span class="ep-path">/HighRisk/GetHighRiskDetails</span><span class="perm p-read">ReadAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">Fetch complete High Risk questionnaire for a project. If project is not currently high risk, also returns the most recent historical high-risk responses.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>EsId</code></td><td>int (query)</td><td class="p-req">required</td><td>Project ID</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">HighRiskQuestionnaireResponse { IsHighRisk, IsCaoComplaint, Rationale, KeyIssues, RecentDevelopments }</span></div></div></div>
+    <div class="ep-card"><div class="ep-header" onclick="toggleEp(this)"><span class="m-post">POST</span><span class="ep-path">/Incident/SaveIncident</span><span class="perm p-edit">EditAll</span><span class="ep-chevron">▼</span></div><div class="ep-body"><p class="ep-desc">[FromForm] Create or update an incident. Includes optional COVID-19 sub-records and optional document upload to WbDocs. Saves incident → COVID details → document uploads sequentially.</p><table class="params-tbl"><thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>EsId</code></td><td>int</td><td class="p-req">required</td><td>Project ID</td></tr><tr><td><code>IncidentDate</code></td><td>datetime</td><td class="p-req">required</td><td>Date incident occurred</td></tr><tr><td><code>Description</code></td><td>string</td><td class="p-req">required</td><td>Incident description</td></tr><tr><td><code>Severity</code></td><td>string</td><td class="p-opt">optional</td><td>Low / Medium / High</td></tr></tbody></table><div class="returns-row"><span class="ret-label">RETURNS</span><span class="ret-val">SaveIncidentResponse { IncidentId, STATUS_CODE: 0, documentUploadResults }</span></div></div></div>
+
+    <!-- OTHER CONTROLLERS -->
+    <h2 class="sh" id="api-other">Other Controllers</h2>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Controller</th><th>Method</th><th>Endpoint</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>OtherInitiatives</td><td class="td-get">GET</td><td><code>GetOtherInitiatives</code></td><td>List WBG/IFC cross-collaboration initiatives with optional filters</td></tr>
+          <tr><td>OtherInitiatives</td><td class="td-post">POST</td><td><code>SaveOtherInitiatives</code></td><td>Create or update initiative. 0=new, &gt;0=update.</td></tr>
+          <tr><td>Document</td><td class="td-get">GET</td><td><code>GetDocuments</code></td><td>Fetch all documents for a project linked to WbDocs</td></tr>
+          <tr><td>Document</td><td class="td-post">POST</td><td><code>SaveDocument</code></td><td>Save document record with WbDocs DocumentKey</td></tr>
+          <tr><td>AuditSummary</td><td class="td-get">GET</td><td><code>GetAuditSummary</code></td><td>Fetch complete chronological change log for a project</td></tr>
+          <tr><td>DropDownValues</td><td class="td-get">GET</td><td><code>GetDropDownValues</code></td><td>All UI dropdown lists in one call: Regions, Countries, Sectors, etc.</td></tr>
+          <tr><td>EsrdMasterData</td><td class="td-get">GET</td><td><code>GetGbvTableData</code></td><td>GBV risk matrix data for the GBV scoring display matrix</td></tr>
+          <tr><td>ProvideClearance</td><td class="td-get">GET</td><td><code>ProvideClearanceProjects</code></td><td>Pipeline projects awaiting E&amp;S clearance memo approval</td></tr>
+          <tr><td>ProvideClearance</td><td class="td-post">POST</td><td><code>ApproveProvideClearanceProject</code></td><td>Manager approves E&amp;S clearance; advances DD stage</td></tr>
+          <tr><td>UnassignedRequests</td><td class="td-get">GET</td><td><code>GetUnassignedRequests</code></td><td>List all pending E&amp;S specialist assignment requests</td></tr>
+          <tr><td>EsInsights</td><td class="td-post">POST</td><td><code>StartMalenaUpload</code></td><td>Initiate Malena AI document analysis — async via Service Bus</td></tr>
+          <tr><td>EsInsights</td><td class="td-get">GET</td><td><code>GetEsInsightsSentensewiseData</code></td><td>Sentence-level AI analysis results with PS reference and confidence</td></tr>
+          <tr><td>EsInsights</td><td class="td-get">GET</td><td><code>GetPowerBiReportDetails</code></td><td>Power BI embed URL + access token for ES Insights dashboard</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ FLOW DIAGRAMS ════════════════════════════════ -->
+<div id="page-flows" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">Flow Diagrams</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">10</span><h1>Flow Diagrams</h1></div>
+      <p>Complete end-to-end request flows from browser click to database and back</p>
+    </div>
+    <h2 class="sh">CQRS Request Flow — Every Operation</h2>
+    <div class="flow-wrap">
+      <div class="flow-title">CQRS + MediatR — Standard Request Pipeline</div>
+      <div class="flow-v">
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-ui">UI</div><div class="flow-line"></div></div><div class="flow-content"><h5>React.js Frontend</h5><p>HTTP POST/GET with <code>Authorization: Bearer &lt;JWT&gt;</code> header + JSON body</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-mw">MW</div><div class="flow-line"></div></div><div class="flow-content"><h5>Azure AD JWT Middleware</h5><p><code>UseAuthentication()</code> validates Bearer token — signature, expiry, audience. Invalid = HTTP 401 immediately.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-ctrl">CTL</div><div class="flow-line"></div></div><div class="flow-content"><h5>ASP.NET Core Controller</h5><p><code>[PolicyAuthorize(ESRD, ReadAll|EditAll)]</code> checked. Body deserialized. Calls <code>_mediator.Send(query)</code> — ZERO business logic here.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-med">VAL</div><div class="flow-line"></div></div><div class="flow-content"><h5>FluentValidation (Auto-runs)</h5><p>Runs BEFORE handler executes. On failure: HTTP 400 returned immediately. Handler never runs.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-med">MED</div><div class="flow-line"></div></div><div class="flow-content"><h5>MediatR Routes to Handler</h5><p>Resolves <code>IRequestHandler&lt;TQuery, TResponse&gt;</code> via Autofac DI container.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-hnd">HND</div><div class="flow-line"></div></div><div class="flow-content"><h5>Handler</h5><p>Calls exactly ONE service method. Wraps result in response envelope. No business logic here.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-svc">SVC</div><div class="flow-line"></div></div><div class="flow-content"><h5>Service Layer</h5><p>ALL business logic lives here. Calls repositories, external APIs, AutoMapper, caching. May use <code>Task.WhenAll</code> for parallel fetches.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-repo">DB</div></div><div class="flow-content"><h5>Repository / External API</h5><p>EF Core → PostgreSQL, or HTTP calls to Integration Service, WbDocs, Malena AI, Service Bus, etc.</p></div></div>
+      </div>
+    </div>
+
+    <h2 class="sh" id="flow-portfolio">Portfolio Projects — Complete Sequence</h2>
+    <p class="body">When a user navigates to Portfolio Projects, this 13-step sequence executes. Total typical latency: 800ms–2s.</p>
+    <div class="flow-wrap">
+      <div class="flow-title">GetPortfolioProjects — 13-Step Sequence</div>
+      <div class="flow-v">
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-ui">1</div><div class="flow-line"></div></div><div class="flow-content"><h5>UI — User Clicks "Portfolio Projects"</h5><p>React triggers HTTP POST <code>/api/esrd/Projects/GetPortfolioProjects</code> with Bearer header + JSON filter body</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-mw">2</div><div class="flow-line"></div></div><div class="flow-content"><h5>Azure AD JWT Validation</h5><p>Token signature, expiry, audience checked. Invalid = HTTP 401 immediately.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-ctrl">3</div><div class="flow-line"></div></div><div class="flow-content"><h5>ProjectsController</h5><p><code>[PolicyAuthorize(ESRD, ReadAll)]</code> checked. Body → <code>PortfolioProjectsQuery</code>. Calls <code>_mediator.Send()</code>.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-hnd">4</div><div class="flow-line"></div></div><div class="flow-content"><h5>PortfolioProjectsQueryHandler</h5><p>Calls <code>IPortfolioProjectsService.GetPortfolioProjects(request)</code>. Awaits result.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-svc">5</div><div class="flow-line"></div></div><div class="flow-content"><h5>Get Portfolio Phase Code from Cache</h5><p><code>_commonService.GetEsMasterData(ProjectPhase)</code> — integer phase code from in-memory cache (30-min TTL).</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-svc">6</div><div class="flow-line"></div></div><div class="flow-content"><h5>Build LINQ Filter Predicate</h5><p><code>BuildEsTablePredicateForPortfolioProjects()</code> — dynamic expression tree. Applies only filters present in query.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-repo">7</div><div class="flow-line"></div></div><div class="flow-content"><h5>Query PostgreSQL</h5><p>EF Core SELECT from <code>es_header</code> with JOINs on monitoring, ESRR ratings, team info.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-ext">8</div><div class="flow-line"></div></div><div class="flow-content"><h5>Call MIGA Portal Integration Service</h5><p>HTTP GET to <code>MPMIntegrationServiceUrl</code>. Gets all project numbers. Identifies unassigned projects.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-svc">9</div><div class="flow-line"></div></div><div class="flow-content"><h5>Parallel Data Fetch — Task.WhenAll</h5><p>Simultaneously: (a) full contract/application data, (b) cost codes. Both calls run in parallel for efficiency.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-svc">10</div><div class="flow-line"></div></div><div class="flow-content"><h5>Fetch Team &amp; Lookup Data</h5><p>Team user details, IFC Track codes, ES Score lookup tables from <code>_commonService.GetEsMasterData()</code>.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-svc">11</div><div class="flow-line"></div></div><div class="flow-content"><h5>Map &amp; Merge — 80+ Fields Per Project</h5><p><code>MapPortfolioProjectInformationResult()</code> — joins ESRD DB data with Integration data. AutoMapper populates all 80+ fields.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-ui">12</div></div><div class="flow-content"><h5>Response Returned to UI</h5><p>Handler wraps list in envelope. ASP.NET Core serializes to JSON (PascalCase). HTTP 200. React renders portfolio grid.</p></div></div>
+      </div>
+    </div>
+
+    <h2 class="sh" id="flow-monitoring">Save Monitoring Activity</h2>
+    <div class="flow-wrap">
+      <div class="flow-title">SaveMonitoringActivity — Multi-Step Save Flow</div>
+      <div class="flow-v">
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-ui">1</div><div class="flow-line"></div></div><div class="flow-content"><h5>UI — Specialist Fills Monitoring Form</h5><p>Checks AMR Review flag, enters dates. Optionally adds SiteVisit, VirtualMonitoring, ClientMeeting. Clicks Save.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-mw">2</div><div class="flow-line"></div></div><div class="flow-content"><h5>JWT + EditAll Permission Check</h5><p>Bearer token validated. <code>[PolicyAuthorize(ESRD, EditAll)]</code> checked. <code>[FromForm]</code> multipart body deserialized.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-med">3</div><div class="flow-line"></div></div><div class="flow-content"><h5>FluentValidation — 12 Conditional Rules</h5><p>If <code>AmrReviewFlag=true</code>: AmrFromDate, AmrToDate, AmrDueDate, AmrReceivedDate ALL required. If <code>SiteVisitFlag=true</code>: From/ToDate required.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-svc">4</div><div class="flow-line"></div></div><div class="flow-content"><h5>Verify EsId Exists in Database</h5><p><code>GetAsync&lt;EsHeader&gt;(x =&gt; x.Id == esId)</code>. Not found → notification "EsId not found", STATUS_CODE=500.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-svc">5</div><div class="flow-line"></div></div><div class="flow-content"><h5>Verify Active Contracts Exist</h5><p><code>CheckIfProjectContainsContracts(projectNumber)</code> — HTTP call to Integration Service. No contracts = cannot save.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-svc">6</div><div class="flow-line"></div></div><div class="flow-content"><h5>Questionnaire Seeding</h5><p>First-ever record: copy DD questionnaire responses to Monitoring. Prior records exist: copy most recent monitoring responses.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-repo">7</div><div class="flow-line"></div></div><div class="flow-content"><h5>INSERT EsMonitoring to PostgreSQL</h5><p>EF Core <code>InsertAsync&lt;EsMonitoring&gt;()</code>. Auto-sets CreatedBy (from JWT UPI), CreatedOn, IsDeleted=false.</p></div></div>
+        <div class="flow-node"><div class="flow-connector"><div class="flow-circle fc-ui">8</div></div><div class="flow-content"><h5>Response Returned</h5><p><code>{ ProjectStageId: 4521, STATUS_CODE: 0 }</code>. React refreshes monitoring list. Dashboard AMR counters auto-update.</p></div></div>
+      </div>
+    </div>
+
+    <h2 class="sh" id="flow-bgjob">Background Jobs</h2>
+    <p class="body">Background jobs run on schedule triggered by the World Bank Background Job Scheduler calling BgJobController. No auth required on these endpoints.</p>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Job</th><th>Endpoint</th><th>Frequency</th><th>What It Does</th></tr></thead>
+        <tbody>
+          <tr><td>UpdateEsrrdDateAndRating</td><td><code>POST /BgJob/UpdateEsrrdDateAndRating</code></td><td>Daily</td><td>Syncs ESRR(D) dates and ratings from MIGA Portal</td></tr>
+          <tr><td>UpdateEsrrmDateAndRating</td><td><code>POST /BgJob/UpdateEsrrmDateAndRating</code></td><td>Daily</td><td>Syncs ESRR(M) dates and ratings for all portfolio projects</td></tr>
+          <tr><td>UpdateAmrDueDate</td><td><code>POST /BgJob/UpdateAmrDueDate</code></td><td>Weekly</td><td>Recalculates AMR due dates based on contract data</td></tr>
+          <tr><td>UpdateKnowledgeGap</td><td><code>POST /BgJob/UpdateKnowledgeGap</code></td><td>Weekly</td><td>Flags projects approaching or past knowledge gap threshold</td></tr>
+          <tr><td>UpdateEsapRequiredData</td><td><code>POST /BgJob/UpdateEsapRequiredData</code></td><td>Weekly</td><td>Auto-sets ESAP required flag based on ESRR score</td></tr>
+          <tr><td>UpdateProjectPhase</td><td><code>POST /BgJob/UpdateProjectPhase</code></td><td>On event</td><td>Triggered by ProjectPhaseUpdateEvent from MIGA Portal</td></tr>
+          <tr><td>CreateAmrHistory</td><td><code>POST /BgJob/CreateAmrHistory</code></td><td>Monthly</td><td>Creates AMR history records for all portfolio projects</td></tr>
+          <tr><td>GetMigaWeeklySnapshot</td><td><code>GET /BgJob/GetMigaWeeklySnapshot</code></td><td>Weekly</td><td>Generates weekly summary Excel for each specialist</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sh" id="flow-events">Domain Events &amp; Azure Service Bus</h2>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Event</th><th>Direction</th><th>Handler</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>ProjectPhaseUpdateEvent</td><td>RECEIVED from MIGA Portal</td><td>ProjectPhaseUpdateEventHandler</td><td>Calls ProjectPhaseBackgroundJobService.UpdateProjectPhase()</td></tr>
+          <tr><td>EsInsightsMalenaPostEvent</td><td>RECEIVED (async result)</td><td>EsInsightsMalenaPostEventHandler</td><td>Processes Malena AI POST result. Stores analysis job ID.</td></tr>
+          <tr><td>EsInsightMalenaGetEvent</td><td>RECEIVED (async result)</td><td>EsInsightsMalenaGetEventHandler</td><td>Processes Malena AI GET result. Stores sentence-wise data.</td></tr>
+          <tr><td>TeamAssignmentApprovedEvent</td><td>PUBLISHED to Service Bus</td><td>(consumed by MIGA Portal)</td><td>Fired when team assignment approved. MIGA Portal syncs team.</td></tr>
+          <tr><td>ClimateTeamInfoUpdatedInClimateEvent</td><td>RECEIVED (disabled)</td><td>Commented out</td><td>Future: sync climate team info from Climate Portal.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="box box-info">
+      <span class="box-icon">ℹ️</span>
+      <p>All event handlers include try/catch. Failures are logged to both the Azure Service Bus failed events queue AND Azure Application Insights via <code>IDomainEventStatusNotification</code>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ CONFIG ════════════════════════════════ -->
+<div id="page-config" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">Configuration</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">11</span><h1>Configuration &amp; Environment</h1></div>
+      <p>All sensitive config in Azure Key Vault. Non-sensitive in environment variables.</p>
+    </div>
+    <div class="box box-warn">
+      <span class="box-icon">⚠️</span>
+      <p><strong>Key Vault secrets are fetched ONCE at application startup.</strong> If Key Vault is unavailable, the application will FAIL TO START. Nothing sensitive is ever stored in appsettings.json or code files.</p>
+    </div>
+    <h2 class="sh">Environment Variables (launchSettings.json)</h2>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Variable</th><th>Example Value</th><th>Used For</th></tr></thead>
+        <tbody>
+          <tr><td><code>KeyVaultName</code></td><td>migaportal-dev-kvd</td><td>Azure Key Vault name for secrets</td></tr>
+          <tr><td><code>KvTenantId</code></td><td>31a2fec0-266b-4c67-b56e-2796d8f59c36</td><td>Azure AD tenant ID for Key Vault auth</td></tr>
+          <tr><td><code>WebApiAzureAdAudience</code></td><td>https://migaportalclouddevapi.worldbank.org</td><td>Expected JWT token audience</td></tr>
+          <tr><td><code>MPMIntegrationServiceUrl</code></td><td>https://migaportalclouddev.api.worldbank.org/</td><td>MIGA Portal Integration microservice</td></tr>
+          <tr><td><code>NotificationServiceUrl</code></td><td>https://migaportalclouddev.api.worldbank.org/</td><td>Email Notification microservice</td></tr>
+          <tr><td><code>MalenaServiceUrl</code></td><td>https://malenaapiext.ifc.org/</td><td>Malena AI Service (IFC)</td></tr>
+          <tr><td><code>ServiceBusTopicName</code></td><td>miga-servicebus-local-topic</td><td>Azure Service Bus topic</td></tr>
+          <tr><td><code>ServiceBusSubscriber</code></td><td>miga-sb-esrd-local-subscription</td><td>ESRD subscription for short events</td></tr>
+          <tr><td><code>WbdocsServiceUrl</code></td><td>https://wbdocsapi.ocappsdev.worldbank.org/V2/services</td><td>WbDocs V2 service</td></tr>
+          <tr><td><code>WbDocsI4Key</code></td><td>0b0f424682ae20e3</td><td>WbDocs integration key</td></tr>
+          <tr><td><code>FromAddress</code></td><td>jgopal@worldbankgroup.org</td><td>Email 'from' address for notifications</td></tr>
+          <tr><td><code>CacheDurationMinutes</code></td><td>30</td><td>Master data in-memory cache duration</td></tr>
+          <tr><td><code>Environment</code></td><td>Dev / QA / Production</td><td>Controls Swagger visibility (hidden in Production)</td></tr>
+          <tr><td><code>WorkspaceId</code></td><td>5736cac6-ecf2-4de3-8046-14aefab04634</td><td>Power BI workspace GUID</td></tr>
+          <tr><td><code>BlobStorageUrl</code></td><td>https://migaportaldevstrg.blob.core.windows.net/</td><td>Azure Blob Storage base URL</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h2 class="sh">Azure Key Vault Secrets</h2>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Secret Name</th><th>Type</th><th>Used For</th></tr></thead>
+        <tbody>
+          <tr><td><code>DbConnStrESRD</code></td><td>Connection String</td><td>Full PostgreSQL connection string for the ESRD database. Fetched at startup.</td></tr>
+          <tr><td><code>app-insights-connectionstring</code></td><td>Connection String</td><td>Azure Application Insights connection string for production monitoring.</td></tr>
+          <tr><td><code>MalenaSubscriptionKey</code></td><td>API Key</td><td>Subscription key header for Malena AI HTTP calls (Ocp-Apim-Subscription-Key).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ VALIDATORS ════════════════════════════════ -->
+<div id="page-validators" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">Validators</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">12</span><h1>FluentValidation — 25 Validators</h1></div>
+      <p>Auto-run BEFORE any handler executes. Failure = HTTP 400; handler never runs.</p>
+    </div>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Validator</th><th>Key Rules</th></tr></thead>
+        <tbody>
+          <tr><td><code>SaveMonitoringActivityCommandValidator</code></td><td>12 conditional date rules: if AmrReviewFlag=true → AmrFromDate, AmrToDate, AmrDueDate, AmrReceivedDate ALL required</td></tr>
+          <tr><td><code>SaveDueDiligenceCommandValidator</code></td><td>Nested validator: for each QuestionDetail where QuestionSection='ESRR' → OptionId required</td></tr>
+          <tr><td><code>SaveEsapActionCommandValidator</code></td><td>EsId &gt; 0 required. Action text required. DueDate required.</td></tr>
+          <tr><td><code>SaveGbvQuestionnairesCommandValidator</code></td><td>EsId required. GbvId required. Questionnaires list not empty. Each question-value pair validated.</td></tr>
+          <tr><td><code>SaveTeamInformationCommandValidator</code></td><td>EsId required. ProjectNumber required. EsSpecialistUpI &gt; 0 (lead specialist mandatory).</td></tr>
+          <tr><td><code>SaveIncidentCommandValidator</code></td><td>EsId required. IncidentDate required. Description not empty. IncidentType required.</td></tr>
+          <tr><td><code>SaveNatureFinanceCommandValidator</code></td><td>EsId required. IsNatureFinance value required. EsStage required.</td></tr>
+          <tr><td><code>SaveOtherInitiativesCommandValidator</code></td><td>Description required. InitiativeTypeId &gt; 0 required. FiscalYear required.</td></tr>
+          <tr><td><code>DeleteEsapActionCommandValidator</code></td><td>esapActionIdList must not be null or empty. At least one ID required.</td></tr>
+          <tr><td><code>ApproveProvideClearanceProjectCommandValidator</code></td><td>EsId required. IsApproved boolean must be set.</td></tr>
+          <tr><td><code>UpdateDocumentNotesCommandValidator</code></td><td>DocumentId &gt; 0 required. Notes text not empty.</td></tr>
+          <tr><td><code>UploadGbvTableDataCommandValidator</code></td><td>UploadFile not null. File extension must be .xlsx.</td></tr>
+          <tr><td><code>GetEsapDetailsQueryValidator</code></td><td>EsId &gt; 0 required.</td></tr>
+          <tr><td><code>GetManagersProjectsQueryValidator</code></td><td>ManagerUpi &gt; 0 required.</td></tr>
+          <tr><td><code>SaveHighRiskDetailsCommandValidator</code></td><td>EsId required.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ ROLES ════════════════════════════════ -->
+<div id="page-roles" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">Roles &amp; Permissions</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">13</span><h1>Roles &amp; Permissions</h1></div>
+      <p>Permission codes enforced via [PolicyAuthorize] attribute on every endpoint</p>
+    </div>
+    <div class="tbl-wrap">
+      <table class="doc-tbl">
+        <thead><tr><th>Permission Code</th><th>Who Has It</th><th>Endpoints Protected</th></tr></thead>
+        <tbody>
+          <tr><td class="td-m">ReadAll</td><td>All authenticated ESRD users</td><td>All GET endpoints, all read-only queries</td></tr>
+          <tr><td class="td-m">EditAll</td><td>Specialists with edit rights + Managers + Admins</td><td>All save/update/delete/upload endpoints</td></tr>
+          <tr><td class="td-m">DashboardManager</td><td>Managers and Admins only</td><td>Dashboard endpoints showing ALL specialists' data</td></tr>
+          <tr><td class="td-m">DashboardSpecialistView</td><td>Individual Specialists</td><td>Dashboard endpoints scoped to own projects only</td></tr>
+          <tr><td class="td-m">InsightsDashboardView</td><td>ES Insights users</td><td>Power BI and sentence-wise Malena AI endpoints</td></tr>
+          <tr><td class="td-m">None / open</td><td>Any authenticated user</td><td>Snapshot endpoints, BgJob endpoints (scheduler)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="role-grid">
+      <div class="role-card"><div class="role-name">E&amp;S Specialist</div><div class="role-lvl rl-spec">SPECIALIST</div><ul class="role-perms"><li>ReadAll on all projects</li><li>EditAll on assigned projects</li><li>Save monitoring, ESAP, GBV, DD</li><li>DashboardSpecialistView</li></ul></div>
+      <div class="role-card"><div class="role-name">Manager</div><div class="role-lvl rl-mgr">MANAGER</div><ul class="role-perms"><li>ReadAll on all projects</li><li>EditAll including ESRR override</li><li>DashboardManager (all specialists)</li><li>ApproveProvideClearance</li></ul></div>
+      <div class="role-card"><div class="role-name">Administrator</div><div class="role-lvl rl-admin">ADMIN</div><ul class="role-perms"><li>Full ReadAll + EditAll</li><li>DashboardManager</li><li>Upload GBV master data</li><li>All management functions</li></ul></div>
+      <div class="role-card"><div class="role-name">GBV Specialist</div><div class="role-lvl rl-gbv">GBV</div><ul class="role-perms"><li>ReadAll on all projects</li><li>EditAll on GBV assessments</li><li>GBV action plan management</li><li>GBV notification recipient</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ IFC PERFORMANCE STANDARDS ════════════════════════════════ -->
+<div id="page-ps" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">IFC Performance Standards</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">14</span><h1>IFC Performance Standards PS1–PS8</h1></div>
+      <p>E&amp;S risk management standards against which all MIGA-guaranteed projects are assessed</p>
+    </div>
+    <div class="ps-grid">
+      <div class="ps-card"><div class="ps-num">PS1</div><div class="ps-info"><h5>Assessment &amp; Management of E&amp;S Risks</h5><p>The foundational standard. Requires an ESMS, stakeholder engagement, and grievance mechanisms. Applies to ALL projects.</p></div></div>
+      <div class="ps-card"><div class="ps-num">PS2</div><div class="ps-info"><h5>Labor &amp; Working Conditions</h5><p>Worker rights, supply chain labor standards, occupational health and safety, non-discrimination and equal opportunity requirements.</p></div></div>
+      <div class="ps-card"><div class="ps-num">PS3</div><div class="ps-info"><h5>Resource Efficiency &amp; Pollution Prevention</h5><p>GHG emissions tracking, pollution controls, hazardous materials management, waste minimization.</p></div></div>
+      <div class="ps-card"><div class="ps-num">PS4</div><div class="ps-info"><h5>Community Health, Safety &amp; Security</h5><p>Infrastructure safety, emergency preparedness, security forces code of conduct. Protects communities from project-related harms.</p></div></div>
+      <div class="ps-card"><div class="ps-num">PS5</div><div class="ps-info"><h5>Land Acquisition &amp; Involuntary Resettlement</h5><p>Compensation at replacement cost, livelihood restoration, Resettlement Action Plans (RAPs). Applies when land acquisition involved.</p></div></div>
+      <div class="ps-card"><div class="ps-num">PS6</div><div class="ps-info"><h5>Biodiversity Conservation</h5><p>Critical habitat assessment, biodiversity offsets, sustainable use of natural resources. Linked to Nature Finance assessments.</p></div></div>
+      <div class="ps-card"><div class="ps-num">PS7</div><div class="ps-info"><h5>Indigenous Peoples</h5><p>Free, Prior and Informed Consent (FPIC), cultural heritage protection, benefit sharing. Applies when indigenous communities affected.</p></div></div>
+      <div class="ps-card"><div class="ps-num">PS8</div><div class="ps-info"><h5>Cultural Heritage</h5><p>Protection of tangible and intangible cultural heritage, chance finds procedures during construction.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ GLOSSARY ════════════════════════════════ -->
+<div id="page-glossary" class="page">
+  <div class="sec-wrap">
+    <div class="breadcrumb"><span>Docs</span> / <span class="bc-active">Business Glossary</span></div>
+    <div class="page-hdr">
+      <div class="page-hdr-top"><span class="page-hdr-num">15</span><h1>Business Glossary</h1></div>
+      <p>Key terms, acronyms, and technical definitions used throughout the MIGA E&amp;S Portal</p>
+    </div>
+    <div class="glossary-grid">
+      <div class="gl-item"><span class="gl-term">AMR</span><span class="gl-def">Annual Monitoring Report — submitted by guarantee holders annually documenting E&amp;S performance against ESAP requirements</span></div>
+      <div class="gl-item"><span class="gl-term">Aspose</span><span class="gl-def">Commercial library for Excel (.xlsx) and PDF report generation on the server — used for all 18+ downloadable reports</span></div>
+      <div class="gl-item"><span class="gl-term">Autofac</span><span class="gl-def">Advanced DI container that overrides default ASP.NET Core DI, providing more features for dependency resolution</span></div>
+      <div class="gl-item"><span class="gl-term">AutoMapper</span><span class="gl-def">Library that automatically copies properties between two object types by name matching — 30 profiles in use</span></div>
+      <div class="gl-item"><span class="gl-term">CAO</span><span class="gl-def">Compliance Advisor Ombudsman — independent IFC/MIGA oversight function handling E&amp;S performance complaints</span></div>
+      <div class="gl-item"><span class="gl-term">CQRS</span><span class="gl-def">Command Query Responsibility Segregation — architecture pattern separating read (Query) and write (Command) operations</span></div>
+      <div class="gl-item"><span class="gl-term">DD</span><span class="gl-def">Due Diligence — the E&amp;S assessment conducted on pipeline projects before guarantee issuance</span></div>
+      <div class="gl-item"><span class="gl-term">ESAP</span><span class="gl-def">Environmental &amp; Social Action Plan — contractual actions guarantee holders must complete as a condition of the guarantee</span></div>
+      <div class="gl-item"><span class="gl-term">ESDD</span><span class="gl-def">Environmental &amp; Social Due Diligence — the full assessment process for pipeline projects</span></div>
+      <div class="gl-item"><span class="gl-term">ESMS</span><span class="gl-def">Environmental and Social Management System — risk management framework at the project or enterprise level</span></div>
+      <div class="gl-item"><span class="gl-term">ESRR(D)</span><span class="gl-def">Environmental &amp; Social Risk Rating at Due Diligence stage — generated from factor scores (Management, Performance, Communication)</span></div>
+      <div class="gl-item"><span class="gl-term">ESRR(M)</span><span class="gl-def">Environmental &amp; Social Risk Rating at Monitoring stage — updated during each monitoring activity cycle</span></div>
+      <div class="gl-item"><span class="gl-term">EsId</span><span class="gl-def">Internal E&amp;S Portal integer ID for each project — primary key in the es_header PostgreSQL table</span></div>
+      <div class="gl-item"><span class="gl-term">EsStage</span><span class="gl-def">Project stage code: 'DD' (Due Diligence pipeline) or 'MN' (Monitoring portfolio)</span></div>
+      <div class="gl-item"><span class="gl-term">FPIC</span><span class="gl-def">Free, Prior and Informed Consent — requirement under PS7 for projects affecting Indigenous Peoples</span></div>
+      <div class="gl-item"><span class="gl-term">GBV</span><span class="gl-def">Gender-Based Violence — specific E&amp;S risk category assessed for all MIGA-guaranteed projects via dedicated questionnaire</span></div>
+      <div class="gl-item"><span class="gl-term">Handler</span><span class="gl-def">MediatR handler class that receives a Query or Command and delegates to exactly one Service method — no business logic here</span></div>
+      <div class="gl-item"><span class="gl-term">IFC Track B</span><span class="gl-def">IFC categorization for Financial Intermediary projects requiring enhanced E&amp;S monitoring requirements</span></div>
+      <div class="gl-item"><span class="gl-term">Key Vault</span><span class="gl-def">Azure Key Vault — secure secret store for DB connection strings, API keys, and subscription keys — never in code</span></div>
+      <div class="gl-item"><span class="gl-term">Malena AI</span><span class="gl-def">IFC's AI document analysis service at malenaapiext.ifc.org — provides sentence-level E&amp;S risk classification</span></div>
+      <div class="gl-item"><span class="gl-term">MediatR</span><span class="gl-def">Open-source .NET library implementing the Mediator pattern for CQRS message dispatch between Controller and Handler</span></div>
+      <div class="gl-item"><span class="gl-term">MIGA</span><span class="gl-def">Multilateral Investment Guarantee Agency — World Bank Group member providing political risk insurance (PRI)</span></div>
+      <div class="gl-item"><span class="gl-term">MSV</span><span class="gl-def">Monitoring Site Visit — physical or virtual visit to a project site for E&amp;S compliance verification</span></div>
+      <div class="gl-item"><span class="gl-term">Polly</span><span class="gl-def">Resilience library providing HTTP retry policies — used for 3-retry on Malena AI service HTTP calls</span></div>
+      <div class="gl-item"><span class="gl-term">PolicyAuthorize</span><span class="gl-def">Custom World Bank attribute combining Azure AD JWT authentication + ESRD permission code check</span></div>
+      <div class="gl-item"><span class="gl-term">PS1–PS8</span><span class="gl-def">IFC Performance Standards 1–8 — E&amp;S risk management standards against which all MIGA-guaranteed projects are assessed</span></div>
+      <div class="gl-item"><span class="gl-term">Service Bus</span><span class="gl-def">Azure Service Bus — async messaging backbone for domain events between MIGA microservices</span></div>
+      <div class="gl-item"><span class="gl-term">UPI</span><span class="gl-def">Unique Person Identifier — World Bank's internal integer user ID used for all user references in the system</span></div>
+      <div class="gl-item"><span class="gl-term">WbDocs</span><span class="gl-def">World Bank document management system at wbdocsapi.ocappsdev.worldbank.org — stores all Strictly Confidential project documents</span></div>
+      <div class="gl-item"><span class="gl-term">Knowledge Gap</span><span class="gl-def">Portfolio metric — projects where AMR has not been received or E&amp;S performance data is insufficient for assessment</span></div>
+    </div>
+    <div class="box box-info" style="margin-top:28px">
+      <span class="box-icon">ℹ️</span>
+      <p><strong>API Base URL (DEV):</strong> <code>https://localhost:44379/api/esrd/</code> — All endpoints follow <code>/api/esrd/[ControllerName]/[ActionName]</code>. Swagger UI at <code>/api/esrd/swagger/index.html</code> (hidden in Production). Standard envelope: <code>{ STATUS, STATUS_CODE, NOTIFICATIONS[], Result }</code> where <code>STATUS_CODE: 0</code> = success.</p>
+    </div>
+    <div style="text-align:center;padding:36px 0 0;border-top:1px solid var(--grey-200);margin-top:36px">
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--grey-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px">MIGA E&amp;S Portal 2.0 — Complete System Documentation</div>
+      <div style="font-size:12px;color:var(--grey-400)">Multilateral Investment Guarantee Agency | World Bank Group | 2026 | Internal Confidential</div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- SEARCH OVERLAY -->
+<div id="search-overlay" onclick="if(event.target===this)closeSearch()">
+  <div id="search-box">
+    <input id="search-input" placeholder="Search documentation…" oninput="doSearch(this.value)" autocomplete="off"/>
+    <div id="search-results"></div>
+  </div>
+</div>
+
+<!-- SCROLL TOP -->
+<div id="scrolltop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+const SEARCH_INDEX = [
+  {title:'System Overview',path:'System Overview',page:'overview',icon:'📖'},
+  {title:'Architecture — CQRS + MediatR',path:'Architecture',page:'architecture',icon:'🏗️'},
+  {title:'Project Lifecycle',path:'Project Lifecycle',page:'lifecycle',icon:'🔄'},
+  {title:'Dashboard Module',path:'Modules → Dashboard',page:'dashboard',icon:'📊'},
+  {title:'Pipeline Projects',path:'Modules → Pipeline',page:'pipeline',icon:'🔍'},
+  {title:'Due Diligence (DD)',path:'Modules → Pipeline → Due Diligence',page:'pipeline',icon:'📋'},
+  {title:'ESAP — Action Plan',path:'Modules → Pipeline → ESAP',page:'pipeline',icon:'📋'},
+  {title:'GBV Risk Assessment',path:'Modules → Pipeline → GBV',page:'pipeline',icon:'📋'},
+  {title:'Portfolio Projects',path:'Modules → Portfolio',page:'portfolio',icon:'📁'},
+  {title:'Monitoring Activities',path:'Modules → Portfolio → Monitoring',page:'portfolio',icon:'📋'},
+  {title:'High Risk Classification',path:'Modules → Portfolio → High Risk',page:'portfolio',icon:'⚠️'},
+  {title:'ESRR Rating Scale',path:'Modules → Portfolio',page:'portfolio',icon:'📊'},
+  {title:'Reports Module',path:'Modules → Reports',page:'reports',icon:'📈'},
+  {title:'Shelved Projects',path:'Modules → Shelved',page:'shelved',icon:'🗃️'},
+  {title:'API Reference',path:'API Reference',page:'api',icon:'🔌'},
+  {title:'Projects API',path:'API → Projects',page:'api',icon:'🔌'},
+  {title:'Monitoring API',path:'API → Monitoring',page:'api',icon:'🔌'},
+  {title:'ESAP Action API',path:'API → ESAP',page:'api',icon:'🔌'},
+  {title:'Due Diligence API',path:'API → DueDiligence',page:'api',icon:'🔌'},
+  {title:'Dashboard API',path:'API → Dashboard',page:'api',icon:'🔌'},
+  {title:'High Risk API',path:'API → High Risk',page:'api',icon:'🔌'},
+  {title:'Other Controllers',path:'API → Other',page:'api',icon:'🔌'},
+  {title:'Flow Diagrams — CQRS',path:'Flow Diagrams',page:'flows',icon:'⚡'},
+  {title:'Portfolio Query Flow',path:'Flow Diagrams → Portfolio',page:'flows',icon:'⚡'},
+  {title:'Save Monitoring Flow',path:'Flow Diagrams → Monitoring',page:'flows',icon:'⚡'},
+  {title:'Background Jobs',path:'Flow Diagrams → BgJobs',page:'flows',icon:'⏰'},
+  {title:'Azure Service Bus Events',path:'Flow Diagrams → Events',page:'flows',icon:'📨'},
+  {title:'Configuration & Environment',path:'Configuration',page:'config',icon:'⚙️'},
+  {title:'Azure Key Vault',path:'Configuration → Key Vault',page:'config',icon:'🔑'},
+  {title:'FluentValidation — 25 Validators',path:'Validators',page:'validators',icon:'✅'},
+  {title:'Roles & Permissions',path:'Roles & Permissions',page:'roles',icon:'🔐'},
+  {title:'IFC Performance Standards PS1–PS8',path:'IFC Standards',page:'ps',icon:'📋'},
+  {title:'Business Glossary',path:'Glossary',page:'glossary',icon:'📚'},
+  {title:'AMR — Annual Monitoring Report',path:'Glossary',page:'glossary',icon:'📚'},
+  {title:'ESRR(D)',path:'Glossary → ESRR',page:'glossary',icon:'📚'},
+  {title:'ESAP — Environmental Social Action Plan',path:'Glossary → ESAP',page:'glossary',icon:'📚'},
+  {title:'GBV — Gender Based Violence',path:'Glossary → GBV',page:'glossary',icon:'📚'},
+  {title:'Quick Start Guide',path:'Getting Started',page:'quickstart',icon:'⚡'},
+  {title:'Adding New Feature — Step by Step',path:'Quick Start',page:'quickstart',icon:'⚡'},
+  {title:'AutoMapper — 30 Mapping Profiles',path:'Architecture → AutoMapper',page:'architecture',icon:'🏗️'},
+];
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+  const pg = document.getElementById('page-' + id);
+  const nv = document.getElementById('nav-' + id);
+  if (pg) { pg.classList.add('active'); window.scrollTo(0,0); }
+  if (nv) nv.classList.add('active');
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function scrollAnchor(anchor) {
+  setTimeout(() => {
+    const el = document.getElementById(anchor);
+    if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 120);
+}
+
+function toggleEp(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+  const ch = header.querySelector('.ep-chevron');
+  if (ch) ch.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+function openSearch() {
+  document.getElementById('search-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('search-input').focus(), 50);
+}
+
+function closeSearch() {
+  document.getElementById('search-overlay').classList.remove('open');
+  document.getElementById('search-input').value = '';
+  document.getElementById('search-results').innerHTML = '';
+}
+
+function doSearch(q) {
+  const results = document.getElementById('search-results');
+  if (!q.trim()) { results.innerHTML = ''; return; }
+  const matches = SEARCH_INDEX.filter(item =>
+    item.title.toLowerCase().includes(q.toLowerCase()) ||
+    item.path.toLowerCase().includes(q.toLowerCase())
+  ).slice(0, 8);
+  if (!matches.length) {
+    results.innerHTML = '<div style="padding:20px;text-align:center;color:var(--grey-400);font-size:13px">No results found</div>';
+    return;
+  }
+  results.innerHTML = matches.map(m => `
+    <div class="sr-item" onclick="closeSearch();showPage('${m.page}')">
+      <span class="sr-icon">${m.icon}</span>
+      <div><div class="sr-title">${m.title}</div><div class="sr-path">${m.path}</div></div>
+    </div>`).join('');
+}
+
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+  if (e.key === 'Escape') closeSearch();
+});
+
+// Scroll top button
+const scrollBtn = document.getElementById('scrolltop');
+window.addEventListener('scroll', () => {
+  scrollBtn.classList.toggle('visible', window.scrollY > 400);
+});
+</script>
+</body>
+</html>

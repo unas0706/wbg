@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>[Project Name] — Technical Documentation Template</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════ THEME ═══════════════════ */
+:root{
+  --topbar-h:60px;--sidebar-w:280px;
+  --font-sans:'IBM Plex Sans',system-ui,sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+  --font-serif:'IBM Plex Serif',Georgia,serif;
+  --blue:#2563EB;--blue-d:#1D4ED8;--blue-l:#EFF6FF;--blue-b:#BFDBFE;
+  --teal:#0D9488;--teal-l:#F0FDFA;--teal-b:#99F6E4;
+  --orange:#EA580C;--orange-l:#FFF7ED;--orange-b:#FED7AA;
+  --purple:#7C3AED;--purple-l:#F5F3FF;--purple-b:#DDD6FE;
+  --red:#DC2626;--red-l:#FEF2F2;--red-b:#FECACA;
+  --green:#16A34A;--green-l:#F0FDF4;--green-b:#BBF7D0;
+  --amber:#D97706;--amber-l:#FFFBEB;--amber-b:#FDE68A;
+  /* hint color for Copilot placeholders */
+  --hint:#7C3AED;--hint-bg:#F5F3FF;--hint-border:#DDD6FE;
+}
+[data-theme="light"]{
+  --bg:#F8FAFC;--bg2:#FFF;--bg3:#F1F5F9;
+  --surface:#FFF;--surface2:#F8FAFC;--surface3:#F1F5F9;
+  --border:#E2E8F0;--border2:#CBD5E1;
+  --text:#0F172A;--text2:#475569;--text3:#94A3B8;
+  --topbar-bg:#0F172A;--sidebar-bg:#FFF;
+  --code-bg:#0D1117;--code-text:#E6EDF3;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.06);
+}
+[data-theme="dark"]{
+  --bg:#0A0F1E;--bg2:#0F1629;--bg3:#141D35;
+  --surface:#1A2540;--surface2:#1E2D4E;--surface3:#253358;
+  --border:#253358;--border2:#2E3F6B;
+  --text:#E2E8F0;--text2:#94A3B8;--text3:#475569;
+  --topbar-bg:#070C18;--sidebar-bg:#0F1629;
+  --code-bg:#060B14;--code-text:#E6EDF3;
+  --shadow:0 1px 3px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  --hint-bg:rgba(124,58,237,.15);--hint-border:rgba(124,58,237,.35);
+  --blue-l:rgba(37,99,235,.15);--blue-b:rgba(37,99,235,.3);
+  --teal-l:rgba(13,148,136,.15);--teal-b:rgba(13,148,136,.3);
+  --orange-l:rgba(234,88,12,.12);--orange-b:rgba(234,88,12,.3);
+  --green-l:rgba(22,163,74,.12);--green-b:rgba(22,163,74,.3);
+  --amber-l:rgba(217,119,6,.12);--amber-b:rgba(217,119,6,.3);
+  --red-l:rgba(220,38,38,.12);--red-b:rgba(220,38,38,.3);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.65;transition:background .25s,color .25s}
+
+/* ═══ TOPBAR ═══ */
+#topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar-h);background:var(--topbar-bg);display:flex;align-items:center;padding:0 18px;z-index:500;gap:10px;box-shadow:0 1px 0 rgba(255,255,255,.06),0 2px 12px rgba(0,0,0,.4)}
+.tb-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.tb-badge{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;letter-spacing:.8px;font-family:var(--font-mono)}
+.tb-name{color:#F1F5F9;font-size:14.5px;font-weight:600}
+.tb-sep{color:rgba(255,255,255,.2);margin:0 2px}
+.tb-sub{color:rgba(255,255,255,.35);font-size:11.5px}
+#tb-search-wrap{margin-left:auto;position:relative;flex:1;max-width:360px}
+#tb-search{width:100%;padding:7px 36px 7px 36px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#F1F5F9;font-size:13px;font-family:var(--font-sans);outline:none;transition:.2s}
+#tb-search:focus{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.25)}
+#tb-search::placeholder{color:rgba(255,255,255,.35)}
+.tb-si{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.3);font-size:14px;pointer-events:none}
+.tb-kbd{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:9px;color:rgba(255,255,255,.25);font-family:var(--font-mono);border:1px solid rgba(255,255,255,.15);border-radius:3px;padding:1px 5px}
+#search-drop{display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--surface);border:1px solid var(--border2);border-radius:10px;box-shadow:var(--shadow);max-height:380px;overflow-y:auto;z-index:600}
+#search-drop.open{display:block}
+.sr-item{display:flex;align-items:center;gap:12px;padding:10px 16px;cursor:pointer;transition:.1s;border-bottom:1px solid var(--border)}
+.sr-item:last-child{border-bottom:none}
+.sr-item:hover{background:var(--blue-l)}
+.sr-icon{font-size:15px;flex-shrink:0}
+.sr-title{font-size:13px;font-weight:500;color:var(--text)}
+.sr-path{font-size:10.5px;color:var(--text3);font-family:var(--font-mono)}
+.sr-empty{padding:24px;text-align:center;color:var(--text3);font-size:13px}
+.tb-controls{display:flex;align-items:center;gap:8px;margin-left:10px;flex-shrink:0}
+.tb-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);font-size:10.5px;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.12);cursor:pointer;transition:.2s;font-family:var(--font-mono);white-space:nowrap}
+.tb-pill:hover{background:rgba(255,255,255,.16)}
+#theme-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:rgba(255,255,255,.7);font-size:16px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;flex-shrink:0}
+#theme-btn:hover{background:rgba(255,255,255,.18)}
+#menu-btn{display:none;background:none;border:none;cursor:pointer;color:rgba(255,255,255,.7);font-size:20px;padding:4px}
+
+/* ═══ SIDEBAR ═══ */
+#sidebar{position:fixed;top:var(--topbar-h);left:0;width:var(--sidebar-w);height:calc(100vh - var(--topbar-h));background:var(--sidebar-bg);border-right:1px solid var(--border);overflow-y:auto;z-index:400;transition:transform .3s,background .25s}
+#sidebar::-webkit-scrollbar{width:3px}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.sb-grp{padding:18px 0 4px 16px;font-size:9.5px;font-weight:700;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;font-family:var(--font-mono)}
+.sb-grp:first-of-type{padding-top:12px}
+.nav-a{display:flex;align-items:center;gap:9px;padding:6px 16px;cursor:pointer;font-size:12.5px;color:var(--text2);transition:.12s;border-left:3px solid transparent;text-decoration:none;line-height:1.4}
+.nav-a:hover{background:var(--blue-l);color:var(--blue)}
+.nav-a.active{background:var(--blue-l);color:var(--blue);border-left-color:var(--blue);font-weight:600}
+.nav-a .ni{font-size:13px;width:16px;text-align:center;flex-shrink:0;opacity:.7}
+.nav-sub .nav-a{font-size:11.5px;padding:5px 16px 5px 40px;border-left:none;color:var(--text3)}
+.nav-sub .nav-a:hover{color:var(--blue);background:var(--blue-l)}
+.nav-sub .nav-a.active{color:var(--blue);font-weight:600;background:none}
+.sb-hr{height:1px;background:var(--border);margin:6px 14px}
+
+/* ═══ MAIN ═══ */
+#main{margin-left:var(--sidebar-w);margin-top:var(--topbar-h);min-height:calc(100vh - var(--topbar-h))}
+.page{display:none}
+.page.active{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ═══ COPILOT HINT SYSTEM ═══ */
+.hint{background:var(--hint-bg);border:1.5px dashed var(--hint-border);border-radius:6px;padding:10px 14px;margin:8px 0;display:flex;align-items:flex-start;gap:10px;position:relative}
+.hint-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.hint-body{flex:1}
+.hint-label{font-family:var(--font-mono);font-size:9px;font-weight:700;color:var(--purple);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.hint-prompt{font-size:12px;color:var(--purple);font-style:italic;line-height:1.55}
+.hint-prompt code{font-family:var(--font-mono);font-size:11px;background:rgba(124,58,237,.1);padding:1px 5px;border-radius:3px;font-style:normal}
+.ph{color:var(--text3);font-style:italic;border-bottom:1px dashed var(--text3)}
+
+/* ═══ HERO ═══ */
+.hero{background:linear-gradient(135deg,#0F172A 0%,#1E3A5F 45%,#1D4ED8 100%);padding:52px 52px 44px;color:#fff;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;right:-100px;top:-100px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.15) 0%,transparent 65%)}
+.hero::after{content:'';position:absolute;bottom:-80px;left:20%;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(13,148,136,.1) 0%,transparent 65%)}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(13,148,136,.15);border:1px solid rgba(13,148,136,.35);border-radius:4px;padding:4px 12px;font-family:var(--font-mono);font-size:9.5px;color:#2DD4BF;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px}
+.hero-tag::before{content:'●';font-size:7px}
+.hero h1{font-family:var(--font-serif);font-size:38px;font-weight:600;line-height:1.15;margin-bottom:12px}
+.hero h1 em{font-style:italic;color:#93C5FD}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.6);max-width:640px;margin-bottom:28px;line-height:1.8;font-weight:300}
+.hero-meta{display:flex;flex-wrap:wrap;gap:28px}
+.hm{display:flex;flex-direction:column;gap:3px}
+.hm-l{font-family:var(--font-mono);font-size:9px;color:rgba(255,255,255,.3);letter-spacing:2px;text-transform:uppercase}
+.hm-v{font-family:var(--font-mono);font-size:13px;color:#93C5FD}
+
+/* ═══ STATS ═══ */
+.stats-bar{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:22px 52px;background:var(--surface);border-bottom:1px solid var(--border)}
+.stat{padding:16px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;text-align:center;transition:.2s;cursor:default}
+.stat:hover{border-color:var(--blue-b)}
+.stat-n{font-family:var(--font-mono);font-size:24px;font-weight:600;color:var(--blue);line-height:1;margin-bottom:5px}
+.stat-l{font-size:10.5px;color:var(--text3);line-height:1.35}
+.stat-ph{font-family:var(--font-mono);font-size:18px;font-weight:600;color:var(--purple);opacity:.5}
+
+/* ═══ SECTIONS ═══ */
+.sw{padding:38px 52px 72px;max-width:1120px}
+.pg-hdr{margin-bottom:28px;padding-bottom:18px;border-bottom:1px solid var(--border)}
+.pg-hdr-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:8px}
+.pg-num{font-family:var(--font-mono);font-size:10px;color:var(--blue);background:var(--blue-l);border:1px solid var(--blue-b);border-radius:4px;padding:3px 9px;white-space:nowrap;margin-top:5px}
+.pg-hdr h1{font-family:var(--font-serif);font-size:28px;font-weight:600;color:var(--text);line-height:1.2}
+.pg-hdr p{font-size:13.5px;color:var(--text2);font-weight:300}
+.bc{font-size:11px;color:var(--text3);margin-bottom:14px;display:flex;align-items:center;gap:5px}
+.bc span{color:var(--blue);cursor:pointer}
+.bc-s{color:var(--text3)}
+
+h2.sh{font-size:17px;font-weight:600;color:var(--text);margin:34px 0 13px;padding-bottom:7px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:8px}
+h2.sh::before{content:'';width:4px;height:17px;background:var(--blue);border-radius:2px;display:inline-block}
+h3.ss{font-size:14.5px;font-weight:600;color:var(--text);margin:20px 0 10px;padding-left:12px;border-left:3px solid var(--teal)}
+p.bd{font-size:13.5px;color:var(--text2);line-height:1.8;margin-bottom:14px}
+
+/* ═══ CALLOUTS ═══ */
+.box{display:flex;gap:12px;border-left:3px solid;border-radius:0 8px 8px 0;padding:12px 16px;margin:14px 0}
+.box-body{font-size:12.5px;line-height:1.65;flex:1;color:var(--text2)}
+.box-body strong{color:var(--text)}
+.box-body code{font-family:var(--font-mono);font-size:11px;background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--orange)}
+.box-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+.bi{background:var(--blue-l);border-color:var(--blue)}
+.bw{background:var(--amber-l);border-color:var(--amber)}
+.bt{background:var(--teal-l);border-color:var(--teal)}
+.be{background:var(--red-l);border-color:var(--red)}
+
+/* ═══ TABLES ═══ */
+.tw{overflow-x:auto;margin:14px 0 24px;border-radius:10px;border:1px solid var(--border)}
+.dt{width:100%;border-collapse:collapse;font-size:12.5px}
+.dt thead tr{background:var(--surface3)}
+.dt th{padding:10px 14px;text-align:left;font-family:var(--font-mono);font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border2);white-space:nowrap}
+.dt td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+.dt tr:last-child td{border-bottom:none}
+.dt tr:hover td{background:var(--blue-l)}
+.dt td:first-child{color:var(--text);font-weight:500}
+.dt code{font-family:var(--font-mono);font-size:11px;color:var(--orange);background:var(--bg3);padding:1px 5px;border-radius:3px}
+.m-get{display:inline-block;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:4px;font-family:var(--font-mono);background:var(--green-l);color:var(--green);border:1px solid var(--green-b)}
+.m-post{display:inline-block;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:4px;font-family:var(--font-mono);background:var(--amber-l);color:var(--amber);border:1px solid var(--amber-b)}
+.td-m{font-family:var(--font-mono);font-size:11px;color:var(--teal)!important}
+
+/* perm badges */
+.perm{display:inline-flex;align-items:center;font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:12px;font-family:var(--font-mono);border:1px solid;vertical-align:middle}
+.p-r{background:var(--green-l);border-color:var(--green-b);color:var(--green)}
+.p-e{background:var(--amber-l);border-color:var(--amber-b);color:var(--amber)}
+.p-d{background:var(--blue-l);border-color:var(--blue-b);color:var(--blue)}
+.p-n{background:var(--bg3);border-color:var(--border);color:var(--text3)}
+
+/* ═══ CODE BLOCKS ═══ */
+.cw{background:var(--code-bg);border-radius:10px;overflow:hidden;margin:14px 0 22px;border:1px solid #30363D}
+.ch{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;background:#161B22;border-bottom:1px solid #30363D}
+.clang{font-size:10.5px;font-weight:600;color:#7D8590;font-family:var(--font-mono)}
+.ccopy{background:none;border:1px solid #30363D;color:#7D8590;font-size:10.5px;padding:3px 10px;border-radius:4px;cursor:pointer;font-family:var(--font-mono);transition:.15s}
+.ccopy:hover{background:#21262D;color:#E6EDF3}
+.ccopy.done{color:#3FB950;border-color:#3FB950}
+pre.cb{padding:20px;overflow-x:auto;font-family:var(--font-mono);font-size:12px;line-height:1.78;color:var(--code-text)}
+.kw{color:#FF7B72}.fn{color:#D2A8FF}.st{color:#A5D6FF}.cm{color:#8B949E;font-style:italic}
+.nu{color:#79C0FF}.pr{color:#E3B341}.tp{color:#F0883E}
+
+/* ═══ SEQUENCE SVG ═══ */
+.seq-wrap{overflow-x:auto;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px;margin:18px 0 28px}
+.seq-title{font-family:var(--font-mono);font-size:10px;color:var(--teal);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.seq-title::before{content:'';width:8px;height:8px;background:var(--teal);border-radius:50%;display:inline-block}
+
+/* ═══ ENDPOINT CARDS ═══ */
+.ep{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;transition:.2s}
+.ep:hover{border-color:var(--border2)}
+.ep-h{display:flex;align-items:center;gap:10px;padding:13px 16px;cursor:pointer;user-select:none}
+.ep-h:hover{background:var(--bg3)}
+.ep-path{font-family:var(--font-mono);font-size:12.5px;color:var(--text);flex:1}
+.ep-chev{color:var(--text3);font-size:11px;flex-shrink:0;transition:.25s}
+.ep-body{display:none;border-top:1px solid var(--border);padding:18px}
+.ep-body.open{display:block}
+.ep-desc{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:14px}
+.pt{width:100%;border-collapse:collapse;font-size:12px;margin:0}
+.pt th{text-align:left;font-size:10px;font-family:var(--font-mono);color:var(--text3);padding:5px 10px;background:var(--bg3);border-bottom:1px solid var(--border);letter-spacing:.5px;text-transform:uppercase}
+.pt td{padding:5px 10px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:top}
+.pt tr:last-child td{border-bottom:none}
+.pt code{font-family:var(--font-mono);font-size:11px;color:var(--orange);background:var(--bg3);padding:1px 4px;border-radius:3px}
+.p-req{color:var(--red);font-size:10px;font-family:var(--font-mono)}
+.p-opt{color:var(--text3);font-size:10px;font-family:var(--font-mono)}
+.ret{margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);display:flex;align-items:flex-start;gap:8px}
+.ret-l{font-size:10px;font-family:var(--font-mono);font-weight:700;color:var(--green);flex-shrink:0;padding-top:2px}
+.ret-v{font-size:12px;font-family:var(--font-mono);color:var(--text2)}
+
+/* ═══ STEPS ═══ */
+.steps{display:flex;flex-direction:column;gap:0;margin:16px 0}
+.step{display:flex;gap:16px;padding-bottom:22px;position:relative}
+.step:not(:last-child)::after{content:'';position:absolute;left:17px;top:36px;bottom:0;width:1.5px;background:var(--border)}
+.step-n{width:34px;height:34px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;position:relative;z-index:1;box-shadow:0 0 0 4px var(--blue-l)}
+.step-b h4{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:4px}
+.step-b p{font-size:12.5px;color:var(--text2);line-height:1.65;margin:0}
+.step-b code{font-family:var(--font-mono);font-size:11px;background:var(--bg3);padding:1px 5px;border-radius:3px;color:var(--orange)}
+
+/* ═══ LIFECYCLE ═══ */
+.lcg{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin:16px 0}
+.lc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;transition:.2s}
+.lc:hover{border-color:var(--border2)}
+.lc-n{position:absolute;top:10px;right:12px;font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--border);line-height:1}
+.lc-tag{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border-radius:3px;margin-bottom:8px;display:inline-block;border:1px solid}
+.lt-1{background:var(--blue-l);color:var(--blue);border-color:var(--blue-b)}
+.lt-2{background:var(--green-l);color:var(--green);border-color:var(--green-b)}
+.lt-3{background:var(--amber-l);color:var(--amber);border-color:var(--amber-b)}
+.lt-4{background:var(--red-l);color:var(--red);border-color:var(--red-b)}
+.lc-name{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:5px}
+.lc-desc{font-size:11px;color:var(--text3);line-height:1.5}
+
+/* ═══ GLOSSARY ═══ */
+.glg{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:9px;margin:14px 0}
+.gli{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;transition:.15s}
+.gli:hover{border-color:var(--teal-b)}
+.gl-t{font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--teal);min-width:70px;padding-top:1px}
+.gl-d{font-size:12px;color:var(--text2);line-height:1.55}
+
+/* ═══ QUICK CARDS ═══ */
+.qg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;padding:24px 52px 0}
+.qc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;transition:.2s;text-decoration:none;display:block}
+.qc:hover{border-color:var(--blue);box-shadow:0 4px 20px rgba(37,99,235,.12);transform:translateY(-2px)}
+.qc-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:12px}
+.qc-title{font-size:13.5px;font-weight:600;color:var(--text);margin-bottom:5px}
+.qc-desc{font-size:11.5px;color:var(--text3);line-height:1.55}
+.qc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.qt{font-size:9.5px;font-weight:600;padding:2px 8px;border-radius:10px;font-family:var(--font-mono);border:1px solid}
+.qt-f{background:var(--orange-l);color:var(--orange);border-color:var(--orange-b)}
+.qt-t{background:var(--blue-l);color:var(--blue);border-color:var(--blue-b)}
+.qt-a{background:var(--green-l);color:var(--green);border-color:var(--green-b)}
+.qt-d{background:var(--purple-l);color:var(--purple);border-color:var(--purple-b)}
+.qc-arr{color:var(--text3);font-size:14px}
+
+/* ═══ SCROLL TOP ═══ */
+#scrolltop{position:fixed;bottom:28px;right:28px;width:40px;height:40px;background:var(--blue);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;transition:.2s;opacity:0;pointer-events:none;font-size:16px;z-index:400;box-shadow:0 4px 16px rgba(37,99,235,.4)}
+#scrolltop.vis{opacity:1;pointer-events:all}
+#scrolltop:hover{background:var(--blue-d);transform:scale(1.08)}
+
+/* ═══ HOW-TO PANEL ═══ */
+.howto{background:linear-gradient(135deg,var(--purple-l),var(--blue-l));border:1px solid var(--purple-b);border-radius:12px;padding:24px 28px;margin:0 0 28px}
+.howto h3{font-size:15px;font-weight:700;color:var(--purple);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.howto ol{padding-left:20px;display:flex;flex-direction:column;gap:7px}
+.howto li{font-size:12.5px;color:var(--text2);line-height:1.6}
+.howto li strong{color:var(--text)}
+.howto code{font-family:var(--font-mono);font-size:11px;background:rgba(124,58,237,.12);padding:1px 5px;border-radius:3px;color:var(--purple)}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:960px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0}
+  #menu-btn{display:flex}
+  #tb-search-wrap{max-width:200px}
+  .hero,.stats-bar,.qg,.sw{padding-left:24px;padding-right:24px}
+  .hero h1{font-size:26px}
+}
+@media(max-width:600px){
+  .lcg,.glg{grid-template-columns:1fr}
+  #tb-search-wrap{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ TOPBAR ═══════════════════ -->
+<header id="topbar">
+  <button id="menu-btn" onclick="toggleSidebar()">☰</button>
+  <a class="tb-logo" href="#" onclick="showPage('home')">
+    <span class="tb-badge">DOC</span>
+    <span class="tb-name">[Project Name]</span>
+    <span class="tb-sep">/</span>
+    <span class="tb-sub">Technical Documentation</span>
+  </a>
+  <div id="tb-search-wrap">
+    <span class="tb-si">🔍</span>
+    <input id="tb-search" type="text" placeholder="Search sections, APIs, terms…" autocomplete="off" oninput="liveSearch(this.value)" onfocus="showDrop()" onblur="setTimeout(hideDrop,200)"/>
+    <span class="tb-kbd">⌘K</span>
+    <div id="search-drop"></div>
+  </div>
+  <div class="tb-controls">
+    <span class="tb-pill" onclick="showPage('howto')" style="background:rgba(124,58,237,.2);border-color:rgba(124,58,237,.4);color:#A78BFA">🤖 Copilot Guide</span>
+    <span class="tb-pill" onclick="showPage('api')">🔌 API Ref</span>
+    <button id="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+  </div>
+</header>
+
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<nav id="sidebar">
+  <div class="sb-grp">Start Here</div>
+  <a class="nav-a active" id="nav-home" onclick="showPage('home')"><span class="ni">🏠</span> Home</a>
+  <a class="nav-a" id="nav-howto" onclick="showPage('howto')"><span class="ni">🤖</span> Copilot Fill Guide</a>
+  <a class="nav-a" id="nav-quickstart" onclick="showPage('quickstart')"><span class="ni">⚡</span> Quick Start</a>
+  <div class="sb-hr"></div>
+  <div class="sb-grp">System</div>
+  <a class="nav-a" id="nav-overview" onclick="showPage('overview')"><span class="ni">📖</span> System Overview</a>
+  <a class="nav-a" id="nav-architecture" onclick="showPage('architecture')"><span class="ni">🏗️</span> Architecture</a>
+  <a class="nav-a" id="nav-lifecycle" onclick="showPage('lifecycle')"><span class="ni">🔄</span> Entity Lifecycle</a>
+  <div class="sb-hr"></div>
+  <div class="sb-grp">Modules</div>
+  <a class="nav-a" id="nav-module1" onclick="showPage('module1')"><span class="ni">📊</span> [Module 1]</a>
+  <a class="nav-a" id="nav-module2" onclick="showPage('module2')"><span class="ni">🔍</span> [Module 2]</a>
+  <div class="nav-sub">
+    <a class="nav-a" onclick="showPage('module2');scrollAnchor('m2-sub1')">↳ [Sub-section 1]</a>
+    <a class="nav-a" onclick="showPage('module2');scrollAnchor('m2-sub2')">↳ [Sub-section 2]</a>
+  </div>
+  <a class="nav-a" id="nav-module3" onclick="showPage('module3')"><span class="ni">📁</span> [Module 3]</a>
+  <a class="nav-a" id="nav-reports" onclick="showPage('reports')"><span class="ni">📈</span> Reports</a>
+  <div class="sb-hr"></div>
+  <div class="sb-grp">Flow Diagrams</div>
+  <a class="nav-a" id="nav-flows" onclick="showPage('flows')"><span class="ni">⚡</span> Request Flow</a>
+  <div class="nav-sub">
+    <a class="nav-a" onclick="showPage('flows');scrollAnchor('flow-read')">↳ Read (Query) Flow</a>
+    <a class="nav-a" onclick="showPage('flows');scrollAnchor('flow-write')">↳ Write (Command) Flow</a>
+    <a class="nav-a" onclick="showPage('flows');scrollAnchor('flow-bgjob')">↳ Background Jobs</a>
+    <a class="nav-a" onclick="showPage('flows');scrollAnchor('flow-events')">↳ Domain Events</a>
+  </div>
+  <div class="sb-hr"></div>
+  <div class="sb-grp">API Reference</div>
+  <a class="nav-a" id="nav-api" onclick="showPage('api')"><span class="ni">🔌</span> All Endpoints</a>
+  <div class="nav-sub">
+    <a class="nav-a" onclick="showPage('api');scrollAnchor('api-ctrl1')">↳ [Controller 1]</a>
+    <a class="nav-a" onclick="showPage('api');scrollAnchor('api-ctrl2')">↳ [Controller 2]</a>
+    <a class="nav-a" onclick="showPage('api');scrollAnchor('api-ctrl3')">↳ [Controller 3]</a>
+  </div>
+  <div class="sb-hr"></div>
+  <div class="sb-grp">Reference</div>
+  <a class="nav-a" id="nav-config" onclick="showPage('config')"><span class="ni">⚙️</span> Config &amp; Env</a>
+  <a class="nav-a" id="nav-roles" onclick="showPage('roles')"><span class="ni">🔐</span> Roles &amp; Permissions</a>
+  <a class="nav-a" id="nav-glossary" onclick="showPage('glossary')"><span class="ni">📚</span> Glossary</a>
+</nav>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main id="main">
+
+<!-- ████████ HOME ████████ -->
+<div id="page-home" class="page active">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Internal · Technical · [Organisation Name]</div>
+    <h1><em>[System Name]</em><br>Complete Technical Documentation</h1>
+    <p class="hero-sub">[One paragraph describing what this system does, who uses it, and what problem it solves. Replace this with your system description using Copilot from the project PDF.]</p>
+    <div class="hero-meta">
+      <div class="hm"><span class="hm-l">Version</span><span class="hm-v">[x.x]</span></div>
+      <div class="hm"><span class="hm-l">Framework</span><span class="hm-v">[e.g. .NET 8]</span></div>
+      <div class="hm"><span class="hm-l">Architecture</span><span class="hm-v">[e.g. CQRS + MediatR]</span></div>
+      <div class="hm"><span class="hm-l">Database</span><span class="hm-v">[e.g. PostgreSQL]</span></div>
+      <div class="hm"><span class="hm-l">Auth</span><span class="hm-v">[e.g. Azure AD JWT]</span></div>
+      <div class="hm"><span class="hm-l">Date</span><span class="hm-v">[YYYY]</span></div>
+    </div>
+  </div>
+  <!-- HINT -->
+  <div style="padding:0 52px">
+    <div class="hint" style="margin-top:18px">
+      <span class="hint-icon">🤖</span>
+      <div class="hint-body">
+        <div class="hint-label">Copilot Prompt — Hero Section</div>
+        <div class="hint-prompt">Open your PDF in Edge/Word → ask Copilot: <code>"Summarise this system in 2 sentences: what it does, who uses it, and what tech stack it uses"</code> → paste result into the hero description above.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-ph">?</div><div class="stat-l">[Entity 1] Count</div></div>
+    <div class="stat"><div class="stat-ph">?</div><div class="stat-l">[Entity 2] Count</div></div>
+    <div class="stat"><div class="stat-ph">?</div><div class="stat-l">API Controllers</div></div>
+    <div class="stat"><div class="stat-ph">?</div><div class="stat-l">REST Endpoints</div></div>
+    <div class="stat"><div class="stat-ph">?</div><div class="stat-l">Services</div></div>
+    <div class="stat"><div class="stat-ph">?</div><div class="stat-l">Integrations</div></div>
+    <div class="stat"><div class="stat-ph">?</div><div class="stat-l">Reports</div></div>
+    <div class="stat"><div class="stat-ph">?</div><div class="stat-l">Validators</div></div>
+  </div>
+
+  <!-- QUICK CARDS -->
+  <div class="qg">
+    <a class="qc" onclick="showPage('overview')">
+      <div class="qc-icon" style="background:rgba(37,99,235,.1)">📖</div>
+      <div class="qc-title">System Overview</div>
+      <div class="qc-desc">Purpose, users, modules, and technology stack.</div>
+      <div class="qc-foot"><span class="qt qt-f">Functional</span><span class="qc-arr">→</span></div>
+    </a>
+    <a class="qc" onclick="showPage('flows')">
+      <div class="qc-icon" style="background:rgba(124,58,237,.1)">⚡</div>
+      <div class="qc-title">Flow Diagrams</div>
+      <div class="qc-desc">Sequence diagrams for all key operations.</div>
+      <div class="qc-foot"><span class="qt qt-d">Diagrams</span><span class="qc-arr">→</span></div>
+    </a>
+    <a class="qc" onclick="showPage('api')">
+      <div class="qc-icon" style="background:rgba(22,163,74,.1)">🔌</div>
+      <div class="qc-title">API Reference</div>
+      <div class="qc-desc">All endpoints with parameters, permissions, and returns.</div>
+      <div class="qc-foot"><span class="qt qt-a">API</span><span class="qc-arr">→</span></div>
+    </a>
+    <a class="qc" onclick="showPage('architecture')">
+      <div class="qc-icon" style="background:rgba(37,99,235,.1)">🏗️</div>
+      <div class="qc-title">Architecture</div>
+      <div class="qc-desc">Design patterns, layers, and response envelope.</div>
+      <div class="qc-foot"><span class="qt qt-t">Technical</span><span class="qc-arr">→</span></div>
+    </a>
+    <a class="qc" onclick="showPage('config')">
+      <div class="qc-icon" style="background:rgba(217,119,6,.1)">⚙️</div>
+      <div class="qc-title">Configuration</div>
+      <div class="qc-desc">Environment variables, secrets, and service URLs.</div>
+      <div class="qc-foot"><span class="qt qt-t">Technical</span><span class="qc-arr">→</span></div>
+    </a>
+    <a class="qc" onclick="showPage('glossary')">
+      <div class="qc-icon" style="background:rgba(13,148,136,.1)">📚</div>
+      <div class="qc-title">Glossary</div>
+      <div class="qc-desc">All domain terms, acronyms, and definitions.</div>
+      <div class="qc-foot"><span class="qt qt-f">Reference</span><span class="qc-arr">→</span></div>
+    </a>
+  </div>
+  <div style="padding:20px 52px 56px">
+    <div class="box bi">
+      <span class="box-icon">ℹ️</span>
+      <div class="box-body"><strong>Base URL (DEV):</strong> <code>[https://localhost:PORT/api/...]</code> &nbsp;|&nbsp; <strong>Auth:</strong> <code>Authorization: Bearer &lt;JWT&gt;</code> required on all endpoints. &nbsp;|&nbsp; Response envelope: <code>{ STATUS_CODE: 0|500, Result: [...] }</code></div>
+    </div>
+  </div>
+</div>
+
+<!-- ████████ COPILOT GUIDE ████████ -->
+<div id="page-howto" class="page">
+  <div class="sw">
+    <div class="bc"><span onclick="showPage('home')">Home</span><span class="bc-s"> / </span><span>Copilot Fill Guide</span></div>
+    <div class="pg-hdr">
+      <div class="pg-hdr-top"><span class="pg-num">🤖</span><h1>How to Fill This Template with Copilot</h1></div>
+      <p>Step-by-step workflow — keep your confidential PDFs local, use Copilot safely</p>
+    </div>
+
+    <div class="howto">
+      <h3>🔒 Why This Workflow Is Safe &amp; Professional</h3>
+      <ol>
+        <li><strong>Claude designed the template</strong> — structure, design system, section layout, flow diagram SVG components. Zero project-specific data was shared with Claude. This is completely safe to say publicly.</li>
+        <li><strong>Microsoft Copilot fills the content</strong> — Copilot in Edge / Word / M365 reads your PDFs <em>locally on your work laptop</em>. Data stays inside your organisation's M365 boundary. World Bank data never leaves your network.</li>
+        <li><strong>You review and paste</strong> — you verify every generated section before pasting into the template. You stay in control.</li>
+        <li><strong>The output is a professional HTML doc site</strong> — opens in any browser, no server needed, shareable with your manager.</li>
+      </ol>
+    </div>
+
+    <div class="box be">
+      <span class="box-icon">⚠️</span>
+      <div class="box-body"><strong>Important:</strong> Never paste confidential project details into Claude.ai, ChatGPT, or any public AI tool. Only use Microsoft Copilot (M365) or GitHub Copilot (enterprise-licensed) for content generation from internal documents.</div>
+    </div>
+
+    <h2 class="sh">Step-by-Step Fill Workflow</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-b">
+          <h4>Open your PDF in Microsoft Edge or Word</h4>
+          <p>Open the technical documentation PDF (or multiple PDFs) on your work laptop. Edge has Copilot built-in via the sidebar — click the Copilot icon on the right.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-b">
+          <h4>Open this HTML file in a text editor (VS Code recommended)</h4>
+          <p>Open <code>documentation-template.html</code> in VS Code. You'll see purple hint blocks throughout — each one has a ready-made Copilot prompt you can copy and use.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-b">
+          <h4>Use the Copilot prompts in each section</h4>
+          <p>Every section of this template has a purple <strong>🤖 Copilot Prompt</strong> box. Copy the prompt text, paste into Copilot sidebar (with your PDF open), get the result, and paste into the template HTML replacing the <code>[placeholder]</code> text.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-b">
+          <h4>Fill the stats bar (Home page — stat numbers)</h4>
+          <p>Copilot prompt: <code>"How many controllers, endpoints, services, and external integrations does this system have? Give me only numbers."</code></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">5</div>
+        <div class="step-b">
+          <h4>Generate tables from the PDF</h4>
+          <p>For API endpoint tables, Copilot prompt: <code>"List all endpoints in [ControllerName] controller with HTTP method, path, permission required, and what it returns. Format as a table."</code></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">6</div>
+        <div class="step-b">
+          <h4>Fill the sequence flow diagrams</h4>
+          <p>For the SVG sequence diagrams, Copilot prompt: <code>"Describe the complete step-by-step flow for [operation name] — from the UI request through middleware, controller, MediatR, handler, service, and database. Include what each step does."</code> Then update the SVG participant labels and message text accordingly.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">7</div>
+        <div class="step-b">
+          <h4>Generate the Glossary</h4>
+          <p>Copilot prompt: <code>"List all acronyms, abbreviations, and domain-specific terms used in this document with a brief definition of each. Format as term: definition pairs."</code></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">8</div>
+        <div class="step-b">
+          <h4>Fill configuration section</h4>
+          <p>Copilot prompt: <code>"List all environment variables, configuration keys, and Azure Key Vault secrets mentioned in this document with their purpose. Do not include actual values."</code></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">9</div>
+        <div class="step-b">
+          <h4>Remove all purple Copilot hint blocks</h4>
+          <p>Once a section is filled, delete the <code>&lt;div class="hint"&gt;...&lt;/div&gt;</code> block above it. The final doc should have no purple hint boxes — those are your working notes only.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">10</div>
+        <div class="step-b">
+          <h4>Open in browser and verify</h4>
+          <p>Double-click the HTML file to open in Chrome/Edge. Navigate every section, check the search bar works, test dark mode. Share the single HTML file with your manager — no server or deployment needed.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sh">Ready-to-Use Copilot Prompt Library</h2>
+    <div class="tw">
+      <table class="dt">
+        <thead><tr><th>Section</th><th>Copilot Prompt to Use</th></tr></thead>
+        <tbody>
+          <tr><td>System Overview</td><td><code>"Summarise this system in 3–4 sentences: what it does, who the users are, and what problem it solves."</code></td></tr>
+          <tr><td>Tech Stack Table</td><td><code>"List the technology stack: layer, technology name, version, and what it is used for. Format as a table."</code></td></tr>
+          <tr><td>Entity Lifecycle</td><td><code>"Describe the lifecycle stages that [main entity] goes through from creation to archival. List each stage with a short description."</code></td></tr>
+          <tr><td>Module Description</td><td><code>"Describe what the [Module Name] module does, who uses it, and what its key features are in 2–3 paragraphs."</code></td></tr>
+          <tr><td>API Endpoints Table</td><td><code>"List all endpoints in [ControllerName]: HTTP method, route path, permission required, parameters, and what it returns."</code></td></tr>
+          <tr><td>Endpoint Description</td><td><code>"Describe what the [EndpointName] endpoint does, what validation it performs, and what it returns."</code></td></tr>
+          <tr><td>Sequence Flow</td><td><code>"Describe the complete step-by-step request flow for [OperationName] — all layers from UI to database and back."</code></td></tr>
+          <tr><td>Config Variables</td><td><code>"List all environment variables and configuration keys mentioned in this document with their purpose. No actual values."</code></td></tr>
+          <tr><td>Glossary</td><td><code>"Extract all acronyms, abbreviations, and domain-specific terms with a one-sentence definition for each."</code></td></tr>
+          <tr><td>Validators</td><td><code>"List all validation rules in this system: class name, what it validates, and the key rules."</code></td></tr>
+          <tr><td>Roles & Permissions</td><td><code>"List all user roles in this system, who has each role, and what permissions/actions they can perform."</code></td></tr>
+          <tr><td>Background Jobs</td><td><code>"List all scheduled background jobs: job name, endpoint, frequency, and what it does."</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ████████ OVERVIEW ████████ -->
+<div id="page-overview" class="page">
+  <div class="sw">
+    <div class="bc"><span onclick="showPage('home')">Home</span><span class="bc-s"> / </span><span>Overview</span></div>
+    <div class="pg-hdr">
+      <div class="pg-hdr-top"><span class="pg-num">01</span><h1>System Overview</h1></div>
+      <p>About the system, its purpose, users, and technology stack</p>
+    </div>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"Summarise this system in 3–4 sentences: what it does, who the users are, and what problem it solves."</code></div></div></div>
+    <p class="bd"><span class="ph">[System overview paragraph — paste Copilot output here. Describe the system purpose, the organisation it belongs to, and the business problem it solves.]</span></p>
+    <p class="bd"><span class="ph">[Second paragraph — describe the key users: their roles, what they do in the system, and the scale of operation (how many records, projects, transactions the system manages).]</span></p>
+    <h2 class="sh">Application Modules</h2>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"List all application modules in this system with a brief description of what each module does."</code></div></div></div>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>Module</th><th>Description</th><th>Key Features</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ph">[Module 1 Name]</span></td><td><span class="ph">[What this module does]</span></td><td><span class="ph">[Feature 1, Feature 2]</span></td></tr>
+        <tr><td><span class="ph">[Module 2 Name]</span></td><td><span class="ph">[What this module does]</span></td><td><span class="ph">[Feature 1, Feature 2]</span></td></tr>
+        <tr><td><span class="ph">[Module 3 Name]</span></td><td><span class="ph">[What this module does]</span></td><td><span class="ph">[Feature 1, Feature 2]</span></td></tr>
+        <tr><td><span class="ph">[Module 4 Name]</span></td><td><span class="ph">[What this module does]</span></td><td><span class="ph">[Feature 1, Feature 2]</span></td></tr>
+      </tbody>
+    </table></div>
+    <h2 class="sh">Technology Stack</h2>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"List the technology stack: layer name, technology, version, and what it is used for. Format as a table."</code></div></div></div>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>Layer</th><th>Technology</th><th>Version</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ph">[API Framework]</span></td><td><span class="ph">[e.g. ASP.NET Core]</span></td><td><span class="ph">[8.0]</span></td><td><span class="ph">[RESTful API host]</span></td></tr>
+        <tr><td><span class="ph">[Messaging]</span></td><td><span class="ph">[e.g. MediatR]</span></td><td><span class="ph">[12.x]</span></td><td><span class="ph">[CQRS pattern]</span></td></tr>
+        <tr><td><span class="ph">[DI Container]</span></td><td><span class="ph">[e.g. Autofac]</span></td><td><span class="ph">[x.x]</span></td><td><span class="ph">[Dependency Injection]</span></td></tr>
+        <tr><td><span class="ph">[ORM]</span></td><td><span class="ph">[e.g. EF Core]</span></td><td><span class="ph">[x.x]</span></td><td><span class="ph">[Database access]</span></td></tr>
+        <tr><td><span class="ph">[Validation]</span></td><td><span class="ph">[e.g. FluentValidation]</span></td><td><span class="ph">[x.x]</span></td><td><span class="ph">[Input validation]</span></td></tr>
+        <tr><td><span class="ph">[Authentication]</span></td><td><span class="ph">[e.g. Azure AD JWT]</span></td><td><span class="ph">—</span></td><td><span class="ph">[SSO and JWT validation]</span></td></tr>
+        <tr><td><span class="ph">[Report Engine]</span></td><td><span class="ph">[e.g. Aspose.Cells]</span></td><td><span class="ph">—</span></td><td><span class="ph">[Excel/PDF generation]</span></td></tr>
+        <tr><td><span class="ph">[Secrets]</span></td><td><span class="ph">[e.g. Azure Key Vault]</span></td><td><span class="ph">—</span></td><td><span class="ph">[Secrets management]</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ████████ ARCHITECTURE ████████ -->
+<div id="page-architecture" class="page">
+  <div class="sw">
+    <div class="bc"><span onclick="showPage('home')">Home</span><span class="bc-s"> / </span><span>Architecture</span></div>
+    <div class="pg-hdr">
+      <div class="pg-hdr-top"><span class="pg-num">02</span><h1>Architecture &amp; Design Patterns</h1></div>
+      <p>Core architectural pattern, request flow, and response conventions</p>
+    </div>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"Describe the architectural pattern used in this system. What design patterns are applied and why? How does a request travel through the system from the client to the database?"</code></div></div></div>
+    <p class="bd"><span class="ph">[Architecture overview — describe the main design pattern (e.g. CQRS + Clean Architecture), why it was chosen, and the key benefit it provides to this system.]</span></p>
+    <div class="box bi"><span class="box-icon">💡</span><div class="box-body"><strong>Key Rule:</strong> <span class="ph">[Describe the most important architectural rule to follow — e.g. "Controller only calls mediator, zero business logic in controllers" or "Service layer owns all business logic".]</span></div></div>
+    <h2 class="sh">Request Chain — Every Operation</h2>
+    <p class="bd">Every API operation — whether reading or writing — travels through the same layers in this exact order:</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-b"><h4><span class="ph">[Layer 1 — e.g. Client / React UI]</span></h4><p><span class="ph">[What happens at this layer]</span></p></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-b"><h4><span class="ph">[Layer 2 — e.g. Authentication Middleware]</span></h4><p><span class="ph">[What happens at this layer]</span></p></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-b"><h4><span class="ph">[Layer 3 — e.g. Controller]</span></h4><p><span class="ph">[What happens at this layer]</span></p></div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-b"><h4><span class="ph">[Layer 4 — e.g. Validation]</span></h4><p><span class="ph">[What happens at this layer]</span></p></div></div>
+      <div class="step"><div class="step-n">5</div><div class="step-b"><h4><span class="ph">[Layer 5 — e.g. Message Bus / Handler]</span></h4><p><span class="ph">[What happens at this layer]</span></p></div></div>
+      <div class="step"><div class="step-n">6</div><div class="step-b"><h4><span class="ph">[Layer 6 — e.g. Service / Business Logic]</span></h4><p><span class="ph">[What happens at this layer — ALL business logic lives here]</span></p></div></div>
+      <div class="step"><div class="step-n">7</div><div class="step-b"><h4><span class="ph">[Layer 7 — e.g. Repository / Database]</span></h4><p><span class="ph">[What happens at this layer — DB access, external API calls]</span></p></div></div>
+    </div>
+    <h2 class="sh">Standard Response Envelope</h2>
+    <div class="cw"><div class="ch"><span class="clang">JSON — Standard Response</span><button class="ccopy" onclick="copyCode(this)">Copy</button></div>
+    <pre class="cb">{
+  <span class="pr">"STATUS"</span>: <span class="st">"<span class="ph">[STATUS_VALUE]</span>"</span>,
+  <span class="pr">"STATUS_CODE"</span>: <span class="nu">0</span>,          <span class="cm">// 0 = success | <span class="ph">[error code]</span> = error</span>
+  <span class="pr">"NOTIFICATIONS"</span>: [],        <span class="cm">// Error/info messages</span>
+  <span class="pr">"Result"</span>: [ ... ]            <span class="cm">// Data payload</span>
+}</pre></div>
+    <h2 class="sh">Object Mapping — Profiles</h2>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"List all AutoMapper (or mapping) profiles in this system: profile name, source object, destination object, and any special mapping notes."</code></div></div></div>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>Profile</th><th>Source → Destination</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code><span class="ph">[ProfileName]</span></code></td><td><span class="ph">[SourceType] → [DestType]</span></td><td><span class="ph">[Special mappings]</span></td></tr>
+        <tr><td><code><span class="ph">[ProfileName]</span></code></td><td><span class="ph">[SourceType] → [DestType]</span></td><td><span class="ph">[Special mappings]</span></td></tr>
+        <tr><td><code><span class="ph">[ProfileName]</span></code></td><td><span class="ph">[SourceType] → [DestType]</span></td><td><span class="ph">[Special mappings]</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ████████ LIFECYCLE ████████ -->
+<div id="page-lifecycle" class="page">
+  <div class="sw">
+    <div class="bc"><span onclick="showPage('home')">Home</span><span class="bc-s"> / </span><span>Entity Lifecycle</span></div>
+    <div class="pg-hdr">
+      <div class="pg-hdr-top"><span class="pg-num">03</span><h1>Entity Lifecycle</h1></div>
+      <p>All stages that the main entity passes through from creation to archival</p>
+    </div>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"Describe the lifecycle of a [main entity name] in this system — all stages from creation through active processing to final archival or deletion. What happens at each stage?"</code></div></div></div>
+    <div class="lcg">
+      <div class="lc"><div class="lc-n">1</div><div class="lc-tag lt-1"><span class="ph">[Stage 1 Type]</span></div><div class="lc-name"><span class="ph">[Stage 1 Name]</span></div><div class="lc-desc"><span class="ph">[What happens at this stage. Who is responsible. What data is recorded.]</span></div></div>
+      <div class="lc"><div class="lc-n">2</div><div class="lc-tag lt-1"><span class="ph">[Stage 2 Type]</span></div><div class="lc-name"><span class="ph">[Stage 2 Name]</span></div><div class="lc-desc"><span class="ph">[What happens at this stage.]</span></div></div>
+      <div class="lc"><div class="lc-n">3</div><div class="lc-tag lt-2"><span class="ph">[Stage 3 Type]</span></div><div class="lc-name"><span class="ph">[Stage 3 Name]</span></div><div class="lc-desc"><span class="ph">[What happens at this stage.]</span></div></div>
+      <div class="lc"><div class="lc-n">4</div><div class="lc-tag lt-2"><span class="ph">[Stage 4 Type]</span></div><div class="lc-name"><span class="ph">[Stage 4 Name]</span></div><div class="lc-desc"><span class="ph">[What happens at this stage.]</span></div></div>
+      <div class="lc"><div class="lc-n">5</div><div class="lc-tag lt-3"><span class="ph">[Stage 5 Type]</span></div><div class="lc-name"><span class="ph">[Stage 5 Name]</span></div><div class="lc-desc"><span class="ph">[What happens at this stage.]</span></div></div>
+      <div class="lc"><div class="lc-n">6</div><div class="lc-tag lt-3"><span class="ph">[Stage 6 Type]</span></div><div class="lc-name"><span class="ph">[Stage 6 Name]</span></div><div class="lc-desc"><span class="ph">[What happens at this stage.]</span></div></div>
+      <div class="lc"><div class="lc-n">7</div><div class="lc-tag lt-3"><span class="ph">[Stage 7 Type]</span></div><div class="lc-name"><span class="ph">[Stage 7 Name]</span></div><div class="lc-desc"><span class="ph">[What happens at this stage.]</span></div></div>
+      <div class="lc"><div class="lc-n">8</div><div class="lc-tag lt-4"><span class="ph">[Stage 8 Type]</span></div><div class="lc-name"><span class="ph">[Stage 8 Name]</span></div><div class="lc-desc"><span class="ph">[Archive / final state.]</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ████████ MODULE 1 ████████ -->
+<div id="page-module1" class="page">
+  <div class="sw">
+    <div class="bc"><span onclick="showPage('home')">Home</span><span class="bc-s"> / </span><span>[Module 1 Name]</span></div>
+    <div class="pg-hdr">
+      <div class="pg-hdr-top"><span class="pg-num">04</span><h1><span class="ph">[Module 1 Name]</span></h1></div>
+      <p><span class="ph">[Brief module subtitle]</span></p>
+    </div>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"Describe what the [Module Name] module does, who uses it, what its key sub-sections or tabs are, and what the main data fields it manages."</code></div></div></div>
+    <p class="bd"><span class="ph">[Module description — what it manages, who uses it, and why it exists.]</span></p>
+    <h2 class="sh">Key Features &amp; Sub-Sections</h2>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>Section / Tab</th><th>Description</th><th>Who Can Access</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ph">[Section 1]</span></td><td><span class="ph">[What this section contains]</span></td><td><span class="ph">[Role]</span></td></tr>
+        <tr><td><span class="ph">[Section 2]</span></td><td><span class="ph">[What this section contains]</span></td><td><span class="ph">[Role]</span></td></tr>
+        <tr><td><span class="ph">[Section 3]</span></td><td><span class="ph">[What this section contains]</span></td><td><span class="ph">[Role]</span></td></tr>
+      </tbody>
+    </table></div>
+    <h2 class="sh">Data Fields</h2>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"List all fields displayed in the [Module Name] list view or detail view: field name, data type, and what it represents."</code></div></div></div>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>Field</th><th>Type</th><th>Description</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ph">[Field 1]</span></td><td><span class="ph">[int/string/date]</span></td><td><span class="ph">[What this field means]</span></td><td class="td-m"><span class="ph">[Example value]</span></td></tr>
+        <tr><td><span class="ph">[Field 2]</span></td><td><span class="ph">[int/string/date]</span></td><td><span class="ph">[What this field means]</span></td><td class="td-m"><span class="ph">[Example value]</span></td></tr>
+        <tr><td><span class="ph">[Field 3]</span></td><td><span class="ph">[int/string/date]</span></td><td><span class="ph">[What this field means]</span></td><td class="td-m"><span class="ph">[Example value]</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ████████ MODULE 2 ████████ -->
+<div id="page-module2" class="page">
+  <div class="sw">
+    <div class="bc"><span onclick="showPage('home')">Home</span><span class="bc-s"> / </span><span>[Module 2 Name]</span></div>
+    <div class="pg-hdr">
+      <div class="pg-hdr-top"><span class="pg-num">05</span><h1><span class="ph">[Module 2 Name]</span></h1></div>
+      <p><span class="ph">[Brief module subtitle]</span></p>
+    </div>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"Describe the [Module Name] module in detail — what records it manages, what operations are possible, and what business rules apply."</code></div></div></div>
+    <p class="bd"><span class="ph">[Module 2 description]</span></p>
+    <h2 class="sh" id="m2-sub1"><span class="ph">[Sub-section 1 of Module 2]</span></h2>
+    <p class="bd"><span class="ph">[Describe this sub-section]</span></p>
+    <h2 class="sh" id="m2-sub2"><span class="ph">[Sub-section 2 of Module 2]</span></h2>
+    <p class="bd"><span class="ph">[Describe this sub-section]</span></p>
+  </div>
+</div>
+
+<!-- ████████ MODULE 3 ████████ -->
+<div id="page-module3" class="page">
+  <div class="sw">
+    <div class="bc"><span onclick="showPage('home')">Home</span><span class="bc-s"> / </span><span>[Module 3 Name]</span></div>
+    <div class="pg-hdr">
+      <div class="pg-hdr-top"><span class="pg-num">06</span><h1><span class="ph">[Module 3 Name]</span></h1></div>
+      <p><span class="ph">[Brief subtitle]</span></p>
+    </div>
+    <p class="bd"><span class="ph">[Module 3 description]</span></p>
+  </div>
+</div>
+
+<!-- ████████ REPORTS ████████ -->
+<div id="page-reports" class="page">
+  <div class="sw">
+    <div class="bc"><span onclick="showPage('home')">Home</span><span class="bc-s"> / </span><span>Reports</span></div>
+    <div class="pg-hdr">
+      <div class="pg-hdr-top"><span class="pg-num">07</span><h1>Reports Module</h1></div>
+      <p><span class="ph">[Describe what kinds of reports are generated and in what format]</span></p>
+    </div>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"List all downloadable reports in this system: report name, what it contains, what filters are available, and what file format it produces."</code></div></div></div>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>Report Name</th><th>Description</th><th>Filters Available</th><th>Format</th></tr></thead>
+      <tbody>
+        <tr><td><span class="ph">[Report 1]</span></td><td><span class="ph">[What this report contains]</span></td><td><span class="ph">[Date range, category, etc.]</span></td><td><span class="ph">.xlsx</span></td></tr>
+        <tr><td><span class="ph">[Report 2]</span></td><td><span class="ph">[What this report contains]</span></td><td><span class="ph">[Filters]</span></td><td><span class="ph">.xlsx</span></td></tr>
+        <tr><td><span class="ph">[Report 3]</span></td><td><span class="ph">[What this report contains]</span></td><td><span class="ph">[Filters]</span></td><td><span class="ph">.pdf</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ████████ FLOW DIAGRAMS ████████ -->
+<div id="page-flows" class="page">
+  <div class="sw">
+    <div class="bc"><span onclick="showPage('home')">Home</span><span class="bc-s"> / </span><span>Flow Diagrams</span></div>
+    <div class="pg-hdr">
+      <div class="pg-hdr-top"><span class="pg-num">08</span><h1>Sequence Flow Diagrams</h1></div>
+      <p>End-to-end request flows from client to database and back</p>
+    </div>
+
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt — For Each Flow</div><div class="hint-prompt"><code>"Describe the complete step-by-step request flow for [operation name] — from UI request through all layers (middleware, controller, validation, message bus, handler, service, repository) to the database and back to the client. What does each layer do?"</code> Then update the participant labels and message text in the SVG below.</div></div></div>
+
+    <!-- READ FLOW -->
+    <h2 class="sh" id="flow-read">Read Operation Flow (Query)</h2>
+    <p class="bd"><span class="ph">[Describe which read operation this diagram represents, e.g. "When a user navigates to [Screen Name], this sequence executes"]</span></p>
+    <div class="seq-wrap">
+      <div class="seq-title"><span class="ph">[Operation Name]</span> — Read Flow</div>
+      <svg viewBox="0 0 800 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:600px;font-family:IBM Plex Mono,monospace">
+        <defs>
+          <marker id="ra" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#64748B"/></marker>
+          <marker id="rb" markerWidth="7" markerHeight="5" refX="1" refY="2.5" orient="auto"><polygon points="7 0,0 2.5,7 5" fill="#0D9488"/></marker>
+        </defs>
+        <style>.rt{font-size:10.5px;fill:#94A3B8;dominant-baseline:middle}.rh{font-size:10px;font-weight:bold;text-anchor:middle;dominant-baseline:middle}.rl{stroke:#374151;stroke-width:1;stroke-dasharray:4,3}.rf{stroke:#64748B;stroke-width:1.5;marker-end:url(#ra)}.rr{stroke:#0D9488;stroke-width:1.5;stroke-dasharray:5,3;marker-end:url(#rb)}.rc{fill:rgba(37,99,235,.15);stroke:rgba(37,99,235,.4);stroke-width:1}</style>
+        <!-- Participants — update text labels to match your system -->
+        <rect x="10" y="12" width="90" height="30" rx="5" fill="rgba(124,58,237,.12)" stroke="rgba(124,58,237,.4)" stroke-width="1"/>
+        <text x="55" y="31" class="rh" fill="#A78BFA" font-size="9">[Client/UI]</text>
+        <rect x="120" y="12" width="90" height="30" rx="5" fill="rgba(217,119,6,.1)" stroke="rgba(217,119,6,.4)" stroke-width="1"/>
+        <text x="165" y="31" class="rh" fill="#FCD34D" font-size="9">[Auth Layer]</text>
+        <rect x="230" y="12" width="90" height="30" rx="5" fill="rgba(37,99,235,.12)" stroke="rgba(37,99,235,.4)" stroke-width="1"/>
+        <text x="275" y="31" class="rh" fill="#93C5FD" font-size="9">[Controller]</text>
+        <rect x="340" y="12" width="90" height="30" rx="5" fill="rgba(13,148,136,.12)" stroke="rgba(13,148,136,.4)" stroke-width="1"/>
+        <text x="385" y="31" class="rh" fill="#2DD4BF" font-size="9">[Handler]</text>
+        <rect x="450" y="12" width="90" height="30" rx="5" fill="rgba(234,88,12,.1)" stroke="rgba(234,88,12,.35)" stroke-width="1"/>
+        <text x="495" y="31" class="rh" fill="#FB923C" font-size="9">[Service]</text>
+        <rect x="560" y="12" width="90" height="30" rx="5" fill="rgba(22,163,74,.1)" stroke="rgba(22,163,74,.3)" stroke-width="1"/>
+        <text x="605" y="31" class="rh" fill="#4ADE80" font-size="9">[Repository/DB]</text>
+        <rect x="670" y="12" width="90" height="30" rx="5" fill="rgba(37,99,235,.08)" stroke="rgba(37,99,235,.25)" stroke-width="1"/>
+        <text x="715" y="31" class="rh" fill="#93C5FD" font-size="9">[Ext. API]</text>
+        <!-- Lifelines -->
+        <line x1="55" y1="42" x2="55" y2="330" class="rl"/>
+        <line x1="165" y1="42" x2="165" y2="330" class="rl"/>
+        <line x1="275" y1="42" x2="275" y2="330" class="rl"/>
+        <line x1="385" y1="42" x2="385" y2="330" class="rl"/>
+        <line x1="495" y1="42" x2="495" y2="330" class="rl"/>
+        <line x1="605" y1="42" x2="605" y2="330" class="rl"/>
+        <line x1="715" y1="42" x2="715" y2="330" class="rl"/>
+        <!-- Step 1: UI → Auth -->
+        <circle cx="18" cy="76" r="7" class="rc"/><text x="18" y="76" class="rh" font-size="8" fill="#93C5FD">1</text>
+        <line x1="60" y1="76" x2="158" y2="76" class="rf"/>
+        <text x="109" y="67" class="rt" text-anchor="middle" font-size="9.5">[HTTP Method] [/api/route] + Bearer JWT</text>
+        <!-- Step 2: Auth → Controller -->
+        <circle cx="18" cy="101" r="7" class="rc"/><text x="18" y="101" class="rh" font-size="8" fill="#93C5FD">2</text>
+        <line x1="170" y1="101" x2="268" y2="101" class="rf"/>
+        <text x="219" y="92" class="rt" text-anchor="middle" font-size="9.5">Token validated ✓ | [PermissionCode] checked</text>
+        <!-- Step 3: Controller → Handler -->
+        <circle cx="18" cy="126" r="7" class="rc"/><text x="18" y="126" class="rh" font-size="8" fill="#93C5FD">3</text>
+        <line x1="280" y1="126" x2="378" y2="126" class="rf"/>
+        <text x="329" y="117" class="rt" text-anchor="middle" font-size="9.5">_mediator.Send([QueryName])</text>
+        <!-- Step 4: Handler → Service -->
+        <circle cx="18" cy="151" r="7" class="rc"/><text x="18" y="151" class="rh" font-size="8" fill="#93C5FD">4</text>
+        <line x1="390" y1="151" x2="488" y2="151" class="rf"/>
+        <text x="439" y="142" class="rt" text-anchor="middle" font-size="9.5">[ServiceMethod(request)]</text>
+        <!-- Step 5: Service → DB -->
+        <circle cx="18" cy="181" r="7" class="rc"/><text x="18" y="181" class="rh" font-size="8" fill="#93C5FD">5</text>
+        <line x1="500" y1="181" x2="598" y2="181" class="rf"/>
+        <text x="549" y="172" class="rt" text-anchor="middle" font-size="9.5">[DB Query / EF Core SELECT]</text>
+        <line x1="598" y1="194" x2="500" y2="194" class="rr"/>
+        <text x="549" y="204" class="rt" text-anchor="middle" font-size="9.5" fill="#0D9488">[Data returned]</text>
+        <!-- Step 6: Service → Ext API (if applicable) -->
+        <circle cx="18" cy="224" r="7" class="rc"/><text x="18" y="224" class="rh" font-size="8" fill="#93C5FD">6</text>
+        <line x1="500" y1="224" x2="708" y2="224" class="rf" stroke-dasharray="5,3"/>
+        <text x="604" y="215" class="rt" text-anchor="middle" font-size="9.5">[External API call, if any]</text>
+        <line x1="708" y1="237" x2="500" y2="237" class="rr"/>
+        <!-- Step 7: Return all the way back -->
+        <circle cx="18" cy="268" r="7" class="rc"/><text x="18" y="268" class="rh" font-size="8" fill="#93C5FD">7</text>
+        <line x1="488" y1="268" x2="62" y2="268" class="rr"/>
+        <text x="275" y="259" class="rt" text-anchor="middle" font-size="9.5" fill="#0D9488">{ STATUS_CODE: 0, Result: [...] } → HTTP 200</text>
+        <text x="275" y="290" class="rt" text-anchor="middle" font-size="9" fill="#A78BFA">[Note any post-processing, e.g. UI renders grid]</text>
+      </svg>
+      <div class="hint" style="margin-top:12px"><span class="hint-icon">✏️</span><div class="hint-body"><div class="hint-label">How to Customise This Diagram</div><div class="hint-prompt">Update the participant labels in the <code>&lt;text&gt;</code> elements. Change the message text in the <code>&lt;text class="rt"&gt;</code> elements along each arrow. Add or remove steps by copying a step group (circle + line + text). The SVG is fully editable in any text editor.</div></div></div>
+    </div>
+
+    <!-- WRITE FLOW -->
+    <h2 class="sh" id="flow-write">Write Operation Flow (Command)</h2>
+    <p class="bd"><span class="ph">[Describe which write operation this diagram represents — e.g. "When a user saves [Entity], this sequence executes including validation and business rule checks."]</span></p>
+    <div class="seq-wrap">
+      <div class="seq-title"><span class="ph">[Save/Create/Update Operation Name]</span> — Write Flow</div>
+      <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:560px;font-family:IBM Plex Mono,monospace">
+        <defs>
+          <marker id="wa" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0,7 2.5,0 5" fill="#64748B"/></marker>
+          <marker id="wb" markerWidth="7" markerHeight="5" refX="1" refY="2.5" orient="auto"><polygon points="7 0,0 2.5,7 5" fill="#0D9488"/></marker>
+        </defs>
+        <style>.wt{font-size:10.5px;fill:#94A3B8;dominant-baseline:middle}.wh{font-size:10px;font-weight:bold;text-anchor:middle;dominant-baseline:middle}.wl{stroke:#374151;stroke-width:1;stroke-dasharray:4,3}.wf{stroke:#64748B;stroke-width:1.5;marker-end:url(#wa)}.wr{stroke:#0D9488;stroke-width:1.5;stroke-dasharray:5,3;marker-end:url(#wb)}.wc{fill:rgba(37,99,235,.15);stroke:rgba(37,99,235,.4);stroke-width:1}</style>
+        <rect x="10" y="12" width="80" height="28" rx="5" fill="rgba(124,58,237,.12)" stroke="rgba(124,58,237,.4)" stroke-width="1"/>
+        <text x="50" y="30" class="wh" fill="#A78BFA" font-size="9">[Client]</text>
+        <rect x="110" y="12" width="80" height="28" rx="5" fill="rgba(217,119,6,.1)" stroke="rgba(217,119,6,.4)" stroke-width="1"/>
+        <text x="150" y="30" class="wh" fill="#FCD34D" font-size="9">[Auth/MW]</text>
+        <rect x="210" y="12" width="80" height="28" rx="5" fill="rgba(234,88,12,.12)" stroke="rgba(234,88,12,.4)" stroke-width="1"/>
+        <text x="250" y="30" class="wh" fill="#FB923C" font-size="9">[Validation]</text>
+        <rect x="310" y="12" width="80" height="28" rx="5" fill="rgba(13,148,136,.12)" stroke="rgba(13,148,136,.4)" stroke-width="1"/>
+        <text x="350" y="30" class="wh" fill="#2DD4BF" font-size="9">[Handler]</text>
+        <rect x="410" y="12" width="80" height="28" rx="5" fill="rgba(234,88,12,.1)" stroke="rgba(234,88,12,.35)" stroke-width="1"/>
+        <text x="450" y="30" class="wh" fill="#FB923C" font-size="9">[Service]</text>
+        <rect x="510" y="12" width="80" height="28" rx="5" fill="rgba(22,163,74,.1)" stroke="rgba(22,163,74,.3)" stroke-width="1"/>
+        <text x="550" y="30" class="wh" fill="#4ADE80" font-size="9">[Database]</text>
+        <rect x="610" y="12" width="72" height="28" rx="5" fill="rgba(37,99,235,.08)" stroke="rgba(37,99,235,.25)" stroke-width="1"/>
+        <text x="646" y="30" class="wh" fill="#93C5FD" font-size="9">[Ext. Service]</text>
+        <line x1="50" y1="40" x2="50" y2="290" class="wl"/>
+        <line x1="150" y1="40" x2="150" y2="290" class="wl"/>
+        <line x1="250" y1="40" x2="250" y2="290" class="wl"/>
+        <line x1="350" y1="40" x2="350" y2="290" class="wl"/>
+        <line x1="450" y1="40" x2="450" y2="290" class="wl"/>
+        <line x1="550" y1="40" x2="550" y2="290" class="wl"/>
+        <line x1="646" y1="40" x2="646" y2="290" class="wl"/>
+        <circle cx="18" cy="72" r="7" class="wc"/><text x="18" y="72" class="wh" font-size="8" fill="#93C5FD">1</text>
+        <line x1="55" y1="72" x2="143" y2="72" class="wf"/><text x="99" y="63" class="wt" text-anchor="middle" font-size="9.5">[POST with body data]</text>
+        <circle cx="18" cy="96" r="7" class="wc"/><text x="18" y="96" class="wh" font-size="8" fill="#93C5FD">2</text>
+        <rect x="143" y="86" width="14" height="30" rx="2" fill="rgba(217,119,6,.3)" stroke="rgba(217,119,6,.6)" stroke-width="1"/>
+        <text x="99" y="111" class="wt" text-anchor="middle" font-size="9">[EditAll] permission + JWT ✓</text>
+        <circle cx="18" cy="124" r="7" class="wc"/><text x="18" y="124" class="wh" font-size="8" fill="#93C5FD">3</text>
+        <line x1="157" y1="124" x2="243" y2="124" class="wf"/><text x="200" y="115" class="wt" text-anchor="middle" font-size="9.5">[N] validation rules auto-run</text>
+        <line x1="250" y1="124" x2="250" y2="144" stroke="#DC2626" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="280" y="150" class="wt" fill="#DC2626" font-size="9">HTTP 400 if fails</text>
+        <circle cx="18" cy="164" r="7" class="wc"/><text x="18" y="164" class="wh" font-size="8" fill="#93C5FD">4</text>
+        <line x1="257" y1="164" x2="343" y2="164" class="wf"/><text x="300" y="155" class="wt" text-anchor="middle" font-size="9.5">_mediator.Send(command)</text>
+        <circle cx="18" cy="190" r="7" class="wc"/><text x="18" y="190" class="wh" font-size="8" fill="#93C5FD">5</text>
+        <line x1="357" y1="190" x2="443" y2="190" class="wf"/><text x="400" y="181" class="wt" text-anchor="middle" font-size="9.5">[Business rule checks]</text>
+        <circle cx="18" cy="216" r="7" class="wc"/><text x="18" y="216" class="wh" font-size="8" fill="#93C5FD">6</text>
+        <line x1="457" y1="216" x2="543" y2="216" class="wf"/><text x="500" y="207" class="wt" text-anchor="middle" font-size="9.5">[INSERT/UPDATE entity]</text>
+        <line x1="543" y1="228" x2="457" y2="228" class="wr"/><text x="500" y="238" class="wt" text-anchor="middle" font-size="9.5" fill="#0D9488">new ID returned</text>
+        <circle cx="18" cy="260" r="7" class="wc"/><text x="18" y="260" class="wh" font-size="8" fill="#93C5FD">7</text>
+        <line x1="443" y1="260" x2="57" y2="260" class="wr"/><text x="250" y="251" class="wt" text-anchor="middle" font-size="9.5" fill="#0D9488">{ STATUS_CODE: 0, [EntityId]: ... } → HTTP 200</text>
+      </svg>
+    </div>
+
+    <!-- BG JOB SECTION -->
+    <h2 class="sh" id="flow-bgjob">Background Jobs</h2>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"List all scheduled background jobs in this system: job name, what triggers it, how frequently it runs, and what it does."</code></div></div></div>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>Job Name</th><th>Endpoint / Trigger</th><th>Frequency</th><th>What It Does</th></tr></thead>
+      <tbody>
+        <tr><td><code><span class="ph">[Job 1 Name]</span></code></td><td><span class="ph">[POST /BgJob/...]</span></td><td><span class="ph">[Daily/Weekly]</span></td><td><span class="ph">[Description]</span></td></tr>
+        <tr><td><code><span class="ph">[Job 2 Name]</span></code></td><td><span class="ph">[POST /BgJob/...]</span></td><td><span class="ph">[Daily/Weekly]</span></td><td><span class="ph">[Description]</span></td></tr>
+        <tr><td><code><span class="ph">[Job 3 Name]</span></code></td><td><span class="ph">[POST /BgJob/...]</span></td><td><span class="ph">[Monthly]</span></td><td><span class="ph">[Description]</span></td></tr>
+      </tbody>
+    </table></div>
+
+    <!-- DOMAIN EVENTS -->
+    <h2 class="sh" id="flow-events">Domain Events &amp; Event Bus</h2>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"List all domain events or message bus events in this system: event name, direction (published or received), what triggers it, and what the handler does."</code></div></div></div>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>Event Name</th><th>Direction</th><th>Handler</th><th>Action Taken</th></tr></thead>
+      <tbody>
+        <tr><td><code><span class="ph">[Event 1 Name]</span></code></td><td><span class="ph">[RECEIVED / PUBLISHED]</span></td><td><span class="ph">[HandlerClassName]</span></td><td><span class="ph">[What the handler does]</span></td></tr>
+        <tr><td><code><span class="ph">[Event 2 Name]</span></code></td><td><span class="ph">[RECEIVED / PUBLISHED]</span></td><td><span class="ph">[HandlerClassName]</span></td><td><span class="ph">[What the handler does]</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ████████ API REFERENCE ████████ -->
+<div id="page-api" class="page">
+  <div class="sw">
+    <div class="bc"><span onclick="showPage('home')">Home</span><span class="bc-s"> / </span><span>API Reference</span></div>
+    <div class="pg-hdr">
+      <div class="pg-hdr-top"><span class="pg-num">API</span><h1>REST API Reference</h1></div>
+      <p>All endpoints — HTTP method, path, permission, parameters, and response</p>
+    </div>
+    <div class="box bi"><span class="box-icon">🔌</span><div class="box-body"><strong>Base URL:</strong> <code><span class="ph">[https://localhost:PORT/api/...]</span></code> &nbsp;|&nbsp; <strong>Auth:</strong> <code>Authorization: Bearer &lt;token&gt;</code></div></div>
+
+    <!-- CONTROLLER 1 -->
+    <h2 class="sh" id="api-ctrl1"><span class="ph">[Controller 1 Name]</span> — <code><span class="ph">/api/[route]</span></code></h2>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"List all endpoints in [ControllerName]: for each endpoint give the HTTP method, route path, permission required, all parameters with types and whether required/optional, and what the response contains."</code></div></div></div>
+    <p class="bd"><span class="ph">[Brief description of what this controller manages]</span></p>
+
+    <div class="ep">
+      <div class="ep-h" onclick="toggleEp(this)">
+        <span class="m-get">GET</span>
+        <span class="ep-path"><span class="ph">/[Controller]/[EndpointName]</span></span>
+        <span class="ep-perm"><span class="perm p-r"><span class="ph">ReadAll</span></span></span>
+        <span class="ep-chev">▼</span>
+      </div>
+      <div class="ep-body">
+        <p class="ep-desc"><span class="ph">[Describe what this endpoint does, what business logic it applies, and any special behavior like caching or parallel fetching.]</span></p>
+        <table class="pt">
+          <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code><span class="ph">[paramName]</span></code></td><td><span class="ph">int</span></td><td class="p-req">required</td><td><span class="ph">[What this parameter does]</span></td></tr>
+            <tr><td><code><span class="ph">[paramName]</span></code></td><td><span class="ph">string</span></td><td class="p-opt">optional</td><td><span class="ph">[What this parameter does]</span></td></tr>
+          </tbody>
+        </table>
+        <div class="ret"><span class="ret-l">RETURNS</span><span class="ret-v"><span class="ph">[ResponseClass] { Result: List&lt;[EntityType]&gt; }</span></span></div>
+      </div>
+    </div>
+
+    <div class="ep">
+      <div class="ep-h" onclick="toggleEp(this)">
+        <span class="m-post">POST</span>
+        <span class="ep-path"><span class="ph">/[Controller]/[SaveEndpointName]</span></span>
+        <span class="ep-perm"><span class="perm p-e"><span class="ph">EditAll</span></span></span>
+        <span class="ep-chev">▼</span>
+      </div>
+      <div class="ep-body">
+        <p class="ep-desc"><span class="ph">[Describe what this endpoint does, what validation runs, what business rules are applied, and what side effects occur (emails, events, etc.)]</span></p>
+        <table class="pt">
+          <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code><span class="ph">[Id]</span></code></td><td><span class="ph">int</span></td><td class="p-req">required</td><td><span class="ph">0=new, &gt;0=update</span></td></tr>
+            <tr><td><code><span class="ph">[Field1]</span></code></td><td><span class="ph">string</span></td><td class="p-req">required</td><td><span class="ph">[Description]</span></td></tr>
+            <tr><td><code><span class="ph">[Field2]</span></code></td><td><span class="ph">datetime?</span></td><td class="p-opt">optional</td><td><span class="ph">[Description]</span></td></tr>
+          </tbody>
+        </table>
+        <div class="ret"><span class="ret-l">RETURNS</span><span class="ret-v"><span class="ph">[ResponseClass] { [EntityId]: int, STATUS_CODE: 0 }</span></span></div>
+      </div>
+    </div>
+
+    <div class="ep">
+      <div class="ep-h" onclick="toggleEp(this)">
+        <span class="m-post">POST</span>
+        <span class="ep-path"><span class="ph">/[Controller]/[DeleteEndpointName]</span></span>
+        <span class="ep-perm"><span class="perm p-e"><span class="ph">EditAll</span></span></span>
+        <span class="ep-chev">▼</span>
+      </div>
+      <div class="ep-body">
+        <p class="ep-desc"><span class="ph">[Describe deletion behavior — soft-delete vs hard-delete, what gets cleaned up, any cascade effects.]</span></p>
+        <table class="pt">
+          <thead><tr><th>Parameter</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code><span class="ph">[EntityId]</span></code></td><td><span class="ph">int (query)</span></td><td class="p-req">required</td><td><span class="ph">Record to delete</span></td></tr>
+          </tbody>
+        </table>
+        <div class="ret"><span class="ret-l">RETURNS</span><span class="ret-v"><span class="ph">SaveResponse { STATUS_CODE: 0 }</span></span></div>
+      </div>
+    </div>
+
+    <!-- CONTROLLER 2 -->
+    <h2 class="sh" id="api-ctrl2"><span class="ph">[Controller 2 Name]</span> — <code><span class="ph">/api/[route]</span></code></h2>
+    <p class="bd"><span class="ph">[Brief description of what this controller manages]</span></p>
+    <div class="ep">
+      <div class="ep-h" onclick="toggleEp(this)">
+        <span class="m-get">GET</span><span class="ep-path"><span class="ph">/[Controller2]/[Endpoint]</span></span>
+        <span class="ep-perm"><span class="perm p-r"><span class="ph">ReadAll</span></span></span>
+        <span class="ep-chev">▼</span>
+      </div>
+      <div class="ep-body">
+        <p class="ep-desc"><span class="ph">[Endpoint description]</span></p>
+        <div class="ret"><span class="ret-l">RETURNS</span><span class="ret-v"><span class="ph">[ResponseType]</span></span></div>
+      </div>
+    </div>
+
+    <!-- CONTROLLER 3 -->
+    <h2 class="sh" id="api-ctrl3"><span class="ph">[Controller 3 Name]</span> — <code><span class="ph">/api/[route]</span></code></h2>
+    <p class="bd"><span class="ph">[Brief description]</span></p>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Permission</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><span class="m-get">GET</span></td><td><code><span class="ph">[EndpointName]</span></code></td><td><span class="perm p-r" style="font-size:9px">ReadAll</span></td><td><span class="ph">[Description]</span></td></tr>
+        <tr><td><span class="m-post">POST</span></td><td><code><span class="ph">[EndpointName]</span></code></td><td><span class="perm p-e" style="font-size:9px">EditAll</span></td><td><span class="ph">[Description]</span></td></tr>
+        <tr><td><span class="m-post">POST</span></td><td><code><span class="ph">[EndpointName]</span></code></td><td><span class="perm p-n" style="font-size:9px">Open</span></td><td><span class="ph">[Description]</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ████████ CONFIG ████████ -->
+<div id="page-config" class="page">
+  <div class="sw">
+    <div class="bc"><span onclick="showPage('home')">Home</span><span class="bc-s"> / </span><span>Configuration</span></div>
+    <div class="pg-hdr">
+      <div class="pg-hdr-top"><span class="pg-num">09</span><h1>Configuration &amp; Environment</h1></div>
+      <p>Environment variables, secrets management, and external service URLs</p>
+    </div>
+    <div class="box be"><span class="box-icon">⚠️</span><div class="box-body"><strong>Security Rule:</strong> <span class="ph">[Describe how secrets are managed — e.g. "All sensitive config stored in Azure Key Vault. Nothing in code or appsettings.json."]</span></div></div>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"List all environment variables and configuration settings in this system: variable name, example value, and what it is used for. Do NOT include actual secret values."</code></div></div></div>
+    <h2 class="sh">Environment Variables</h2>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>Variable Name</th><th>Example Value</th><th>Used For</th></tr></thead>
+      <tbody>
+        <tr><td><code><span class="ph">[VARIABLE_NAME]</span></code></td><td><span class="ph">[example-value-no-secrets]</span></td><td><span class="ph">[Purpose]</span></td></tr>
+        <tr><td><code><span class="ph">[VARIABLE_NAME]</span></code></td><td><span class="ph">[example-value-no-secrets]</span></td><td><span class="ph">[Purpose]</span></td></tr>
+        <tr><td><code><span class="ph">[VARIABLE_NAME]</span></code></td><td><span class="ph">[example-value-no-secrets]</span></td><td><span class="ph">[Purpose]</span></td></tr>
+        <tr><td><code><span class="ph">[VARIABLE_NAME]</span></code></td><td><span class="ph">[example-value-no-secrets]</span></td><td><span class="ph">[Purpose]</span></td></tr>
+      </tbody>
+    </table></div>
+    <h2 class="sh">Secret Management (Key Vault / Secret Manager)</h2>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>Secret Name</th><th>Type</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code><span class="ph">[SecretName]</span></code></td><td><span class="ph">Connection String</span></td><td><span class="ph">[What this secret is for]</span></td></tr>
+        <tr><td><code><span class="ph">[SecretName]</span></code></td><td><span class="ph">API Key</span></td><td><span class="ph">[What this secret is for]</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- ████████ ROLES ████████ -->
+<div id="page-roles" class="page">
+  <div class="sw">
+    <div class="bc"><span onclick="showPage('home')">Home</span><span class="bc-s"> / </span><span>Roles &amp; Permissions</span></div>
+    <div class="pg-hdr">
+      <div class="pg-hdr-top"><span class="pg-num">10</span><h1>Roles &amp; Permissions</h1></div>
+      <p>User roles, permission codes, and what each role can access</p>
+    </div>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"List all user roles in this system: role name, who has this role, what permission codes they have, and what actions they can perform."</code></div></div></div>
+    <div class="tw"><table class="dt">
+      <thead><tr><th>Permission Code</th><th>Who Has It</th><th>Endpoints / Actions Protected</th></tr></thead>
+      <tbody>
+        <tr><td><span class="perm p-r"><span class="ph">ReadAll</span></span></td><td><span class="ph">[All authenticated users]</span></td><td><span class="ph">[All GET / read endpoints]</span></td></tr>
+        <tr><td><span class="perm p-e"><span class="ph">EditAll</span></span></td><td><span class="ph">[Editors, Managers, Admins]</span></td><td><span class="ph">[All save/update/delete endpoints]</span></td></tr>
+        <tr><td><span class="perm p-d"><span class="ph">ManagerView</span></span></td><td><span class="ph">[Managers and Admins]</span></td><td><span class="ph">[Aggregate/admin dashboard endpoints]</span></td></tr>
+        <tr><td><span class="perm p-n"><span class="ph">Open</span></span></td><td><span class="ph">[Any authenticated user]</span></td><td><span class="ph">[Public/scheduler endpoints]</span></td></tr>
+      </tbody>
+    </table></div>
+    <h2 class="sh">User Role Cards</h2>
+    <!-- Add role cards here — copy the .rc pattern and fill in -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin:14px 0">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px">
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px"><span class="ph">[Role 1 Name]</span></div>
+        <div style="font-family:var(--font-mono);font-size:9px;padding:2px 7px;border-radius:3px;margin-bottom:10px;display:inline-block;letter-spacing:1px;text-transform:uppercase;background:var(--green-l);color:var(--green);border:1px solid var(--green-b)"><span class="ph">ROLE_TYPE</span></div>
+        <ul style="list-style:none;padding:0">
+          <li style="font-size:11.5px;color:var(--text2);padding:3px 0;border-bottom:1px solid var(--border);display:flex;gap:5px"><span style="color:var(--teal)">→</span><span class="ph">[Permission 1]</span></li>
+          <li style="font-size:11.5px;color:var(--text2);padding:3px 0;display:flex;gap:5px"><span style="color:var(--teal)">→</span><span class="ph">[Permission 2]</span></li>
+        </ul>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px">
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px"><span class="ph">[Role 2 Name]</span></div>
+        <div style="font-family:var(--font-mono);font-size:9px;padding:2px 7px;border-radius:3px;margin-bottom:10px;display:inline-block;letter-spacing:1px;text-transform:uppercase;background:var(--amber-l);color:var(--amber);border:1px solid var(--amber-b)"><span class="ph">ROLE_TYPE</span></div>
+        <ul style="list-style:none;padding:0">
+          <li style="font-size:11.5px;color:var(--text2);padding:3px 0;border-bottom:1px solid var(--border);display:flex;gap:5px"><span style="color:var(--teal)">→</span><span class="ph">[Permission 1]</span></li>
+          <li style="font-size:11.5px;color:var(--text2);padding:3px 0;display:flex;gap:5px"><span style="color:var(--teal)">→</span><span class="ph">[Permission 2]</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ████████ QUICK START ████████ -->
+<div id="page-quickstart" class="page">
+  <div class="sw">
+    <div class="bc"><span onclick="showPage('home')">Home</span><span class="bc-s"> / </span><span>Quick Start</span></div>
+    <div class="pg-hdr">
+      <div class="pg-hdr-top"><span class="pg-num">00</span><h1>Quick Start — Adding New Features</h1></div>
+      <p>The step-by-step process every new endpoint must follow</p>
+    </div>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"Describe the step-by-step process for adding a new API endpoint to this system. What files need to be created, in what order, and what layer does each file belong to?"</code></div></div></div>
+    <div class="box be"><span class="box-icon">🚫</span><div class="box-body"><strong>Key Rule:</strong> <span class="ph">[State the most important architectural rule — e.g. "Never inject a Service into a Controller. Never inject a Repository into a Handler. Always follow the chain: Controller → Message Bus → Handler → Service → Repository."]</span></div></div>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-b"><h4><span class="ph">[Step 1 — e.g. Define Response Class]</span></h4><p><span class="ph">[What to create, where to create it, and what it should contain.]</span></p></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-b"><h4><span class="ph">[Step 2 — e.g. Create Query or Command]</span></h4><p><span class="ph">[What to create and what interface it implements.]</span></p></div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-b"><h4><span class="ph">[Step 3 — e.g. Write Validator]</span></h4><p><span class="ph">[Validation class details.]</span></p></div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-b"><h4><span class="ph">[Step 4 — e.g. Define Service Interface]</span></h4><p><span class="ph">[Interface details.]</span></p></div></div>
+      <div class="step"><div class="step-n">5</div><div class="step-b"><h4><span class="ph">[Step 5 — e.g. Implement Service]</span></h4><p><span class="ph">[Service implementation details — all business logic lives here.]</span></p></div></div>
+      <div class="step"><div class="step-n">6</div><div class="step-b"><h4><span class="ph">[Step 6 — e.g. Register in DI]</span></h4><p><span class="ph">[How to register in the DI container.]</span></p></div></div>
+      <div class="step"><div class="step-n">7</div><div class="step-b"><h4><span class="ph">[Step 7 — e.g. Create Handler]</span></h4><p><span class="ph">[Handler details — calls service, wraps response, nothing else.]</span></p></div></div>
+      <div class="step"><div class="step-n">8</div><div class="step-b"><h4><span class="ph">[Step 8 — e.g. Add Controller Endpoint]</span></h4><p><span class="ph">[Controller method details — calls message bus only.]</span></p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ████████ GLOSSARY ████████ -->
+<div id="page-glossary" class="page">
+  <div class="sw">
+    <div class="bc"><span onclick="showPage('home')">Home</span><span class="bc-s"> / </span><span>Glossary</span></div>
+    <div class="pg-hdr">
+      <div class="pg-hdr-top"><span class="pg-num">GLS</span><h1>Business Glossary</h1></div>
+      <p>All domain terms, acronyms, and technical definitions</p>
+    </div>
+    <div class="hint"><span class="hint-icon">🤖</span><div class="hint-body"><div class="hint-label">Copilot Prompt</div><div class="hint-prompt"><code>"Extract all acronyms, abbreviations, and domain-specific terms used in this document. For each, provide a one-sentence definition that explains what it means in the context of this system."</code></div></div></div>
+    <div class="glg">
+      <div class="gli"><span class="gl-t"><span class="ph">TERM</span></span><span class="gl-d"><span class="ph">[Definition — what this term means in the context of this system]</span></span></div>
+      <div class="gli"><span class="gl-t"><span class="ph">TERM</span></span><span class="gl-d"><span class="ph">[Definition]</span></span></div>
+      <div class="gli"><span class="gl-t"><span class="ph">TERM</span></span><span class="gl-d"><span class="ph">[Definition]</span></span></div>
+      <div class="gli"><span class="gl-t"><span class="ph">TERM</span></span><span class="gl-d"><span class="ph">[Definition]</span></span></div>
+      <div class="gli"><span class="gl-t"><span class="ph">TERM</span></span><span class="gl-d"><span class="ph">[Definition]</span></span></div>
+      <div class="gli"><span class="gl-t"><span class="ph">TERM</span></span><span class="gl-d"><span class="ph">[Definition]</span></span></div>
+      <div class="gli"><span class="gl-t"><span class="ph">TERM</span></span><span class="gl-d"><span class="ph">[Definition]</span></span></div>
+      <div class="gli"><span class="gl-t"><span class="ph">TERM</span></span><span class="gl-d"><span class="ph">[Definition]</span></span></div>
+    </div>
+    <div class="box bt" style="margin-top:24px"><span class="box-icon">💡</span><div class="box-body">To add more glossary items, copy a <code>.gli</code> block and paste it inside <code>.glg</code>. Replace the <code>[TERM]</code> and <code>[Definition]</code> text.</div></div>
+
+    <div style="text-align:center;padding:40px 0 0;border-top:1px solid var(--border);margin-top:32px">
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px"><span class="ph">[System Name]</span> — Technical Documentation</div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:4px"><span class="ph">[Organisation Name] | [Year] | Internal Confidential</span></div>
+      <div style="font-size:11px;color:var(--text3);margin-top:8px;font-style:italic">Template designed with Claude AI · Content generated with Microsoft Copilot · Data stays within organisational boundaries</div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- SCROLL TOP -->
+<button id="scrolltop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<script>
+/* ══ SEARCH INDEX ══ */
+const SI = [
+  {t:'Copilot Fill Guide — How to Use',p:'Copilot Guide',pg:'howto',i:'🤖'},
+  {t:'Ready-to-Use Copilot Prompts',p:'Copilot Guide',pg:'howto',i:'🤖'},
+  {t:'System Overview',p:'System Overview',pg:'overview',i:'📖'},
+  {t:'Technology Stack Table',p:'System Overview',pg:'overview',i:'📖'},
+  {t:'Application Modules',p:'System Overview',pg:'overview',i:'📖'},
+  {t:'Architecture & Design Patterns',p:'Architecture',pg:'architecture',i:'🏗️'},
+  {t:'Request Chain Layers',p:'Architecture',pg:'architecture',i:'🏗️'},
+  {t:'Standard Response Envelope',p:'Architecture',pg:'architecture',i:'🏗️'},
+  {t:'Object Mapping Profiles',p:'Architecture',pg:'architecture',i:'🏗️'},
+  {t:'Entity Lifecycle',p:'Entity Lifecycle',pg:'lifecycle',i:'🔄'},
+  {t:'Module 1',p:'Modules',pg:'module1',i:'📊'},
+  {t:'Module 2',p:'Modules',pg:'module2',i:'🔍'},
+  {t:'Module 3',p:'Modules',pg:'module3',i:'📁'},
+  {t:'Reports Module',p:'Reports',pg:'reports',i:'📈'},
+  {t:'Quick Start — Adding New Features',p:'Quick Start',pg:'quickstart',i:'⚡'},
+  {t:'Flow Diagrams — Sequence Diagrams',p:'Flow Diagrams',pg:'flows',i:'⚡'},
+  {t:'Read Operation (Query) Flow',p:'Flow Diagrams → Read',pg:'flows',i:'⚡'},
+  {t:'Write Operation (Command) Flow',p:'Flow Diagrams → Write',pg:'flows',i:'⚡'},
+  {t:'Background Jobs',p:'Flow Diagrams → BgJobs',pg:'flows',i:'⏰'},
+  {t:'Domain Events & Event Bus',p:'Flow Diagrams → Events',pg:'flows',i:'📨'},
+  {t:'API Reference — All Endpoints',p:'API Reference',pg:'api',i:'🔌'},
+  {t:'Controller 1 Endpoints',p:'API → Controller 1',pg:'api',i:'🔌'},
+  {t:'Controller 2 Endpoints',p:'API → Controller 2',pg:'api',i:'🔌'},
+  {t:'Controller 3 Endpoints',p:'API → Controller 3',pg:'api',i:'🔌'},
+  {t:'Configuration & Environment Variables',p:'Configuration',pg:'config',i:'⚙️'},
+  {t:'Secrets Management',p:'Configuration → Secrets',pg:'config',i:'🔑'},
+  {t:'Roles & Permissions',p:'Roles & Permissions',pg:'roles',i:'🔐'},
+  {t:'Business Glossary — All Terms',p:'Glossary',pg:'glossary',i:'📚'},
+];
+
+/* ══ NAVIGATION ══ */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-a').forEach(n => n.classList.remove('active'));
+  const pg = document.getElementById('page-' + id);
+  const nv = document.getElementById('nav-' + id);
+  if (pg) { pg.classList.add('active'); window.scrollTo(0,0); }
+  if (nv) nv.classList.add('active');
+  document.getElementById('sidebar').classList.remove('open');
+}
+function scrollAnchor(anchor) {
+  setTimeout(() => {
+    const el = document.getElementById(anchor);
+    if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+  }, 120);
+}
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+/* ══ THEME ══ */
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('theme-btn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('doc-theme', isDark ? 'light' : 'dark');
+}
+(function(){
+  const s = localStorage.getItem('doc-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', s);
+  const b = document.getElementById('theme-btn');
+  if (b) b.textContent = s === 'dark' ? '☀️' : '🌙';
+})();
+
+/* ══ ENDPOINT TOGGLE ══ */
+function toggleEp(h) {
+  const b = h.nextElementSibling;
+  b.classList.toggle('open');
+  const c = h.querySelector('.ep-chev');
+  if (c) c.style.transform = b.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+/* ══ LIVE SEARCH ══ */
+let st;
+function liveSearch(q) {
+  clearTimeout(st);
+  st = setTimeout(() => renderSearch(q), 120);
+}
+function renderSearch(q) {
+  const drop = document.getElementById('search-drop');
+  if (!q.trim()) { drop.classList.remove('open'); return; }
+  const terms = q.toLowerCase().split(' ').filter(Boolean);
+  const m = SI.filter(item =>
+    terms.every(t => item.t.toLowerCase().includes(t) || item.p.toLowerCase().includes(t))
+  ).slice(0, 10);
+  if (!m.length) {
+    drop.innerHTML = '<div class="sr-empty">No results for "' + q + '"</div>';
+    drop.classList.add('open'); return;
+  }
+  drop.innerHTML = m.map(x =>
+    `<div class="sr-item" onclick="closeDrop();showPage('${x.pg}')">
+      <span class="sr-icon">${x.i}</span>
+      <div><div class="sr-title">${hl(x.t, q)}</div><div class="sr-path">${x.p}</div></div>
+    </div>`).join('');
+  drop.classList.add('open');
+}
+function hl(text, q) {
+  let r = text;
+  q.split(' ').filter(Boolean).forEach(t => {
+    const re = new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+    r = r.replace(re, '<mark style="background:rgba(37,99,235,.25);color:inherit;border-radius:2px;padding:0 1px">$1</mark>');
+  });
+  return r;
+}
+function showDrop() { const v = document.getElementById('tb-search').value; if (v.trim()) renderSearch(v); }
+function closeDrop() { document.getElementById('search-drop').classList.remove('open'); document.getElementById('tb-search').value = ''; }
+function hideDrop() { document.getElementById('search-drop').classList.remove('open'); }
+
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); const s = document.getElementById('tb-search'); s.focus(); s.select(); }
+  if (e.key === 'Escape') closeDrop();
+});
+
+/* ══ CODE COPY ══ */
+function copyCode(btn) {
+  const pre = btn.closest('.cw').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = '✓ Copied'; btn.classList.add('done');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 2000);
+  });
+}
+
+/* ══ SCROLL TOP ══ */
+window.addEventListener('scroll', () => {
+  document.getElementById('scrolltop').classList.toggle('vis', window.scrollY > 400);
+}, { passive:true });
+</script>
+</body>
+</html>
